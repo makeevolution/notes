@@ -1,0 +1,57 @@
+# Powershell
+
+- There are multiple types of Powershell hosts, most common that you use are
+  - VSCode
+  - Powershell
+  - ISE
+- Types of profiles:
+  - $profile.CurrentUserCurrentHost => profile created for the current user for the current host
+  - $profile.CurrentUserAllHosts => profile for current user that can be accessed from any host
+  - $profile.AllUsersCurrentHost => profile for all users in the current host (need admin rights to modify)
+  - $profile.AllUsersAllHosts
+- Profiles don't exist by default. To create one, use ```new-item $profile.CurrentUserCurrentHost -Force ```
+- To add content to a profile, examples are:
+  - Set alias: ```add-content -Value "set-alias np Notepad" -Path $profile.CurrentUserCurrentHost```
+  - Set an env var: ```add-content -Value "$var = 123" -Path $profile.CurrentUserCurrentHost```
+- To edit an existing profile, type ```ise $profile.CurrentUserCurrentHost``` (or other profiles)
+  and edit in ISE.
+
+- Remember to create new window for changes to occur
+
+- Example code with explanations (let's say the code is in ```$profile.CurrentUserAllHosts```):
+```ps
+    filter checkvalidrow {
+    if($_.Contains("IMAGE") -OR $_.IsNullOrEmpty()) {throw "test"}
+    else {$_}
+    }
+    
+    # The output of a non-cmdlet command (like docker ps -a) is a list.
+
+    # The function below outputs the result of docker ps -a to a Select cmdlet.
+
+    # The cmdlet takes the 1st element of the list corresponding to 1st row. It is now a String object (remember that cmdlet command outputs objects).
+
+    # Then pipes it to the checkvalidrow filter defined above. With a filter, you can refer to the object with $_.
+
+    # The filter checks if the row is not empty or not the header of the docker ps -a, by invoking the String object's Contains method and IsNullOrEmpty method.
+
+    # If successful, the Select-String cmdlet takes the object and applies a Regex to it. (?<=\s\s\s) means look behind for the first occurence of 3 spaces, (.*?) means match any characters after the 3 spaces non-greedily, and (?=\s\s\s) means look forward to match with 3 spaces. With the non-greedily, we match up to the first occurence of (?=\s\s\s), without the non-greedily we would match the last occurence.
+
+    # Finally we take the first match of the group (the 0th match is the whole row).
+
+    function dockerlastbuiltimage {docker ps -a |
+                               Select -index 1 | checkvalidrow |
+                               Select-String "(?<=\s\s\s)(.*?)(?=\s\s\s)" | 
+                               ForEach-Object { $_.Matches.Groups[1].Value } 
+                              }
+
+    # So if docker ps -a output is as shown:
+#CONTID   IMAGE     COMMAND      CREATED      STATUS       PORTS   NAMES
+#0ecbe   32dfids   "sh"       55 minutes ago      Exited 55 minutes ago      james
+#a78d3   fc5cc1d   "sh"       About an hour ago   Exited About an hour ago   john
+    # The dockerlastbuiltimage function outputs 32dfids.
+
+    # We can invoke functions inside other functions by putting it inside $()
+    function debuglastimagedocker {docker run -i -t $(dockerlastbuiltimage) sh}
+```
+- With the above example, any powershell host ran by the current user can invoke the commands ```dockerlastbuiltimage``` and ```debuglastimagedocker```. 
