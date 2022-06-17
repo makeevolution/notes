@@ -54,4 +54,16 @@
     # We can invoke functions inside other functions by putting it inside $()
     function debuglastimagedocker {docker run -i -t $(dockerlastbuiltimage) sh}
 ```
-- With the above example, any powershell host ran by the current user can invoke the commands ```dockerlastbuiltimage``` and ```debuglastimagedocker```. 
+- With the above example, any powershell host ran by the current user can invoke the commands ```dockerlastbuiltimage``` and ```debuglastimagedocker```.
+
+- Get the value of a certain column (Source column in example below) from a cmdlet output:
+```ps
+#If output of Get-Command VSTest.Console.exe is:
+#CommandType     Name                                               Version    Source
+#-----------     ----                                               -------    ------
+#Application     vstest.console.exe                                 16.0.31... C:\Program Files (x86)\Microsoft Visual Stud
+
+Get-Command VSTest.Console.exe | Select-Object -Property Source | Format-Table -HideTableHeaders -Wrap
+
+# Output is C:\Program Files (x86)\Microsoft Visual Stu
+```
