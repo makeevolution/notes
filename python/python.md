@@ -54,3 +54,8 @@ gives an iterator stored in ```result```. To get the values you cannot do ```lis
     Note that once iterated through, the iterator cannot be iterated again (it is exhausted).
 
 - item 14 of 90 effective ways to write python book: how to create a list of class instances, and use map() or sorted() or others'' key=lambda on each instance's attributes
+- How to get parent dir path of current file and append to sys path:
+    ```python
+    parentdir = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
+    sys.path.append(os.path.join(parentdir))
+    ```
