@@ -59,3 +59,11 @@ gives an iterator stored in ```result```. To get the values you cannot do ```lis
     parentdir = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
     sys.path.append(os.path.join(parentdir))
     ```
+- Check if all elements in ```list1``` is in another list ```list2``` (assuming both lists have unique elements, otherwise this method will remove duplicates!):
+  ```python
+  (set(list1) & set(list2)) == set(list1)
+  ```
+- Get elements of ```list1``` not in ```list2```:
+  ```python
+    ret = list1 - list2 if len(list1)>len(list2) else list2 - list1
+  ```
