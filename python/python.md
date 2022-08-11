@@ -67,3 +67,9 @@ gives an iterator stored in ```result```. To get the values you cannot do ```lis
   ```python
     ret = list1 - list2 if len(list1)>len(list2) else list2 - list1
   ```
+- How string representation works:
+```str``` in Python is represented in Unicode.
+```UTF-8``` is an encoding standard to encode Unicode string to bytes. There are many encoding standards out there (e.g. UTF-16, ASCII, SHIFT-JIS, etc.).
+When a client sends data to your Python program, they are sending a bunch of bytes not str.
+Your Python program needs to correctly decode it. The client must also send you the information on the encoding used (e.g. in response class of ```requests``` library, it should be somewhere inside it).
+When you want to write/pipe the string to somewhere else (e.g. print to console, write to file), you should also encode it with the same encoding!
