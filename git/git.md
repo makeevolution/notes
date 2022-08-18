@@ -1,6 +1,22 @@
 # Git
 
-- Multiple .gitignore files for different branches. There's a trick to have multiple gitignores for different branches: https://gist.github.com/wizioo/c89847c7894ede628071 or https://gist.github.com/Tealk/13ec8effe72f45f45165143cc64a3048. This is useful if you have a development branch which has files that you dont want production to track when development is merged to production. It uses post-checkout hook functionality of Git. The disadvantage is that all branches will include an extra .gitignore.production file, maybe undesired non-cleanliness.
+- Multiple .gitignore files for different branches. There's a trick to have multiple gitignores for different branches: https://gist.github.com/wizioo/c89847c7894ede628071 or https://gist.github.com/Tealk/13ec8effe72f45f45165143cc64a3048. Summary:
+
+In general, the solution is to make a general `.gitignore` file and add `.gitignore.branch_name` files for the branches I want to add specific file exclusion.
+I'll use post-checkout hook to copy those `.gitignore.branch_name` in place` of `.git/info/exclude` each time I go to the branch with `git checkout branch_name`.
+
+0. On top an existing `.gitignore` which all branches use, create new `.gitignore` files for each branch you want the extra ignores to be and name it like this : `.gitignore.branch_name`
+1. Then, add the extra files you want the branch to ignore in the `.gitignore.branch_name`
+2. In your git repo, go to `.git/hooks/`
+3. Edit or create `post-checkout` file and copy the content found in this gist.
+4. Don't forget to make it executable with `chmod 755 post-checkout`
+5. Just go to the branch you want and type `git status --ignored`. If you make the file in the branch you want it to work on, first checkout to another branch and checkout back to the branch to make the ignore take effect.
+
+This is useful if you have a development branch, which has files that you dont want production to track, when development is merged to production. It uses post-checkout hook functionality of Git. The disadvantage is that all branches will include an extra .gitignore.production file, maybe undesired non-cleanliness.
+
+- Untracking existing file: After first cleaning cache using ```git rm -r --cached <FILE>```, do ```git status``` and sometimes in the changes to be commited part, the files are marked as fully deleted instead! Remember then to follow the instruction on top of this part i.e. ```git reset ...``` to fully untrack the file. Check if the file is truly untracked using ```git status --untracked```. To fully ignore the file, include the files in the .gitignore.
+
+Ignoring makes the file truly invisible to git and unavailable to be tracked by git (it will not even show up in ```git status``` although can be seen using ```git status --ignored```), while untracked status makes it ready to be added to be tracked by git.
 
 - Best practice for good workflow: fork upstream to create origin/master and local master. Then create branches for each feature you are working on. https://www.youtube.com/watch?v=deEYHVpE1c8. Procedure is:
   
