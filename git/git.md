@@ -59,3 +59,5 @@
 - git mergetool on command line: left top (LOCAL) is the status of tther branch you want to merge to, right top (REMOTE) is your stuff, bottom is merge result. Move cursor to bottom window using ctrl+w+direction, and to use other branch's version for the resolution, type :diffget LOCAL, to use yours use :diffget REMOTE, save by :wqa. Do this for every colored lines that represent conflicts.
 
 - Overwrite one file in current branch with that of another branch: git checkout OtherBranchName \<filePath\>
+
+- Rewrite commit history: If you want to edit some commits on a particular branch, do ```git rebase --strategy recursive --strategy-option ours -i --root```, using ours strategy so that if there are merge conflicts during rebase, the original version is retained (i.e. git doesn't attempt to merge . Make your changes in the commit you want, and if there are merge conflicts like files are modified/deleted, always add them to maintain the original version!
