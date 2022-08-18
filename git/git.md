@@ -1,5 +1,7 @@
 # Git
 
+- Multiple .gitignore files for different branches. There's a trick to have multiple gitignores for different branches: https://gist.github.com/wizioo/c89847c7894ede628071 or https://gist.github.com/Tealk/13ec8effe72f45f45165143cc64a3048. This is useful if you have a development branch which has files that you dont want production to track when development is merged to production. It uses post-checkout hook functionality of Git. The disadvantage is that all branches will include an extra .gitignore.production file, maybe undesired non-cleanliness.
+
 - Best practice for good workflow: fork upstream to create origin/master and local master. Then create branches for each feature you are working on. https://www.youtube.com/watch?v=deEYHVpE1c8. Procedure is:
   
   git fork the real repository (i.e. the upstream), by going to the real git repo on github and press "fork"
