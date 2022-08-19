@@ -14,7 +14,7 @@ I'll use post-checkout hook to copy those `.gitignore.branch_name` in place` of 
 
 This is useful if you have a development branch, which has files that you dont want production to track, when development is merged to production. It uses post-checkout hook functionality of Git. The disadvantage is that all branches will include an extra .gitignore.production file, maybe undesired non-cleanliness.
 
-- Untracking and ignoring existing file: After first cleaning cache using ```git rm -r --cached <FILE>```, do ```git status``` and sometimes in the changes to be commited part, the files are marked as fully to be deleted instead! THUS A WARNING: While this will not remove the physical file from your local machine, it will remove the files physically if you do a git pull the next time! So back it up, or use the workflow in the previous bullet point to save these files if you need them (e.g. notes, etc.)
+- Untracking and ignoring existing file: After first cleaning cache using ```git rm -r --cached <FILE>```, do ```git status``` and sometimes in the changes to be commited part, the files are marked as fully to be deleted instead! THUS A WARNING: While this will not remove the physical file from your local machine, it will remove the files physically if you do a git pull or any merges the next time! So back it up, or use the workflow in the previous bullet point to save these files if you need them (e.g. notes, etc.)
 
 Check if the file is truly untracked using ```git status --untracked```, although it won't show if you didn't make any changes to the file; use ```git clean -n``` to check if the file is untracked. To fully ignore the file, include the file in ```.gitignore```.
 
