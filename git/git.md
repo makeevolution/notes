@@ -22,9 +22,9 @@ To list all files being currently tracked by git (i.e. in the staging area), run
 
 To list all untracked (not in staging area) and ignored (not considered by git at all) files, run ```git ls-files --others```
 
-To list only ignored files, run ```git ls-files --others --exclude-standard```
+To list only untracked files but not ignored, run ```git ls-files --others --exclude-standard``` or ```git clean -n```
 
-To list only untracked files (but not ignored), run ```git clean -n```
+To list only ignored files, it's then the difference between ```git ls-files --others``` and ```git clean -n```. Or if you want to check if a file in .gitignore is truly ignored, just do ```git ls-files --others | grep filename``` and make sure it is also not in ```git clean -n```.
 
 - Best practice for good workflow: fork upstream to create origin/master and local master. Then create branches for each feature you are working on. https://www.youtube.com/watch?v=deEYHVpE1c8. Procedure is:
   
