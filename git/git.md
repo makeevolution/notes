@@ -14,9 +14,17 @@ I'll use post-checkout hook to copy those `.gitignore.branch_name` in place` of 
 
 This is useful if you have a development branch, which has files that you dont want production to track, when development is merged to production. It uses post-checkout hook functionality of Git. The disadvantage is that all branches will include an extra .gitignore.production file, maybe undesired non-cleanliness.
 
-- Untracking existing file: After first cleaning cache using ```git rm -r --cached <FILE>```, do ```git status``` and sometimes in the changes to be commited part, the files are marked as fully deleted instead! Need to then do ```git reset HEAD <FILE>``` to fully untrack the file WITHOUT deleting the file from the filesystem. Check if the file is truly untracked using ```git status --untracked```, although it won't show if you didn't make any changes to the file; try adding a change and redo the command and see if it is in untracked files. To fully ignore the file, include the files in ```.gitignore```.
+- Untracking existing file: After first cleaning cache using ```git rm -r --cached <FILE>```, do ```git status``` and sometimes in the changes to be commited part, the files are marked as fully to be deleted instead! This is because the file has been already commited before in history. Thus need to then do ```git reset HEAD <FILE>``` to fully untrack the file WITHOUT deleting the file from the filesystem. Check if the file is truly untracked using ```git status --untracked```, although it won't show if you didn't make any changes to the file; use ```git clean -n``` to check if the file is untracked. To fully ignore the file, include the file in ```.gitignore```.
 
-Ignoring makes the file truly invisible to git and unavailable to be tracked by git (it will not even show up in ```git status``` although can be seen using ```git status --ignored```), while untracked status makes it ready to be added to be tracked by git. Be careful in interpreting ```git status```, it only shows status of changed files, so if you did not change anything in the file, the file won't show there regardless if is tracked, untracked or ignored!
+Ignoring makes the file truly invisible to git and unavailable to be tracked by git (it will not even show up in ```git status``` although can be seen using ```git status --ignored```), while untracked status makes it ready to be added to be tracked by git. Be careful in interpreting ```git status```, it only shows status of changed files, so if you did not change anything in the file, the file won't show there regardless if is tracked, untracked or ignored! So don't rely on ```git status``` to find out the status of a file.
+
+To list all files being currently tracked by git (i.e. in the staging area), run ```git ls-files -s```
+
+To list all untracked (not in staging area) and ignored (not considered by git at all) files, run ```git ls-files --others```
+
+To list only ignored files, run ```git ls-files --others --exclude-standard```
+
+To list only untracked files (but not ignored), run ```git clean -n```
 
 - Best practice for good workflow: fork upstream to create origin/master and local master. Then create branches for each feature you are working on. https://www.youtube.com/watch?v=deEYHVpE1c8. Procedure is:
   
