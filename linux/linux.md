@@ -23,3 +23,4 @@
   -bash: [: foo: integer expression expected
   2
   ```
+  better practice for sh for compatibility of your docker .sh entry point across different systems
