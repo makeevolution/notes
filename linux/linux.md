@@ -7,3 +7,19 @@
   - May break some things on already running servers, only use when making docker containers
 - Change ```python3``` to ```python``` if ```python``` doesn't exist:
   - Create ```alias python=python3``` in ```.bashrc``` and ```source``` it
+
+- = and == are for string comparisons
+  -eq is for numeric comparisons
+  -eq is in the same family as -lt, -le, -gt, -ge, and -ne
+
+  == is specific to bash (not present in sh (Bourne shell), ...). Using POSIX = is preferred for compatibility. In bash the two are equivalent, and in sh = is the only one that will work.
+```sh
+  $ a=foo
+  $ [ "$a" = foo ]; echo "$?"       # POSIX sh
+  0
+  $ [ "$a" == foo ]; echo "$?"      # bash-specific
+  0
+  $ [ "$a" -eq foo ]; echo "$?"     # wrong
+  -bash: [: foo: integer expression expected
+  2
+  ```
