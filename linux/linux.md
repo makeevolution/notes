@@ -43,3 +43,16 @@
     echo $i;
   done
   ```
+- ```cut``` to filter out columns from lines of text, or characters from a line of text.
+  Examples:
+  ```sh
+  Hello
+  World
+  how are you
+  
+  cut -c 3-4 
+  
+  l
+  r
+  w
+  ```
