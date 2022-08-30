@@ -36,3 +36,10 @@
   fi
   ```
   This example also shows that outside ```[ ]```, use AND and OR syntax using the normal way. More info: https://unix.stackexchange.com/questions/28781/what-is-the-syntax-of-a-complex-condition-in-shell
+
+- Looping:
+  ```sh
+  for i in {1..50}; do
+    echo $i;
+  done
+  ```
