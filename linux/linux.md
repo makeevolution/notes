@@ -24,3 +24,5 @@
   2
   ```
   better practice for sh for compatibility of your docker .sh entry point across different systems
+  
+- Use ```-a``` for AND, ```-o``` for OR, and ```!``` for NOT
