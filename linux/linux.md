@@ -56,3 +56,15 @@
   r
   w
   ```
+  
+  ```sh
+  Hello
+  World
+  how are you
+  
+  cut -c 2,7 
+  
+  e
+  o
+  oe
+  ```
