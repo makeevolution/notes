@@ -27,4 +27,12 @@
   ```
   better practice for sh for compatibility of your docker .sh entry point across different systems
   
-- Use ```-a``` for AND, ```-o``` for OR, and ```!``` for NOT
+- Use ```-a``` for AND, ```-o``` for OR, and ```!``` for NOT, inside ```[ ]``` expressions.
+
+- To group multiple conditionals, use ```{ }```. Example:
+  ```sh
+  if { [ $X -eq $Y ] || [ $Y -eq $Z ] || [ $X -eq $Z ]; }; then
+    echo "ISOSCELES"
+  fi
+  ```
+  This example also shows that outside ```[ ]```, use AND and OR syntax using the normal way. More info: https://unix.stackexchange.com/questions/28781/what-is-the-syntax-of-a-complex-condition-in-shell
