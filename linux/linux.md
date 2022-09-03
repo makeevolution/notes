@@ -68,3 +68,11 @@
   o
   oe
   ```
+  
+  ```sh
+  New York is a state in the Northeastern and Mid-Atlantic regions of the United States. 
+  
+  cut -d " " -f 1,3
+  
+  New York is
+  ```
