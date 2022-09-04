@@ -10,17 +10,18 @@ class Player {
 ---
 Aggregation is a more specific version of Association, and Composition is a more specific version of Aggregation.
 
-
+```java
 class Person {
     private Heart heart;
     private List<Hand> hands;
 }
-
+```
+```java
 class City {
     private List<Tree> trees;
     private List<Car> cars
 }
-
+```
 In composition (Person, Heart, Hand), "sub objects" (Heart, Hand) will be destroyed as soon as Person is destroyed.
 
 In aggregation (City, Tree, Car) "sub objects" (Tree, Car) will NOT be destroyed when City is destroyed.
