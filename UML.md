@@ -29,6 +29,7 @@ In composition (Person, Heart, Hand), "sub objects" (Heart, Hand) will be destro
 In aggregation (City, Tree, Car) "sub objects" (Tree, Car) will NOT be destroyed when City is destroyed.
 
 The bottom line is, composition stresses on mutual existence, and in aggregation, this property is NOT required.
+
 ---
 
 Realization: The class extends a parent class, the parent class is at the arrow end. The dashed line is the signal that the block at the arrow end is a class, not an interface.
