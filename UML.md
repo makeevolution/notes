@@ -10,6 +10,8 @@ class Player {
 ---
 Aggregation is a more specific version of Association, and Composition is a more specific version of Aggregation.
 
+<blockquote class="imgur-embed-pub" lang="en" data-id="a/WOEy33h" data-context="false" ><a href="//imgur.com/a/WOEy33h"></a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
+
 ![https://imgur.com/7myeA6o](https://imgur.com/7myeA6o)
 
 ```java
