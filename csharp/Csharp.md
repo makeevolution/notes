@@ -180,7 +180,7 @@ In the second function the type T must be a type of ProxyBase (as I mentioned ab
 - ctrl shift p to open nuget gallery
 - ctrl k c visual studio bulk comment, ctrl k u uncomment
 
-- Null check one liner cool:
+- Null check one liner cool, this is called null propagation:
 
 ```
         if (!inputNumeric.Val?.IsNotApplicable() ?? false)
