@@ -1,5 +1,5 @@
 - Get all foreign keys in a table:
-
+  ```
   USE '<yourschema>';
 
   SELECT i.TABLE_NAME, i.CONSTRAINT_TYPE, i.CONSTRAINT_NAME, k.REFERENCED_TABLE_NAME, k.REFERENCED_COLUMN_NAME 
@@ -8,3 +8,4 @@
   WHERE i.CONSTRAINT_TYPE = 'FOREIGN KEY' 
   AND i.TABLE_SCHEMA = DATABASE()
   AND i.TABLE_NAME = '<yourtable>';
+  ```
