@@ -4,7 +4,7 @@
 - Als je een domain op `namecheap.com` heeft gekocht, volg de instruties op https://www.youtube.com/watch?v=zOPH54ltGLQ
 om je droplet te configureren met de domain naam.
 - En dan, volg de instruties op https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-ubuntu-20-04 om
-je server met NGINX en ufw te configureren.
+je server met NGINX en ufw te configureren, zodat je je server met je domain naam toegang kan krijgen.
 - NGINX is een toepassing die internetverbindingen met je server configureren.
 - Belangrijke mappen in NGINX, en korte omschrijving erover:
 ```
