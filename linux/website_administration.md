@@ -75,3 +75,7 @@ naar je server aansluiten, en ssh werkt niet meer!***
   - sudo ufw status
   - sudo ufw allow 'een-van-de-uitvoer-van-sudo-ufw-app-list'
   
+## SSL
+- Uitgebreid: https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-20-04
+- Momenteel in Smallblog is SSL geinstalleerd. De configuratie is zodat alle HTTP verbindingen, onafhankelijk van de poort,
+aan HTTPS aangepast worden.
