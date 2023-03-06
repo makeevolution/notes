@@ -89,3 +89,5 @@ To list only ignored files, it's then the difference between ```git ls-files --o
 - Overwrite one file in current branch with that of another branch: git checkout OtherBranchName \<filePath\>
 
 - Rewrite commit history: If you want to edit some commits on a particular branch, do ```git rebase --strategy recursive --strategy-option ours -i --root```, using ours strategy so that if there are merge conflicts during rebase, the original version is retained (i.e. git doesn't attempt to merge . Make your changes in the commit you want, and if there are merge conflicts like files are modified/deleted, always add them to maintain the original version!
+
+- If you are at a certain commit after branching off from master, realized you hardcoded your password in the previous commits after branching off, and would like to remove those commits: [https://stackoverflow.com/questions/46230138/how-do-i-remove-specific-commit-in-my-branch](https://stackoverflow.com/a/46230271/9498624). In a nutshell: create a new branch, and then rebase onto master in the fashion shown in the link's answer
