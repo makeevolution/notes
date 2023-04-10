@@ -1,3 +1,5 @@
+course: https://app.pluralsight.com/library/courses/kubernetes-installation-configuration-fundamentals/table-of-contents
+
 Context related
 - kubectl config use-context
 -	kubectl config get-contexts
@@ -47,3 +49,13 @@ The hierarchy in Kubernetes is as follows:
  
 - An ingress controller is a service that will create its own separate namespace from the other pods. 
 You use it to load balance pods running in other namespaces (e.g. pods in default namespace for example).
+ 
+ -------------
+ 
+ What does single-node cluster mean? It means that the cluster contains only one node (i.e. one VM), aka the master node, and no worker nodes.
+ Usually we have worker nodes (i.e. other VMs) that do the work that the master node orchestrates. The worker nodes will create pod(s) inside themselves to do the work.
+ With a single node configuration, this means the master node will create the pods inside itself that do the work that it orchestrates. The master node itself also creates a pod that does the orchestration. This all means that nodes do not "do" the work; rather they spin up pods (i.e. containers) that would do the work(s) assigned to them.
+ 
+ --------------
+
+ How to set up your own cluster from scratch? https://1drv.ms/f/s!ApGS4APr_VQLpu8-A4kTgICxMlzEng?e=Bou0Dj
