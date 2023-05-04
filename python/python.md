@@ -73,3 +73,9 @@ gives an iterator stored in ```result```. To get the values you cannot do ```lis
 When a client sends data to your Python program, they are sending a bunch of bytes not str.
 Your Python program needs to correctly decode it. The client must also send you the information on the encoding used (e.g. in response class of ```requests``` library, it should be somewhere inside it).
 When you want to write/pipe the string to somewhere else (e.g. print to console, write to file), you should also encode it with the same encoding!
+
+- How to get where pip packages are installed:
+    import site
+    site.getsitepackages() # List of global package locations
+    site.getusersitepackages() # String for user-specific package location
+
