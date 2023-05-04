@@ -75,7 +75,8 @@ Your Python program needs to correctly decode it. The client must also send you 
 When you want to write/pipe the string to somewhere else (e.g. print to console, write to file), you should also encode it with the same encoding!
 
 - How to get where pip packages are installed:
+``` 
     import site
     site.getsitepackages() # List of global package locations
     site.getusersitepackages() # String for user-specific package location
-
+```
