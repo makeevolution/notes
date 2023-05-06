@@ -44,8 +44,8 @@ The hierarchy in Kubernetes is as follows:
 -	A cluster is a collection of nodes that run containerized applications.
 -	Each cluster can contain one or more namespaces, which provide a way to group and isolate resources within a cluster.
 -	Each namespace can contain multiple Kubernetes objects, such as pods, deployments, services, config maps, and secrets.
--	A pod is the smallest deployable unit in Kubernetes and represents a single instance of a running process in a cluster. A pod can contain one or more containers that share the same network and storage resources.
--	Each container in a pod runs in its own isolated environment, similar to a lightweight virtual machine.
+-	A pod is the smallest deployable unit in Kubernetes and represents a single instance of a running process in a cluster. A pod can contain one or more containers that share the same network and storage resources. Each container in a pod runs in its own isolated environment, similar to a lightweight virtual machine.
+- A pod is usually contained within another Kubernetes object e.g. deployments, services, etc. To permanently delete a pod belonging to another Kubernetes object, you need to delete that object instead
  
 - An ingress controller is a service that will create its own separate namespace from the other pods. 
 You use it to load balance pods running in other namespaces (e.g. pods in default namespace for example).
