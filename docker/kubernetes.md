@@ -1,5 +1,7 @@
 course: https://app.pluralsight.com/library/courses/kubernetes-installation-configuration-fundamentals/table-of-contents
 
+Get all objects currently registered: kubectl get all
+
 Context related
 - kubectl config use-context
 -	kubectl config get-contexts
