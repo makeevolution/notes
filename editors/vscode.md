@@ -1,0 +1,2 @@
+- From normal mode of vim: ctrl+d until all matches desired are selected, then escape, then i. But first disable ctrl+d from vim settings (go to file preferences ctrl+d remove vim handling)
+- Also disable ctrl + u, ctrl + k. To skip the current selection, do ctrl + k + d. To remove selection and go back use ctrl + u. 

@@ -8,7 +8,7 @@ class Player {
 }
 ```
 ---
-Aggregation is a more specific version of Association, and Composition is a more specific version of Aggregation.
+Aggregation is a more specific version of Association, and Composition is a more specific version of Aggregation. Aggregation
 
 [https://imgur.com/7myeA6o](https://imgur.com/7myeA6o)
 
