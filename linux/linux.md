@@ -108,3 +108,8 @@
   To print the 12th up to 22th lines use tail and head, with + in tail to output everything except the 12 lines from top (without +, it outputs the 12 lines  from the bottom):
   tail -n +12 | head -n 11
   ```
+
+------------
+
+list disk usage `df -h` or `du -h`
+show all files and folder sizes in a folder `du -sh * | sort -n`
