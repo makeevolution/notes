@@ -84,10 +84,14 @@ When you want to write/pipe the string to somewhere else (e.g. print to console,
 - Pytest how to check if object is class and if it is subclass of exception:
   ``` inspect.isclass(myobject) and issubclass(myobject, Exception) ```
 
-- encode decode base64 that works:
+- encode decode base64 trick (at least password is not barely seen):
   ```
   word = "myword"
   word_as_bytes = bytes(word, 'utf-8')
   encoded_word = base64.b64encode(word_as_bytes)
-  decoded_word = base64.b64encode(encoded_word.decode())
+  ```
+  Now you can use this encoded word as a token-like string in config file, etc.
+  To decode this token (where token is now a Python string):
+  ```
+  decoded_word = base64.b64decode(token)
   ```
