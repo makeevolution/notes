@@ -1,4 +1,4 @@
-# Python
+,# Python
 
 - Check if you are running python from virtual environment: run python, import ```sys```, then ```sys.prefix```, or do ```pip -V``` or ```python -m pip -V```
 
@@ -95,3 +95,62 @@ When you want to write/pipe the string to somewhere else (e.g. print to console,
   ```
   decoded_word = base64.b64decode(token)
   ```
+
+-------------------
+
+## Copies and mutability
+
+- An assignment to another variable creates only a shallow copy. The objects inside that variable are not copied!
+
+```
+l1 = [3, [66, 55, 44], (7, 8, 9)]
+l2 = list(l1)      
+l1.append(100)     
+l1[1].remove(55)   
+print('l1:', l1)
+print('l2:', l2)
+l2[1] += [33, 22]  
+l2[2] += (10, 11)  
+print('l1:', l1)
+print('l2:', l2)
+```
+The above gives
+```
+l1: [3, [66, 44], (7, 8, 9), 100]
+l2: [3, [66, 44], (7, 8, 9)]
+l1: [3, [66, 44, 33, 22], (7, 8, 9), 100]
+l2: [3, [66, 44, 33, 22], (7, 8, 9, 10, 11)]
+```
+
+Appending 100 to l1 doesn't effect l2 since l2 is a copy. However, modifying a mutable type inside l2 (i.e. the list inside it) also mutates that inside l1 since the copy is shallow. But modifying the tuple inside l2 doesn't affect the tuple in l1 since a tuple is immutable.
+
+- The mutability of lists or dicts or reference value types are dangerous and should be watched out for. Given the following mutable type optional argument:
+
+```
+
+class HauntedBus:
+    """A bus model haunted by ghost passengers"""
+
+    def __init__(self, passengers=[]):  1
+        self.passengers = passengers  2
+
+    def pick(self, name):
+        self.passengers.append(name)  3
+
+    def drop(self, name):
+        self.passengers.remove(name)
+```
+
+The following will unexpectedly happen
+
+```
+>>> bus2 = HauntedBus()  
+>>> bus2.pick('Carrie')
+>>> bus2.passengers
+['Carrie']
+>>> bus3 = HauntedBus()  
+>>> bus3.passengers  
+['Carrie']
+```
+This is because the default is a reference type and so every assignment will refer to the same object every time!!
+
