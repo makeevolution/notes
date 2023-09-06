@@ -6,6 +6,13 @@
 2. Type `echo $profile` and make the file specified
 3. Create your alias in the file `New-Alias -Name ls Value Get-ChildItem`
 4. Save it, done
+5. If you want more complex alias, make a function instead of `New-Alias` e.g.
+```
+function myssh()
+{
+ssh myname@myserver.com
+}
+```
 
 Extra: To customize your terminal easily (if you don't have Terminal in your windows), download `hyper.is` `https://hyper.is/` as your new terminal, go to `preferences`, and change the
 `shell` entry to point to your powershell executable.
