@@ -1,5 +1,17 @@
 # Powershell
 
+### How to create alias in Windows Powershell
+
+1. Open Powershell
+2. Type `echo $profile` and make the file specified
+3. Create your alias in the file `New-Alias -Name ls Value Get-ChildItem`
+4. Save it, done
+
+Extra: To customize your terminal easily (if you don't have Terminal in your windows), download `hyper.is` `https://hyper.is/` as your new terminal, go to `preferences`, and change the
+`shell` entry to point to your powershell executable.
+
+----------------------
+### Misc
 - There are multiple types of Powershell hosts, most common that you use are
   - VSCode
   - Powershell
