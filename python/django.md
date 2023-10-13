@@ -14,3 +14,4 @@
   ```
   Additionally, since your debugging has raised an exception, your test run will fail inevitably :(
 - To avoid errors in saving data using Django, it's best to call `full_clean()` before `save()` https://docs.djangoproject.com/en/2.0/ref/models/instances/#django.db.models.Model.full_clean. There the info is not low-level, low level info is here https://django.readthedocs.io/en/stable/ref/forms/validation.html
+- Use https://django-extensions.readthedocs.io/en/latest/sqldiff.html to evaluate db migration status with that of your code's migration
