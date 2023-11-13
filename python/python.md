@@ -98,6 +98,14 @@ When you want to write/pipe the string to somewhere else (e.g. print to console,
 
 -------------------
 
+## pre commit stuff
+
+- If flake8 outputs empty wemake errors, run black before it to remove extra empty lines that causes this confusing message
+
+
+
+-------------------
+
 ## Copies and mutability
 
 - An assignment to another variable creates only a shallow copy. The objects inside that variable are not copied!
