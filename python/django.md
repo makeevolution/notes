@@ -14,7 +14,8 @@
   ```
   Additionally, since your debugging has raised an exception, your test run will fail inevitably :(
 - To avoid errors in saving data using Django, it's best to call `full_clean()` before `save()` https://docs.djangoproject.com/en/2.0/ref/models/instances/#django.db.models.Model.full_clean. There the info is not low-level, low level info is here https://django.readthedocs.io/en/stable/ref/forms/validation.html
-- Use https://django-extensions.readthedocs.io/en/latest/sqldiff.html to evaluate db migration status with that of your code's migration
+- Reset all tables (including sessions, auth, admin etc) and data inside: `python manage.py reset_db`. Need to install django extensions too
+- Use https://django-extensions.readthedocs.io/en/latest/sqldiff.html to evaluate db migration status with that of your code's migration; doesn't work for mysql
 - If you change your django migration file(s) and your db is out of sync with your migrations db code, to make them in sync again easily (data will be lost):
     -  go to `django_migrations` table in the db, and identify the migration scripts that are different to your code
     -  drop the tables/columns being created/altered in these scripts, use best judgement when doing this
