@@ -6,3 +6,5 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS auth_group;
 DROP TABLE IF EXISTS auth_group_permissions;
 SET FOREIGN_KEY_CHECKS = 1;
+
+- If you get error `specified key was too long max length is 3072 bytes` or something like that when changing a column to a string type, make sure that your currently existing data is not longer than your specified varchar!
