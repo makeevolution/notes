@@ -7,4 +7,8 @@ DROP TABLE IF EXISTS auth_group;
 DROP TABLE IF EXISTS auth_group_permissions;
 SET FOREIGN_KEY_CHECKS = 1;
 
-- If you get error `specified key was too long max length is 3072 bytes` or something like that when changing a column to a string type, make sure that your currently existing data is not longer than your specified varchar!
+- When you have constraints between your Django model fields (e.g. field1 and field2 must be unique together in the database), you can have problems with the column size of each field, since the columns now effectively become
+foreign keys. MySQL uses utf8md4 and thus store each character as 4 bytes, and an Integer (which is the testcase in this list) is also allocated 4 bytes. Thus the total bytes taken by this index is 256 x 4 x 3 + 4 = 3076 bytes.
+MySQL (and other non SQLite databases) have a limit on the maximum bytes that an index key can have; for MySQL case it is 3072 for Dynamic row format (which is what we are provided by IT). Thus it doesn't fit here and raised an error when migration was applied.
+More information here: https://dev.mysql.com/doc/refman/8.0/en/create-index.html#create-index-unique.
+So always double check; this constraint is not applicable to SQLite so there will be surprises when migrating to MySqL
