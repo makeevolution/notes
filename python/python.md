@@ -162,3 +162,8 @@ The following will unexpectedly happen
 ```
 This is because the default is a reference type and so every assignment will refer to the same object every time!!
 
+-------------------
+
+### Testing
+
+- How to change dynamically mock return value: in your email
