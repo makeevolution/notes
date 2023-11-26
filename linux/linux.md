@@ -113,3 +113,8 @@
 
 list disk usage `df -h` or `du -h`
 show all files and folder sizes in a folder `du -sh * | sort -n`
+
+------------
+
+To match regex in a non greedy way:
+doing `(.*?)\=` on `i am a message test=123` captures `i am a message test =`
