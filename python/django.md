@@ -21,4 +21,5 @@
     -  drop the tables/columns being created/altered in these scripts, use best judgement when doing this
     -  delete these scripts rows from `django_migrations`
     -  Run `python manage.py migrate` again
+-  How to check all reverse urls in your Django app: https://stackoverflow.com/questions/1275486/how-can-i-list-urlpatterns-endpoints-on-django
 
