@@ -1,4 +1,4 @@
-# Linux
+https://bizanosa.com/debian-10-initial-server-setup-vps-vultr/ Linux
 
 - Change ```python3``` to ```python``` if ```python``` already exists:
   - Find the location of your ```python3``` and ```python``` (if it exists) using ```which python3``` and ```which python```. Say they're in ```usr/bin/python3``` and ```/usr/bin/python```
@@ -118,3 +118,7 @@ show all files and folder sizes in a folder `du -sh * | sort -n`
 
 To match regex in a non greedy way:
 doing `(.*?)\=` on `i am a message test=123` captures `i am a message test =`
+
+setup new server: 
+https://bizanosa.com/debian-10-initial-server-setup-vps-vultr/
+To enable non root to login without password: edit /etc/ssh/sshd_config using the user (with sudo), allow publickeyauth and authkey file
