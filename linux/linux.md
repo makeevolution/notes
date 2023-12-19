@@ -121,6 +121,16 @@ doing `(.*?)\=` on `i am a message test=123` captures `i am a message test =`
 
 ------------
 
-setup new server: 
+## How to setup new server to add new user and allow ssh for that user from another server without password: 
 https://bizanosa.com/debian-10-initial-server-setup-vps-vultr/
-To enable non root to login without password: edit /etc/ssh/sshd_config using the user (with sudo), allow publickeyauth and authkey file
+1. `adduser newuser`
+2. `usermod -aG sudo newuser`
+3. Re-login into server as `newuser`
+4. `sudo mkdir ~/.ssh`
+5. `sudo nano ~/.ssh/authorized_keys`, and copy public key of server you want to ssh from into this file
+6. `sudo chmod 700 -R ~/.ssh`
+7. `sudo chmod 600 ~/.ssh/authorized_keys`
+8. `sudo chown -R joe:joe /home/joe`
+9. `sudo vi /etc/ssh/sshd_config`, allow publickeyauth and authkey file
+10. (optional) disable root by setting `PermitRootLogin no` on the above file, and `sudo service ssh restart`
+11. (optional) disable passwordauthentication for the user by setting `PasswordAuthentication no`, and restart ssh service
