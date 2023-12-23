@@ -79,3 +79,24 @@ naar je server aansluiten, en ssh werkt niet meer!***
 - Uitgebreid: https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-20-04
 - Momenteel in Smallblog is SSL geinstalleerd. De configuratie is zodat alle HTTP verbindingen, onafhankelijk van de poort,
 aan HTTPS aangepast worden.
+
+## What happens when you type in a domain name to url bar (how DNS works)
+Your router resolves the domain name you type in using a Domain Name System (DNS) resolver. There are various DNS resolvers that it will ask, returning the first one with an answer.
+
+When your router DNS resolver receives a query (for example, a request to resolve a domain name to an IP address), it checks its local cache. If the information is not present in the cache or has expired, the resolver starts A DNS recursion process.
+
+Root DNS Servers: The resolver first contacts a root DNS server. These servers are the starting point for resolving domain names. The root servers don't contain the specific information about domain names but instead direct the resolver to the authoritative servers responsible for top-level domains (like .com, .org, .net, etc.). For our website it would direct the resolver to the authoritative server for .com.
+
+Top-Level Domain (TLD) Servers: The root DNS servers direct the resolver to the appropriate TLD servers based on the domain's extension (.com, .org, .net, etc.). For instance, if the domain is "example.com," the resolver contacts the .com TLD server.
+
+Authoritative DNS Servers: The TLD servers then guide the resolver to the authoritative DNS servers responsible for the specific domain, in this case, "example.com." These authoritative servers contain the actual DNS records for the domain, such as IP addresses associated with the domain's hostname. Hetzner, for example, has hydrogen.ns.hetzner.com., oxygen.ns.hetzner.com. and helium.ns.hetzner.de. .
+
+How does the TLD server know who the authoritative server for our desired domain is? This is done by specifiying the nameservers in our domain hosting website
+    
+DNS Record Retrieval: The resolver sends a query directly to the authoritative DNS servers, asking for the specific DNS record it needs (like an A record for the IP address). The authoritative servers respond with the requested information.
+
+Response Back to Resolver: The authoritative DNS servers send the resolved information (such as the IP address associated with the domain) back to the initial resolver that made the query.
+
+Caching: The resolver caches the received information locally for future use, reducing the need to repeat the entire process if someone else requests the same domain name in the near future.
+
+This recursive process allows DNS resolvers to efficiently find the IP address associated with a domain name by querying various DNS servers in a hierarchical manner, starting from the root servers down to the authoritative servers responsible for the specific domain.
