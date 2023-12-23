@@ -134,3 +134,7 @@ https://bizanosa.com/debian-10-initial-server-setup-vps-vultr/
 9. `sudo vi /etc/ssh/sshd_config`, allow publickeyauth and authkey file
 10. (optional) disable root by setting `PermitRootLogin no` on the above file, and `sudo service ssh restart`
 11. (optional) disable passwordauthentication for the user by setting `PasswordAuthentication no`, and restart ssh service
+
+------------
+
+## How to easily set up Nginx and certbot for ssl
