@@ -319,3 +319,55 @@ Thus we see that the difference is that the PersistentVolume is created dynamica
 - To make NGINX not bypass Service, set this annotation https://github.com/kubernetes/ingress-nginx/issues/257#issuecomment-335835670. But this means your pods are not load balanced by NGINX anymore and you have to set IPVS rules on your service object for more advanced load balancing rules.
 
 - More discussions and info here https://www.reddit.com/r/kubernetes/comments/161xrdb/am_i_load_balancing_correctly/ https://kubernetes.io/docs/reference/networking/virtual-ips/ 
+
+---------------------------
+# Get logs of applications using Loki and display in Grafana
+
+Followed the following with some modifications https://www.youtube.com/watch?v=Mn2YpMJaEBY&t=1359s
+
+The following is the architecture. Each node has a log collector (`promtail`) that pipes its output to a log aggregator (`loki`) deployed in a node, which will then process the logs and pipe the results to `grafana` for visualization ![Alt text](grafanaloki.JPG)
+
+- Clone the repo `git clone https://github.com/grafana/helm-charts.git`. The commit that was found to work was `316f4a28a`
+- Create a new namespace specific for monitoring `kubectl create ns monitoring`
+- The charts to use are `grafana`, `loki-distributed`, and `promtail`
+- Go to `values.yaml` of `promtail`, and change `config -> client -> url` section to send logs to the following loki url:
+```
+config:
+  clients:
+      - url: http://loki-loki-distributed-gateway/loki/api/v1/push
+```
+- Do `helm upgrade --install promtail charts/promtail/ -n monitoring` to install promtail
+- Then install loki `helm upgrade --install loki charts/loki-distributed/ -n monitoring`
+- Now for grafana, go to its `values.yaml` and edit datasources section to the following:
+```
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+    - name: Loki
+      type: loki
+      url: http://loki-loki-distributed-query-frontend.monitoring:3100
+```
+- Then `helm upgrade --install grafana charts/grafana -n monitoring`
+- To see the dashboard on your own laptop, you can do `kubectl port-forward service/grafana -n monitoring 3000:80`. If you run this on a VPS, port-forward `3000` to `3000` of your local machine. Then visit `localhost:3000`
+- Also deploy a sample app that logs some things:
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kodecloud
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kodecloud
+  template:
+    metadata:
+      labels:
+        app: kodecloud
+    spec:
+      containers:
+      - name: your-container-name
+        image: kodekloud/loki-demo
+```
+`kubectl apply -f deployment.yaml`
