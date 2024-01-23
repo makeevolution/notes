@@ -164,10 +164,10 @@ This is because the default is a reference type and so every assignment will ref
 
 - To compare two YAML files easily: https://stackoverflow.com/questions/63702238/compare-keys-in-two-yaml-files-and-print-differences
   ```
-import yaml
-from deepdiff import DeepDiff
+  import yaml
+  from deepdiff import DeepDiff
 
-def yaml_as_dict(my_file):
+  def yaml_as_dict(my_file):
     my_dict = {}
     with open(my_file, 'r') as fp:
         docs = yaml.safe_load_all(fp)
@@ -176,7 +176,7 @@ def yaml_as_dict(my_file):
                 my_dict[key] = value
     return my_dict
 
-if __name__ == '__main__':
+  if __name__ == '__main__':
     a = yaml_as_dict(yaml_file1)
     b = yaml_as_dict(yaml_file2)
     ddiff = DeepDiff(a, b, ignore_order=True)
