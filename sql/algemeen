@@ -14,3 +14,6 @@ More information here: https://dev.mysql.com/doc/refman/8.0/en/create-index.html
 So always double check; this constraint is not applicable to SQLite so there will be surprises when migrating to MySqL
 
 - When migrating, order of operations is also important! If you have 3072 bytes total and want to reduce to 3000 but first have to increase other field, then it will break!
+
+- By default MySQL collation is case insensitive! Remember your issue with bulk_create; it didn't work because the default collation is utf8mb4_ai_ci (or smth like that), which means the comparison is case insensitive and thus it didn't want to insert sHMB since SHMB already exists!
+  More formal info: https://dev.mysql.com/doc/refman/8.0/en/charset-applications.html
