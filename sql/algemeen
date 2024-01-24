@@ -21,3 +21,4 @@ So always double check; this constraint is not applicable to SQLite so there wil
 - Escape special characters like - in sql queries using ` e.g. `ALTER DATABASE `my-database-name` CHARACTER SET utf8mb4;`
 - Change collation `ALTER TABLE `manager_testcase` convert to CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;`
 - Show db charset and collation `SELECT @@character_set_database, @@collation_database`, more info `https://stackoverflow.com/questions/5906585/how-to-change-the-character-set-and-collation-throughout-a-database`
+- Show table data: `SHOW TABLE STATUS where name like 'TABLE_NAME'`
