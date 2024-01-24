@@ -19,4 +19,5 @@ So always double check; this constraint is not applicable to SQLite so there wil
   More formal info: https://dev.mysql.com/doc/refman/8.0/en/charset-applications.html
 
 - Escape special characters like - in sql queries using ` e.g. `ALTER DATABASE `my-database-name` CHARACTER SET utf8mb4;`
+- Change collation `ALTER TABLE `manager_testcase` convert to CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;`
 - Show db charset and collation `SELECT @@character_set_database, @@collation_database`, more info `https://stackoverflow.com/questions/5906585/how-to-change-the-character-set-and-collation-throughout-a-database`
