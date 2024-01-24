@@ -1,4 +1,4 @@
-- het verschil tussen TEXT en VARCHAR en STRING: ```https://stackoverflow.com/questions/25300821/difference-between-varchar-and-text-in-mysql```
+,- het verschil tussen TEXT en VARCHAR en STRING: ```https://stackoverflow.com/questions/25300821/difference-between-varchar-and-text-in-mysql```
 - How to drop all tables in a db quickly:
 1. SELECT CONCAT('DROP TABLE IF EXISTS `', table_name, '`;') FROM information_schema.tables WHERE table_schema = 'database_name';
 2. Copy it to the console, separate them with new lines, dissable FOREIGN_KEY_CHECKS and enable again after dropping. example of copied to run:
@@ -19,4 +19,4 @@ So always double check; this constraint is not applicable to SQLite so there wil
   More formal info: https://dev.mysql.com/doc/refman/8.0/en/charset-applications.html
 
 - Escape special characters like - in sql queries using ` e.g. `ALTER DATABASE `my-database-name` CHARACTER SET utf8mb4;`
-- Show db charset and collation `SELECT @@character_set_database, @@collation_database`
+- Show db charset and collation `SELECT @@character_set_database, @@collation_database`, more info `https://stackoverflow.com/questions/5906585/how-to-change-the-character-set-and-collation-throughout-a-database`
