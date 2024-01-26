@@ -1,4 +1,4 @@
-- Find which db is used from a model instance (useful when debugging), if you use multiple database other than 'default': modelInstance._state.db. 
+3- Find which db is used from a model instance (useful when debugging), if you use multiple database other than 'default': modelInstance._state.db. 
 - How to ascertain which db is currently used (useful when debugging, run in console)
   ```
   from django.conf import settings
@@ -22,4 +22,5 @@
     -  delete these scripts rows from `django_migrations`
     -  Run `python manage.py migrate` again
 -  How to check all reverse urls in your Django app: https://stackoverflow.com/questions/1275486/how-can-i-list-urlpatterns-endpoints-on-django
+- Django's get_or_create method is case sensitive against sqlite but its __exact method is not; be careful. To make __exact case sensitive, use this:
 
