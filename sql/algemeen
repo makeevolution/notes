@@ -22,3 +22,7 @@ So always double check; this constraint is not applicable to SQLite so there wil
 - Change collation `ALTER TABLE `manager_testcase` convert to CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs;`
 - Show db charset and collation `SELECT @@character_set_database, @@collation_database`, more info `https://stackoverflow.com/questions/5906585/how-to-change-the-character-set-and-collation-throughout-a-database`
 - Show table data: `SHOW TABLE STATUS where name like 'TABLE_NAME'`
+- If you set collation to be case sensitive (for MySQL), Django's `icontains` and `iexact` doesn't work anymore; it will match case sensitively! 
+  `MyQuerySet.filter(attribute__icontains="FaS")` executes the SQL `select * from myquerysettable where attribute like %FaS%`. If the collation is case sensitive, this will return nothing but those containing exactly FaS. But if it is case insensitive, it will return also those containing fAS, FAS, etc.
+  Just FYI: `MyQuerySet.filter(attribute__contains="FaS")` executes the SQL `select * from myquerysettable where attribute like binary %FaS%` i.e. it forces case sensitivity on queries to tables that are case insensitive.
+  Thus, tables with case sensitivity are more restrictive.
