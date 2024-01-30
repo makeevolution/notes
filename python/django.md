@@ -22,5 +22,8 @@
     -  delete these scripts rows from `django_migrations`
     -  Run `python manage.py migrate` again
 -  How to check all reverse urls in your Django app: https://stackoverflow.com/questions/1275486/how-can-i-list-urlpatterns-endpoints-on-django
-- Django's get_or_create method is case sensitive against sqlite but its __exact method is not; be careful. To make __exact case sensitive, use this:
-
+- Django's `get_or_create` method is case sensitive against SQLite but its `__exact` method is not; be careful. To make `__exact` case sensitive, use this before your query:
+```
+                with connection.cursor() as cursor:
+                    cursor.execute("PRAGMA case_sensitive_like = true;")
+```
