@@ -188,3 +188,26 @@ This is because the default is a reference type and so every assignment will ref
 ### Testing
 
 - How to change dynamically mock return value: in your email
+
+--------------------
+### Profiling slow code
+
+To profile a block of code that you suspect is slow:
+```
+import cProfile
+def test():
+    profiler = cProfile.Profile()
+    profiler.enable()
+    yourcodehere
+    .
+    .
+    .
+    profiler.disable()
+    profiler.dump_stats("res.prof")
+```
+and to evaluate the results, open a Python interpreter and:
+```
+import pstats
+stats = pstats.Stats('res.prof')
+stats.sort_stats('cumulative').print_stats(10) # 10 is the no of results to show, slowest on top; you can change this to show more
+```
