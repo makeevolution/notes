@@ -188,6 +188,29 @@ This is because the default is a reference type and so every assignment will ref
 ### Testing
 
 - How to change dynamically mock return value: in your email
+```
+queue_success_list = [elem[1] for elem in some_tuple]
+def mock_queue_test_case_execution(*args, **kwargs):
+    return queue_success_list.pop(0)
+mocked_queue_test_case_execution = mocker.patch(TestCaseExecutionService, "queue_test_case_execution")
+mocked_queue_test_case_execution.side_effect = mock_queue_test_case_execution
+```
+
+- How to keep original method functionality if you mock a function; and also how to raise exception in general
+```
+queue_error_lst = [elem[1] for elem in test_case_error_cases]
+test_case_execution_create = TestCaseExecution.objects.create  # Original method to
+def mock_queue_test_case_execution(*args, **kwargs):
+    is_queue_error = queue_error_lst.pop(0)
+    if is_queue_error:
+        raise Exception
+    return JsonResponse(
+        {"some_data": "some_value"},
+        status=status.HTTP_201_CREATED
+    )
+mocked_queue_test_case_execution = mocker.patch("somemodule.queue_test_case_execution")
+mocked_queue_test_case_execution.side_effect = mock_queue_test_case_execution
+```
 
 --------------------
 ### Profiling slow code
