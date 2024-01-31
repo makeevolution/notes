@@ -212,6 +212,7 @@ mocked_queue_test_case_execution = mocker.patch("somemodule.queue_test_case_exec
 mocked_queue_test_case_execution.side_effect = mock_queue_test_case_execution
 ```
 
+- If you use pytest and structlog, caplog will not work; use https://pypi.org/project/pytest-structlog/ instead!
 --------------------
 ### Profiling slow code
 
