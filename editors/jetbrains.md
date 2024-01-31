@@ -1,1 +1,2 @@
 - (from normal mode in vim) for selecting multiple words and edit them: alt + j, then escape, then i
+- (Pycharm) To change docstring format, ctrl shift A and type python integrated tools, change docstring format there and then when making docstring, type """ and enter
