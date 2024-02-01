@@ -245,6 +245,37 @@ class TestFoodViewSet(TestCase):
         assert response.status_code == status.HTTP_201_CREATED
         assert response.data == {"something"}
 ```
+
+- Another way to write Django tests (if you are using DRF) without using APIClient of Django:
+
+if you have a viewset:
+```
+class MyObjectViewSet(ModelViewSet):  # pylint: disable=too-many-ancestors
+   
+    queryset = MyObject.objects.all()
+
+    @action(methods=[HTTP_GET], detail=True)
+    def abort(self, request: Request, pk: int) -> JsonResponse:  # noqa: WPS212 pylint: disable=unused-argument
+        ....
+```
+A test to test the above method:
+```
+@pytest.mark.django_db
+def test_something(
+    request_factory: rest_framework.test.APIRequestFactory,
+) -> None:
+    """
+    Args:
+        request_factory: The RequestFactory object.
+    """
+    id_to_abort = 10
+    request = request_factory.get(rest_framework.reverse.reverse("myobject-abort", args=[id_to_abort]))  # Get the request object
+    assert request.path == f"/api/my-object/{id_to_abort}/abort/"  # assuming you register in urls.py as router.register("my-object", MyObjectViewSet)
+
+    response = MyObjectViewSet().abort(rest_framework.views.APIView().initialize_request(request), id_to_abort)  # Call your viewset method with appropriate args
+    assert response.status_code == rest_framework.status.HTTP_200_OK
+    
+```
 --------------------
 ### Profiling slow code
 
