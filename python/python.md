@@ -213,6 +213,38 @@ mocked_queue_test_case_execution.side_effect = mock_queue_test_case_execution
 ```
 
 - If you use pytest and structlog, caplog will not work; use https://pypi.org/project/pytest-structlog/ instead!
+
+- A clean way to write Django tests and mock:
+```
+from django.test import TestCase
+
+class TestFoodViewSet(TestCase):
+    def setUp(self) -> None:
+        self.client = APIClient()
+        self.user = auth_models.User.objects.create_user(username="test-user", password="test-password")
+        self.client.force_authenticate(user=self.user)
+
+    @pytest.mark.django_db
+    @mock.patch("somemodule.get_file_by_url")
+    @mock.patch("somemodule.get_all_testcases")
+    def test_food_variant1(
+        self,
+        mock_get_all_testcases: mock.MagicMock,
+        mock_get_file_by_url: mock.MagicMock,
+    ) -> None:
+
+        mock_get_all_testcases.return_value = [
+            {"scenario": "test", "scenario_version": "1", "testcase": "test", "variant": "test"},
+            {"scenario": "test", "scenario_version": "1", "testcase": "test", "variant": "test"},
+        ]
+        mock_get_file_by_url.return_value = DATA_PATH / "definition1.xml"
+
+        request = reverse("food-someendpointinsidefoodviewset")
+        response = self.client.get(request)
+
+        assert response.status_code == status.HTTP_201_CREATED
+        assert response.data == {"something"}
+```
 --------------------
 ### Profiling slow code
 
