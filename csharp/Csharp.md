@@ -1,5 +1,6 @@
 # C# lessons learned
 
+- C# and Python compared https://jamescrosswell.github.io/python.html#intro
 - Some good C# quizzes: 
 https://www.tutorialsteacher.com/online-test/csharp-test3
 - When making a setter, use the reserved keyword "value" to refer to the input
