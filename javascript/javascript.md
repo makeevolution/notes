@@ -40,7 +40,7 @@ https://stackblitz.com/edit/rxjs-dwwryf?devtoolsheight=60&file=index.ts
                 "/": "${workspaceRoot}",
                 "/base": "${workspaceRoot}"
             },
-            "webRoot": "${workspaceFolder}/frontend"
+            "webRoot": "${workspaceFolder}/locationwhereyourkarmaconfjsfileis"
         }
     ]
     }
