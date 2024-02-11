@@ -22,7 +22,7 @@ https://stackblitz.com/edit/rxjs-dwwryf?devtoolsheight=60&file=index.ts
      ```
   2. Run your tests using `ng test` or similar, and keep it running even if it is done
   3. In .vscode, add launch config:
-     ```
+  ```
     {
     // Use IntelliSense to learn about possible attributes.
     // Hover to view descriptions of existing attributes.
