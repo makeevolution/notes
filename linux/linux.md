@@ -138,3 +138,14 @@ https://bizanosa.com/debian-10-initial-server-setup-vps-vultr/
 ------------
 
 ## How to easily set up Nginx and certbot for ssl
+
+---------------
+
+## CLI tips
+- if you don't have vim/nano in cli and want to edit file, do the following:
+  `cat file.txt`, and copy to clipboard, edit contents in local editor, then:
+  ```
+  cat <<- "EOF" > file.txt //
+  // paste edited content
+  EOF
+  ```
