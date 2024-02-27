@@ -80,6 +80,7 @@ When you want to write/pipe the string to somewhere else (e.g. print to console,
    site.getsitepackages() # List of global package locations
    site.getusersitepackages() # String for user-specific package location
    ```
+   usually its in `/usr/local/lib/python3.6/site-packages` though
 
 - Pytest how to check if object is class and if it is subclass of exception:
   ``` inspect.isclass(myobject) and issubclass(myobject, Exception) ```
