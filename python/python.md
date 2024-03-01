@@ -183,7 +183,73 @@ This is because the default is a reference type and so every assignment will ref
     ddiff = DeepDiff(a, b, ignore_order=True)
     print(ddiff)
   ```
-  
+
+- My own generic retry function for API requests:
+  ```
+def _retry_requests_with_backoff(  # noqa: C901, WPS231, WPS212
+    request_function: typing.Callable[..., requests.Response],
+    url: str,
+    headers: typing.Dict[str, str],
+    allowed_error_status_codes: typing.Optional[typing.List[int]] = None,
+) -> typing.Optional[requests.Response]:
+    """
+    Helper method to make an API request with retries and exponential backoff between each attempt, when an attempt
+    raises an exception or a non ok (i.e. => 400) status code
+
+    Args:
+        request_function: The requests function to execute
+        url: URL to request to
+        headers: Headers for the request function
+        allowed_error_status_codes: Exceptional error codes that should not cause retries to occur
+
+    Returns:
+        The response if the code is < 400 or is an allowed error code, or None if all retries failed
+    """
+    if allowed_error_status_codes is None:
+        allowed_error_status_codes = []
+    for attempt in range(MAX_ATTEMPTS_DEFINE_YOURSELF):
+        try:  # noqa: WPS229
+            response = request_function(url, verify=False, headers=headers)
+            if response.status_code in allowed_error_status_codes or response.ok:
+                return response
+            if attempt == DEFAULT_RETRY_API_CALL_ATTEMPTS - 1:
+                LOGGER.warning(
+                    f"All attempts to reach {url} failed! "
+                    + f"Last attempt gave status code: {response.status_code}.",
+                )
+            else:
+                LOGGER.warning(
+                    f"Attempt {attempt + 1} contacting: {url} failed with status code {response.status_code}!",
+                )
+                _wait_before_request_retry(attempt)
+        except Exception as exc:  # noqa: B902 pylint: disable=broad-except
+            if attempt == DEFAULT_RETRY_API_CALL_ATTEMPTS - 1:
+                LOGGER.warning(
+                    f"All attempts to reach {url} failed! Last attempt threw an exception: {str(exc)}",
+                )
+            else:
+                LOGGER.warning(
+                    f"Attempt {attempt + 1} reaching {url} failed with exception {str(exc)}!",  # noqa: WPS221
+                )
+                _wait_before_request_retry(attempt)
+    return None
+
+
+def _wait_before_request_retry(attempt: int) -> None:
+    """
+    Helper method to log and wait between retries of requests
+
+    Args:
+        attempt: The attempt number
+
+    """
+    delay = SOME_BASE_DELAY * (
+        SOME_BACKOFF_MULTIPLIER**attempt
+    ) + random.uniform(0, 1)  # This is to minimize chances parallel calls of this function hitting the API at the same time
+    LOGGER.warning(f"Retry reaching the endpoint in {delay} seconds...")
+    time.sleep(delay)
+  ```
+
 -------------------
 
 ### Testing
