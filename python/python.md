@@ -186,12 +186,12 @@ This is because the default is a reference type and so every assignment will ref
 
 - My own generic retry function for API requests:
   ```
-def _retry_requests_with_backoff(  # noqa: C901, WPS231, WPS212
-    request_function: typing.Callable[..., requests.Response],
-    url: str,
-    headers: typing.Dict[str, str],
-    allowed_error_status_codes: typing.Optional[typing.List[int]] = None,
-) -> typing.Optional[requests.Response]:
+    def _retry_requests_with_backoff(  # noqa: C901, WPS231, WPS212
+        request_function: typing.Callable[..., requests.Response],
+        url: str,
+        headers: typing.Dict[str, str],
+        allowed_error_status_codes: typing.Optional[typing.List[int]] = None,
+    ) -> typing.Optional[requests.Response]:
     """
     Helper method to make an API request with retries and exponential backoff between each attempt, when an attempt
     raises an exception or a non ok (i.e. => 400) status code
@@ -235,14 +235,14 @@ def _retry_requests_with_backoff(  # noqa: C901, WPS231, WPS212
     return None
 
 
-def _wait_before_request_retry(attempt: int) -> None:
-    """
-    Helper method to log and wait between retries of requests
+    def _wait_before_request_retry(attempt: int) -> None:
+        """
+        Helper method to log and wait between retries of requests
 
-    Args:
-        attempt: The attempt number
+        Args:
+            attempt: The attempt number
 
-    """
+        """
     delay = SOME_BASE_DELAY * (
         SOME_BACKOFF_MULTIPLIER**attempt
     ) + random.uniform(0, 1)  # This is to minimize chances parallel calls of this function hitting the API at the same time
