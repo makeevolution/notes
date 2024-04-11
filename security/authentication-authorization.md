@@ -1,0 +1,41 @@
+- Sessions:
+    - Basics: 
+        - After login, user gets a sessionid embedded in their cookies 
+        - Sessionid is also stored in the database (separate table)
+        - The user must send the sessionid in the cookies everytime they make a request to authenticate
+        - When server gets the sessionid, it checks if the sessionid is in the sessions table and authenticates the user if it is; thus the operation is stateful/not serverless.
+        - When calling logout, the sessionid data in the db is removed
+        - The downside of sessions is then it doesn't scale well; if there are many users then many database reads become inevitable
+    - Security:
+        - To mitigate CSRF, the server can/will also send an extra cookie called csrftoken when user logs in
+        - The user must also send this csrftoken everytime they make a request (on top of the sessionid). 
+          - Most online tutorials illustrate this only for POST requests, by sending it as a hidden field in the body of the form that is submitted. 
+          - However, there are many other ways this can be done (e.g. sending it as a header with a specific name, which is what Django requires).
+        - You can set the server to make the csrftoken per sessionid, or refresh it on every request
+- JWT:
+    - After login, user gets an access and refresh token in the response body
+    - Users then need to embed this token as header with value Authorization: Bearer
+    - When server gets this, they will use some algorithm to decode the token and authenticates user if token is valid and not yet expired
+ expired  
+    - Since an algorithm is used to check the token, the approach is serverless (no db reads) and thus scales well
+    - if token expires, client can create a middleware to catch 401, send refresh token, get a new access token, and retry the request
+    - JWT is a way of encoding a token. Other alternatives include having opaque tokens, CWT (cbor web tokens, RFC-8392), etc
+
+                                                            - OAuth:
+    - OAuth is a specification for an authorization protocol/flow (i.e. specifying what a principal, that is, a user or service, can do). 
+    - There are 5 different authorization flows:
+    M
+
+    - We have done the password one with VFM
+        -  But even with this one we didn't really have a separate web app (the frontend of VFM don't really count as a separate web app I think)
+        - The OAuth protocol is actually made to replace this way of authorizing (since now the web app now knows the username and password of the user's backend resource); but it was made here for backwards compatibility
+        - The protocol really is made to control the scope of the web app's access to the user's resource and credentials, instead of controlling the user itself
+        - The protocol exchanges tokens, yet in our VFM implementation it was stateful (so not like JWT) since the tokens are stored in the database (remember django auth toolkit tables?) But you can indeed use JWT tokens (so sign the token with the data inside it); but the toolkit we used don't support it.
+        - The tokens internally also contains the scope (i.e. which resources can the token access); even without using JWT; if the token is used to e.g. access an admin endpoint, you will be unauthorized
+                                                        
+- Misc.:
+  - CORS:
+    - In short: cross domain requests should not be allowed by default.
+    - On every request, we always send a header called ORIGIN to indicate its hostname
+    - The server will need to check this origin against a list of origins it allows (e.g. ACCESS_CONTROL_ALLOW_ORIGIN of Django)
+    - If ok, then the server will send its response, with ACCESS_CONTROL_ALLOW_ORIGIN and its value in the header
