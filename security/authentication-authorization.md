@@ -1,7 +1,7 @@
 - Sessions:
     - Basics: 
         - After login, user gets a sessionid embedded in their cookies 
-        - Sessionid is also stored in the database (separate table)
+        - Sessionid is also stored in the database (has its own table)
         - The user must send the sessionid in the cookies everytime they make a request to authenticate
         - When server gets the sessionid, it checks if the sessionid is in the sessions table and authenticates the user if it is; thus the operation is stateful/not serverless.
         - When calling logout, the sessionid data in the db is removed
@@ -19,20 +19,25 @@
  expired  
     - Since an algorithm is used to check the token, the approach is serverless (no db reads) and thus scales well
     - if token expires, client can create a middleware to catch 401, send refresh token, get a new access token, and retry the request
-    - JWT is a way of encoding a token. Other alternatives include having opaque tokens, CWT (cbor web tokens, RFC-8392), etc
-
-                                                            - OAuth:
-    - OAuth is a specification for an authorization protocol/flow (i.e. specifying what a principal, that is, a user or service, can do). 
-    - There are 5 different authorization flows:
-    M
-
+    - JWT is a way of encoding a token. Other alternatives include having opaque tokens, CWT (cbor web tokens, RFC-8392), etc                       
+- OAuth:
+    - OAuth is a specification for an authorization protocol/flow (i.e. specifying what a principal, that is, a user or service, can do to a resource in a particular server)
+    - Thus comparing it with JWT is like comparing apples and oranges; they are different things
+    - There are 3 key players:
+      - The client (e.g. web app) requesting access to a resource in a server
+      - The authorization server (determines whether the client can access the resource and gives access)
+      - The server containing the resource itself
+    - Simple guide to understand the above https://darutk.medium.com/the-simplest-guide-to-oauth-2-0-8c71bd9a15bb
+    - There are 5 different authorization flows (only 4 shown here):
+    ![alt text](oauth_flows.png "These are also the grant_types parameter")
+    Read the following article, very useful:
+https://darutk.medium.com/diagrams-and-movies-of-all-the-oauth-2-0-flows-194f3c3ade85
     - We have done the password one with VFM
         -  But even with this one we didn't really have a separate web app (the frontend of VFM don't really count as a separate web app I think)
         - The OAuth protocol is actually made to replace this way of authorizing (since now the web app now knows the username and password of the user's backend resource); but it was made here for backwards compatibility
         - The protocol really is made to control the scope of the web app's access to the user's resource and credentials, instead of controlling the user itself
         - The protocol exchanges tokens, yet in our VFM implementation it was stateful (so not like JWT) since the tokens are stored in the database (remember django auth toolkit tables?) But you can indeed use JWT tokens (so sign the token with the data inside it); but the toolkit we used don't support it.
-        - The tokens internally also contains the scope (i.e. which resources can the token access); even without using JWT; if the token is used to e.g. access an admin endpoint, you will be unauthorized
-                                                        
+        - The tokens internally also contains the scope (i.e. which resources can the token access); even without using JWT; if the token is used to e.g. access an admin endpoint, you will be unauthorized            
 - Misc.:
   - CORS:
     - In short: cross domain requests should not be allowed by default.
