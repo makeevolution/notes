@@ -33,7 +33,7 @@
     - django_structlog (to have structlog as django logger)
     - django extensions
     - watchman (for heartbeat checks to /ping endpoint, useful for k8s liveness probe)
-    - The structlog config that I found to work for django_structlog:
+    - The structlog config that I found to work for django_structlog (put this in settings.py)
   ```
   structlog.configure(
     processors=[
