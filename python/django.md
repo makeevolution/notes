@@ -29,7 +29,25 @@
 ```
 - Useful Django apps and middlewares:
     - Whitenoise (to see static files served behind WSGI)
-    - log request id (to have logging of all requests)
+    - log request id (to have logging ID of all requests)
     - django_structlog (to have structlog as django logger)
     - django extensions
     - watchman (for heartbeat checks to /ping endpoint, useful for k8s liveness probe)
+    - The structlog config that I found to work for django_structlog:
+  ```
+  structlog.configure(
+    processors=[
+        structlog.contextvars.merge_contextvars,
+        structlog.processors.CallsiteParameterAdder(
+            {
+                structlog.processors.CallsiteParameter.PATHNAME,
+                structlog.processors.CallsiteParameter.FUNC_NAME,
+                structlog.processors.CallsiteParameter.LINENO,
+            }
+        ),
+        structlog.processors.add_log_level,
+        structlog.processors.TimeStamper(fmt="iso", utc=False),
+        structlog.dev.ConsoleRenderer(),
+    ],
+)
+```
