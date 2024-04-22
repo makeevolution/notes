@@ -27,3 +27,9 @@
                 with connection.cursor() as cursor:
                     cursor.execute("PRAGMA case_sensitive_like = true;")
 ```
+- Useful Django apps and middlewares:
+    - Whitenoise (to see static files served behind WSGI)
+    - log request id (to have logging of all requests)
+    - django_structlog (to have structlog as django logger)
+    - django extensions
+    - watchman (for heartbeat checks to /ping endpoint, useful for k8s liveness probe)
