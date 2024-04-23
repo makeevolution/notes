@@ -351,6 +351,7 @@ If you have a non JSON payload to test, example:
     response = TokenView().post(request)
     assert response.status_code == status.HTTP_200_OK
 ```
+- Always use `HttpResponse` of django or `Response` of rest framework to make response objects for testing, and `RequestFactory` of Django to make requests; they are the most robust
 --------------------
 ### Profiling slow code
 
