@@ -343,6 +343,14 @@ def test_something(
     assert response.status_code == rest_framework.status.HTTP_200_OK
     
 ```
+If you have a non JSON payload to test, example:
+```
+    headers = {"Authorization": f"Bearer {refresh_token}", "Content-Type":"application/x-www-form-urlencoded"}
+    data = f'client_id=VFM2&client_secret=VFM2_secret&grant_type=refresh_token&refresh_token={refresh_token.token}'
+    request = RequestFactory().post(TOKEN_PATH, bytes(data, "UTF-8"), content_type="application/x-www-form-urlencoded", headers=headers)
+    response = TokenView().post(request)
+    assert response.status_code == status.HTTP_200_OK
+```
 --------------------
 ### Profiling slow code
 
