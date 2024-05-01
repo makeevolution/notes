@@ -51,6 +51,7 @@ class Player {
 ---
 
 Example on how to make plantUML diagram:
+```
 @startuml
 
 entity "Group" as group {
