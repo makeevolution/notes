@@ -336,10 +336,10 @@ def test_something(
         request_factory: The RequestFactory object.
     """
     id_to_abort = 10
-    request = request_factory.get(rest_framework.reverse.reverse("myobject-abort", args=[id_to_abort]))  # Get the request object
+    request = request_factory.get(rest_framework.reverse.reverse("myobject-abort", args=[id_to_abort]))  # Get the request object as a WSGIRequest object
     assert request.path == f"/api/my-object/{id_to_abort}/abort/"  # assuming you register in urls.py as router.register("my-object", MyObjectViewSet)
-
-    response = MyObjectViewSet().abort(rest_framework.views.APIView().initialize_request(request), id_to_abort)  # Call your viewset method with appropriate args
+    request = rest_framework.views.APIView().initialize_request(request)  # Change the WSGIRequest object to Django's RestFramework Request object
+    response = MyObjectViewSet().abort(request, id_to_abort)  # Call your viewset method with appropriate args
     assert response.status_code == rest_framework.status.HTTP_200_OK
     
 ```
