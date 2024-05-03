@@ -343,7 +343,7 @@ def test_something(
     assert response.status_code == rest_framework.status.HTTP_200_OK
     
 ```
-If you have a non JSON payload to test, example:
+- Example if you have If you have a FORM type payload to test:
 ```
     headers = {"Authorization": f"Bearer {refresh_token}", "Content-Type":"application/x-www-form-urlencoded"}
     data = f'client_id=VFM2&client_secret=VFM2_secret&grant_type=refresh_token&refresh_token={refresh_token.token}'
