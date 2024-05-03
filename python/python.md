@@ -343,15 +343,16 @@ def test_something(
     assert response.status_code == rest_framework.status.HTTP_200_OK
     
 ```
-- Example if you have If you have a FORM type payload to test:
+- Example if you have If you have a FORM type payload to test, without DRF (i.e. no serializers that access request.data for example):
 ```
     headers = {"Authorization": f"Bearer {refresh_token}", "Content-Type":"application/x-www-form-urlencoded"}
     data = f'client_id=VFM2&client_secret=VFM2_secret&grant_type=refresh_token&refresh_token={refresh_token.token}'
-    request = RequestFactory().post(TOKEN_PATH, bytes(data, "UTF-8"), content_type="application/x-www-form-urlencoded", headers=headers)
-    response = TokenView().post(request)
+    request = RequestFactory().post(TOKEN_PATH, bytes(data, "UTF-8"), content_type="application/x-www-form-urlencoded", headers=headers)  # Returns a WSGIRequest object
+    response = TokenView().post(request)  # Make sure 
     assert response.status_code == status.HTTP_200_OK
 ```
-- Always use `HttpResponse` of django or `Response` of rest framework to make response objects for testing, and `RequestFactory` of Django to make requests; they are the most robust
+- Always use `HttpResponse` of django or `Response` of rest framework to make response objects for testing, and `RequestFactory` of Django to make requests; they are the most robust; more explanation below
+- There are two types of Requests that you can make for testing in DRF: `WSGIRequest` (obtained from using `django.http.client.RequestFactory` or `rest_framework.test.APIRequestFactory`). This is a class that inherits Django `HttpRequest` object, but without extra attributes like `request.data` that you can use in serializers (which is in `rest_framework.request.Request`). You can convert `WSGIRequest` to that using `rest_framework.views.APIView().initialize_request(request)`
 --------------------
 ### Profiling slow code
 
