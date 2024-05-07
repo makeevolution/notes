@@ -11,6 +11,7 @@ SET FOREIGN_KEY_CHECKS = 1;
 foreign keys. MySQL uses utf8md4 and thus store each character as 4 bytes, and an Integer (which is the testcase in this list) is also allocated 4 bytes. Thus the total bytes taken by this unique index is 256 x 4 x 3 + 4 = 3076 bytes.
 MySQL (and other non SQLite databases) have a limit on the maximum bytes that an index key can have; for MySQL case it is 3072 for Dynamic row format (which is what we are provided by IT). Thus it doesn't fit here and raised an error when migration was applied.
 More information here: https://dev.mysql.com/doc/refman/8.0/en/create-index.html#create-index-unique.
+This means also; that for a column with a unique constraint/index (a unique constraint is then automatically an index), the maximum amount of characters possible is 3072/4 = 768 characters.
 So always double check; this constraint is not applicable to SQLite so there will be surprises when migrating to MySqL
 
 - When migrating, order of operations is also important! If you have 3072 bytes total and want to reduce to 3000 but first have to increase other field, then it will break!
