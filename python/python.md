@@ -253,7 +253,21 @@ This is because the default is a reference type and so every assignment will ref
 -------------------
 
 ### Testing
-
+- How to spy using mocker fixture of Pytest example:
+  ```
+    def test_check_servers_and_inform_users(
+    mocker,
+    server_status_pairs_in_db,
+    current_server_status_pair,
+    no_of_times_user_mailed,
+    ):
+    
+    _seed_servers_table(server_status_pairs_in_db)
+    t_object = job_queue.PeriodicServerAlert()
+    spy_mail_users = mocker.spy(t_object, "_mail_users_server_status_msg")
+    t_object.check_servers_and_inform_users()
+    assert spy_mail_users.call_count == no_of_times_user_mailed
+  ```
 - How to change dynamically mock return value: in your email
 ```
 queue_success_list = [elem[1] for elem in some_tuple]
