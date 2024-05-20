@@ -51,3 +51,5 @@
     ],
 )
 ```
+- Django OAuth toolkit notes:
+    - If a refresh token does not have a corresponding access token in the db, then it will throw (confusingly) a 400 bad request
