@@ -1,5 +1,9 @@
 course: https://app.pluralsight.com/library/courses/kubernetes-installation-configuration-fundamentals/table-of-contents
+---------------------------------
+### Debugging issues
+- How to get into a `crashloopbackoff` container: in the container yaml, set this: `command: ["sh", "-c", "while true; do echo hello; sleep 86400; done"]`
 
+------------------------------------------------------------
 Get all objects currently registered: kubectl get all
 
 Context related
