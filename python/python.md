@@ -358,6 +358,11 @@ def test_something(
     assert response.status_code == rest_framework.status.HTTP_200_OK
     
 ```
+- If you are not overriding the ModelViewSets and would like to test them:
+```
+request = request_factory.get(rest_framework.reverse.reverse("execution-list"))  # Get the request object as a WSGIRequest object
+response = ExecutionViewSet.as_view({"get": "list"})(request).render()  # Do not transform to rest_framework.request.Request type!
+```
 - Example if you have If you have a FORM type payload to test, without DRF (i.e. no serializers that access request.data for example):
 ```
     headers = {"Authorization": f"Bearer {refresh_token}", "Content-Type":"application/x-www-form-urlencoded"}
