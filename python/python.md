@@ -351,6 +351,7 @@ def test_something(
     """
     id_to_abort = 10
     request = request_factory.get(rest_framework.reverse.reverse("myobject-abort", args=[id_to_abort]))  # Get the request object as a WSGIRequest object
+    # Note if you don't specify any args, you will get a 
     assert request.path == f"/api/my-object/{id_to_abort}/abort/"  # assuming you register in urls.py as router.register("my-object", MyObjectViewSet)
     request = rest_framework.views.APIView().initialize_request(request)  # Change the WSGIRequest object to Django's RestFramework Request object
     response = MyObjectViewSet().abort(request, id_to_abort)  # Call your viewset method with appropriate args
@@ -365,8 +366,8 @@ def test_something(
     response = TokenView().post(request)  # Make sure 
     assert response.status_code == status.HTTP_200_OK
 ```
-- Always use `HttpResponse` of django or `Response` of rest framework to make response objects for testing, and `RequestFactory` of Django to make requests; they are the most robust; more explanation below
-- There are two types of Requests that you can make for testing in DRF: `WSGIRequest` (obtained from using `django.http.client.RequestFactory` or `rest_framework.test.APIRequestFactory`). This is a class that inherits Django `HttpRequest` object, but without extra attributes like `request.data` that you can use in serializers (which is in `rest_framework.request.Request`). You can convert `WSGIRequest` to that using `rest_framework.views.APIView().initialize_request(request)`
+- Always use `HttpResponse` of django or `Response` of rest framework to make response objects for testing, and `RequestFactory` of Django to make requests; they are the most robust
+- There are two types of Requests that you can make for testing in DRF: `WSGIRequest` (obtained from using `django.http.client.RequestFactory` or `rest_framework.test.APIRequestFactory`) or `rest_framework.request.Request`. `WSGIRequest` is a class that inherits Django `HttpRequest` object, but without extra attributes like `request.data` that you can use in serializers (which is in `rest_framework.request.Request`). You can convert `WSGIRequest` to `rest_framework.request.Request` using `rest_framework.views.APIView().initialize_request(request)`
 --------------------
 ### Profiling slow code
 
