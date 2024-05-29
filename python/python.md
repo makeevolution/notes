@@ -360,9 +360,15 @@ def test_something(
 ```
 - If you are not overriding the ModelViewSets and would like to test them:
 ```
-request = request_factory.get(rest_framework.reverse.reverse("execution-list"))  # Get the request object as a WSGIRequest object
-response = ExecutionViewSet.as_view({"get": "list"})(request).render()  # Do not transform to rest_framework.request.Request type!
+request = request_factory.get(rest_framework.reverse.reverse("execution-list"), headers = ..., whatever else)  # Get the request object as a WSGIRequest object
+response = ExecutionViewSet.as_view({"get": "list"})(request).render()  # i.e. do not transform the request to rest_framework.request.Request type!
 ```
+Alternative below, but the bad news with the below is you cannot debug inside the viewset itself:
+```
+client = APIClient()
+resposne = client.get(rest_framework.reverse.reverse("execution-list"), headers = ..., whatever else)
+```
+HOWEVER, if you are overriding but still call super().list inside your override, the above would not work
 - Example if you have If you have a FORM type payload to test, without DRF (i.e. no serializers that access request.data for example):
 ```
     headers = {"Authorization": f"Bearer {refresh_token}", "Content-Type":"application/x-www-form-urlencoded"}
