@@ -402,3 +402,40 @@ import pstats
 stats = pstats.Stats('res.prof')
 stats.sort_stats('cumulative').print_stats(10) # 10 is the no of results to show, slowest on top; you can change this to show more
 ```
+--------------------------
+### VSCode configs
+- Pytest and running a Django server:
+  ```
+  {
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Django",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}\\backend\\manage.py",
+            "cwd": "${workspaceFolder}\\backend",
+            "args": [
+                "runserver",
+                "localhost:8001"
+            ],
+            "django": true,
+            "justMyCode": true
+        },
+        {
+            "name": "python debug pytest",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/backend/venv/Scripts/pytest.exe",
+            "args": [
+                "${workspaceFolder}/backend/tests/unittests",
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": false
+        }
+    ]
+}
+```
