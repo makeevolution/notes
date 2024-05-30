@@ -50,6 +50,31 @@
         structlog.dev.ConsoleRenderer(),
     ],
 )
-```
+
 - Django OAuth toolkit notes:
     - If a refresh token does not have a corresponding access token in the db, then it will throw (confusingly) a 400 bad request
+
+- vscode to debug django that works, put this in launch.json:
+  ```
+  {
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Django",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}\\backend\\manage.py",
+            "cwd": "${workspaceFolder}\\backend",
+            "args": [
+                "runserver",
+                "localhost:8001"
+            ],
+            "django": true,
+            "justMyCode": true
+        },
+    ]
+  }
+  ```
