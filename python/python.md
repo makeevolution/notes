@@ -163,6 +163,10 @@ The following will unexpectedly happen
 ```
 This is because the default is a reference type and so every assignment will refer to the same object every time!!
 
+-------------------
+
+## Tricks
+
 - To compare two YAML files easily: https://stackoverflow.com/questions/63702238/compare-keys-in-two-yaml-files-and-print-differences
   ```
   import yaml
