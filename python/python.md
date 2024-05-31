@@ -185,6 +185,19 @@ This is because the default is a reference type and so every assignment will ref
   ```
 
 - My own generic retry function for API requests:
+  use generic library:
+  ```
+        with requests.Session() as s:
+            retries = Retry(total=2,  # total retries
+                    backoff_factor=0.1,  # see docs for more info
+                    status_forcelist=[ 500, 502, 503, 504 ])  # will also retry if response is in these
+            s.mount(f"{self.host}/", HTTPAdapter(max_retries=retries))
+            resp = s.get(f"{self.host}/{self.endpoint}", headers={"Authorization": self.access_token})
+            resp.raise_for_status()
+  ```
+  To test the above (if it does anything), make self.host go to invalid host, and you'll see it is actually effective
+  
+  made by myself:
   ```
     def _retry_requests_with_backoff(  # noqa: C901, WPS231, WPS212
         request_function: typing.Callable[..., requests.Response],
