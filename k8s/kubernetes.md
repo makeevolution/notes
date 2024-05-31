@@ -2,7 +2,7 @@ course: https://app.pluralsight.com/library/courses/kubernetes-installation-conf
 ---------------------------------
 ### Debugging issues
 - How to get into a `crashloopbackoff` container: in the container yaml, set this: `command: ["sh", "-c", "while true; do echo hello; sleep 86400; done"]`
-
+- How to copy file from pod container to host: `kubectl cp -c yourbackendcontainernameinthepod <your-namespace>/<your-backend-pod-name-get-it-from-kubectl-get-pods>:mydesireddatabase.sqlite mydesireddatabase.sqlite`
 ------------------------------------------------------------
 Get all objects currently registered: kubectl get all
 
