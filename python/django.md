@@ -1,4 +1,4 @@
-3- Find which db is used from a model instance (useful when debugging), if you use multiple database other than 'default': modelInstance._state.db. 
+- Find which db is used from a model instance (useful when debugging), if you use multiple database other than 'default': modelInstance._state.db. 
 - How to ascertain which db is currently used (useful when debugging, run in console)
   ```
   from django.conf import settings
@@ -8,6 +8,7 @@
   base.py of backend/django
   transaction.py in backed/django/db
   models/base.py
+- If you want to iterate through each existing for an object, don't use `.all()`! It will save the list in memory and if there's millions of records you're dead. Use `get_queryset()`, it also supports __iter__ and does not load the items to memory, but rather one by one when you are actually iterating.
 - If you're on debug mode and committing a save, and it raises any kind of error, Django won't allow any other database related actions since you're still in the middle of an atomic operation! To force Django to get out of atomic operation, do the following:
   ```from django.db import transaction
      transaction.get_connection().in_atomic_block=False
