@@ -21,3 +21,5 @@ export class Test implements OnInit, OnDestroy{
      }
 }
 ```
+
+- How to define and use directives in Angular 16: `https://stackoverflow.com/a/77406436`
