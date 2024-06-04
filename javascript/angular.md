@@ -52,3 +52,4 @@ To mock this call when testing that component, it's different to a function, sin
             [], {'subject': new BehaviorSubject('somefakeusername')}
         )
 ```
+- JAsmine change ret val of spied function multiple times https://stackoverflow.com/questions/56118277/how-to-fix-function-has-already-been-spied-on-error-in-jasmine
