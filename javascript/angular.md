@@ -46,7 +46,7 @@ export class UsernameService {
 }
 ```
 Then you will use it in a component e.g. `this.usernameService.subject.subscribe(... `.
-To mock this call, it's different to usual since subject is a property. To mock it you need to do:
+To mock this call when testing that component, it's different to a function, since subject is a property. To mock it you need to do:
 ```
         usernameService = jasmine.createSpyObj<UsernameService>('UsernameService',
             [], {'subject': new BehaviorSubject('somefakeusername')}
