@@ -397,6 +397,7 @@ So use that only to test custom made endpoints. Otherwise, use either of the two
 ```
 - Always use `HttpResponse` of django or `Response` of rest framework to make response objects for testing, and `RequestFactory` of Django to make requests; they are the most robust
 - There are two types of Requests that you can make for testing in DRF: `WSGIRequest` (obtained from using `django.http.client.RequestFactory` or `rest_framework.test.APIRequestFactory`) or `rest_framework.request.Request`. `WSGIRequest` is a class that inherits Django `HttpRequest` object, but without extra attributes like `request.data` that you can use in serializers (which is in `rest_framework.request.Request`). You can convert `WSGIRequest` to `rest_framework.request.Request` using `rest_framework.views.APIView().initialize_request(request)`
+- To check if response is ok or not, don't compare to specific code; your test will be brittle. Use `rest_framework.status.is_success(response.status_code)` and other methods inside that class to check.
 --------------------
 ### Profiling slow code
 
