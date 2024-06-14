@@ -3,29 +3,31 @@ https://github.com/zedr/clean-code-python
 
 
 ```
-apiVersion: v1
-kind: ConfigMap
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: logger-script
-data:
-  logger.sh: |
-    #!/bin/sh
-
-    while true
-    do
-        log=$(cat <<EOF
-    {
-        "time": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")",
-        "method": "$(echo "GET POST PUT DELETE" | tr " " "\n" | shuf -n 1)",
-        "endpoint": "$(echo "/api/resource1 /api/resource2 /api/resource3" | tr " " "\n" | shuf -n 1)",
-        "status": "$(echo "200 201 400 404 500" | tr " " "\n" | shuf -n 1)",
-        "response_time_ms": "$(shuf -i 10-500 -n 1)"
-    }
-    EOF
-    )
-        echo "$log"
-        sleep 5
-    done
+  name: logger-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: logger
+  template:
+    metadata:
+      labels:
+        app: logger
+    spec:
+      containers:
+      - name: logger
+        image: busybox
+        command: ["/bin/sh", "-c", "sh /scripts/logger.sh"]
+        volumeMounts:
+        - name: script-volume
+          mountPath: /scripts
+      volumes:
+      - name: script-volume
+        configMap:
+          name: logger-script
 
 ```
 
