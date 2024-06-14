@@ -3,60 +3,30 @@ https://github.com/zedr/clean-code-python
 
 
 ```
-def get_groups_membership_of_user(self, username: str) -> typing.List[str]: 
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: logger-script
+data:
+  logger.sh: |
+    #!/bin/sh
 
-        """ 
+    while true
+    do
+        log=$(cat <<EOF
+    {
+        "time": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")",
+        "method": "$(echo "GET POST PUT DELETE" | tr " " "\n" | shuf -n 1)",
+        "endpoint": "$(echo "/api/resource1 /api/resource2 /api/resource3" | tr " " "\n" | shuf -n 1)",
+        "status": "$(echo "200 201 400 404 500" | tr " " "\n" | shuf -n 1)",
+        "response_time_ms": "$(shuf -i 10-500 -n 1)"
+    }
+    EOF
+    )
+        echo "$log"
+        sleep 5
+    done
 
-        Contacts the user groups microservice to obtain group membership info of a user 
-
- 
-
-        Args: 
-
-            username: The username 
-
- 
-
-        Returns: 
-
-            List of group names 
-
-
-
-        Raises: 
-
-            KeyError: If the response from the service is not processable 
-
-        """ 
-
-        with requests.Session() as sess: 
-
-            retries = Retry(total=5, backoff_factor=0.1, status_forcelist=[500, 502, 503, 504]) 
-
-            sess.mount(f"{self.host}/", HTTPAdapter(max_retries=retries)) 
-
-            resp = sess.get(f"{self.host}/{self.user_endpoint}/{username}/", headers=self.header)  # noqa: WPS221 
-
-            resp.raise_for_status() 
-
-        try: 
-
-            groups = json.loads(resp.content)["groups"] 
-
-            logger.info(f"User with username: {username} is found to be in groups: {groups}") 
-
-            return groups 
-
-        except (json.JSONDecodeError, KeyError) as exc: 
-
-            logger.error( 
-
-                f"Error occurred processing groups info for user with username {username} " 
-
-                + f"from user mgmt service, response: {resp.content!r}", 
-
-            ) 
-            raise exc
 ```
 
 ```
