@@ -308,8 +308,9 @@ Thus we see that the difference is that the PersistentVolume is created dynamica
 
 - A pvc needs to be ReadWriteMany if possible, otherwise pods claiming it cannot respawn on a different node if the node it is running on initially is being serviced!
 ------------------
-# RBAC
+# RBAC (https://www.youtube.com/watch?v=jvhKOAyD8S8)
 
+### RBAC for humans
 - K8S uses certificates to authorize users access to the cluster.
 - The flow is:
     - When you provision a k8s cluster, a `ca.crt` and `ca.key` file is created under (for Kind clusters) `/etc/kubernetes/pki` in the master node(s)
@@ -357,7 +358,7 @@ Thus we see that the difference is that the PersistentVolume is created dynamica
                namespace: shopping
                user: bob
            ```
-         - So bob has access by default to that namespace (so he doesn't have to type `-n shopping` when wanting to list pods in that namespace i.e. `kubectl get pods` will list pods in `shopping` namespace instead of `default` namespace (the default used if this field is not specified).
+         - So bob has access only to that `shopping` namespace (I think! but not sure about this point, need to test further)
        - The `current-context` is the context that the user are going to connect to when they run `kubectl`. To set this, you (or the user) can run:
          - `kubectl config use-context cluster1`
        - You can indeed create more user in `users` and context in `contexts` for defining multiple users and contexts, and bind them appropriately.
@@ -414,7 +415,7 @@ Thus we see that the difference is that the PersistentVolume is created dynamica
      name: manage-pods
      namespace: shopping
    subjects:
-   - kind: User
+   - kind: User  // NOTE THE KIND HEREEEEEE!!!!!!!!! NOTE THIS WILL BE DIFFERENT FOR SERVICE ACCOUNTS (LATER BELOW)
      name: "Bob Smith"  // THIS IS THE NAME EMBEDDED IN YOUR CA CERTIFICATE I.E. THE CN ENTRY WE SET IN THE CERTIFICATE ABOVE!!
      apiGroup: rbac.authorization.k8s.io  // Like I explained above, this is the boilerplate/ceremony; for RoleBinding and Roles, they are inside apiGroup rbac.authorization.k8s.io so need to specify
    roleRef:
@@ -423,9 +424,61 @@ Thus we see that the difference is that the PersistentVolume is created dynamica
      apiGroup: rbac.authorization.k8s.io
    ```
    Note that in the metadata you specify namespace. If you don't specify namespace, the role and rolebinding will be applied to default namespace!
-- Finally, Bob can run `kubectl get pods` successfully; it will list all pods in the `shopping` namespace.
+- Finally, Bob can run `kubectl get pods -n shopping` successfully; it will list all pods in the `shopping` namespace.
 
-
+### ServiceAccount (RBAC for apps)
+- Usually, `kubectl` stuff is done by humans through CLI. But what if your pod/your k8s objects needs to `kubectl` stuff against the k8s API (usually it will do curl to the kubernetes API of the cluster instead of bare `kubectl`, example command: `curl --cacert ${CACERT} --header "Authorization: Bearer $TOKEN" -s ${APISERVER}/api/v1/namespaces/shopping/pods/`)? How do we manage permissions for it?
+- A service account is an identity a K8S object can use to do the `kubectl` stuff against the cluster.
+- How does it work? We first create a k8s object called ServiceAccount (we meaning Bob) and a role for it:
+  ```
+  apiVersion: v1
+  kind: ServiceAccount
+  metadata:
+    name: shopping-api
+  ```
+  
+  ```
+  apiVersion: rbac.authorization.k8s.io/v1
+  kind: Role
+  metadata:
+    namespace: shopping
+    name: shoppingroleforpod
+  rules:  // Make the rules more restrictive than Bob's just for fun
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "watch", "list"]
+  ```
+  We can then assign the ServiceAccount to a k8s object that we are going to deploy e.g. for a pod:
+  ```
+  apiVersion: v1
+  kind: Pod
+  metadata:
+    name: shopping-api
+  spec:
+    containers:
+    - image: nginx
+      name: shopping-api
+    serviceAccountName: shopping-api  // THIS IS THE NAME OF THE ROLE WE DEFINED ABOVE
+  ```
+  The pod still won't have any access to do `kubectl` stuff from inside of it, since we haven't bind it yet to a RoleBinding.
+  Nugget: to confirm that it doesn't have access, follow the relevant section in `https://github.com/marcel-dempers/docker-development-youtube-series/blob/master/kubernetes/rbac/README.md#kubernetes-service-accounts`. Notice: Bob can do `kubectl exec` to the pod we created above since we have `pods/exec` in `resources` section of Role object for Bob!
+  - Then we need then to assign a rolebinding to the serviceaccount's role:
+    ```
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: RoleBinding
+    metadata:
+      name: shopping-api
+      namespace: shopping
+    subjects:
+    - kind: ServiceAccount  // NOTE THE KIND HERE!!!!!!!!
+      name: shopping-api
+    roleRef:
+      kind: Role
+      name: shoppingroleforpod
+      apiGroup: rbac.authorization.k8s.io
+    ```
+    Also notice! ServiceAccount is in apiGroup "", and this (somehow) means we dont specify it in the `subjects` section above.
+  - The pod finally then has also access to do `kubectl` stuff, with permissions defined in the 
 ------------------
 
 # Services, NGINX, and kubeproxy, how it works
