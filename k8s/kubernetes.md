@@ -308,6 +308,125 @@ Thus we see that the difference is that the PersistentVolume is created dynamica
 
 - A pvc needs to be ReadWriteMany if possible, otherwise pods claiming it cannot respawn on a different node if the node it is running on initially is being serviced!
 ------------------
+# RBAC
+
+- K8S uses certificates to authorize users access to the cluster.
+- The flow is:
+    - When you provision a k8s cluster, a `ca.crt` and `ca.key` file is created under (for Kind clusters) `/etc/kubernetes/pki` in the master node(s)
+    - We use this file to sign user certificates. We can create a certificate for a user named Bob by:
+    - Running `openssl genrsa -out bob.key 2048`. This will generate a private key file called `bob.key`
+    - Then, we need the create a Certificate Signing Request (CSR) by running `openssl req -new -key bob.key -out bob.csr -subj "/CN=Bob Smith/O=Shopping"`; where CN is Common Name and O is Organization `https://knowledge.digicert.com/general-information/what-is-a-distinguished-name`; CN can be your user name and O is the namespace this person is allowed to access (e.g. like the scope in OAuth)
+    - Then we can generate a certificate by `signing` this `request`: `openssl x509 -req -in bob.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out bob.crt -days 1`
+    - (So flow is create private key ->  create certificate signing request from key -> sign the request using `ca.key` and `ca.crt` -> you get a certificate)
+    - Then, we use this certificate to create the .kubeconfig file for access to the cluster. This kubeconfig is what we give Bob.
+- What does a kubeconfig file contain?
+    - It contains 3 sections: `clusters`, `users`, `contexts`, and `current-context`
+      - `clusters` section contain info on the cluster URL API server and the certificate-authority-data of the cluster. The certificate-authority-data is a CA certificate that `kubectl` can later use when connecting to the cluster URL aforementioned. When the kubectl connects to the API server, it expects the server to return a certificate. `kubectl` will compare this returned cert with the value in `certificate-authority-data` to ensure the URL is legit and prevent man in the middle attack.
+        - Create the section in the kubeconfig using: `kubectl config set-cluster dev-cluster --server=https://127.0.0.1:52807 --certificate-authority=ca.crt --embed-certs=true `
+        - This will create a section like:
+          ```
+          apiVersion: v1
+          clusters:
+          - cluster:
+              certificate-authority-data: ASDFWETAHTHAWHTWHHRTAWHERHAW_I_AM_SOME_LONG_STRING
+              server: https://my-cluster-api:someport
+            name: cluster1
+          ```
+      - The `users` section contain a name field, as well as the user's certificate data and key we generated for the user. The user in the cluster is not in the name; it is the data inside this certificate
+        - Generate using `kubectl config set-credentials bob --client-certificate=bob.crt --client-key=bob.key --embed-certs=true`. This will create a section in the kubeconfig like:
+          ```
+          - users:
+            name: bob
+            user:
+              client-certificate-data: SOMELONGSTRING
+              client-key-data: SOMELONGSTRING
+          ```
+        - In AsML, we used token instead, which creates section
+          ```
+          user:
+            token: some JWT token
+          ```
+       - The `context` BINDS a user to a cluster
+         - Create section in the kubeconfig using `kubectl config set-context dev --cluster=cluster1 --namespace=shopping --user=bob`
+         - In this above example, it will bind the user `bob` to the cluster `cluster1`, and gives access to resources in namespace `shopping`
+         - Result:
+           ```
+           contexts:
+             - context:
+               cluster: cluster1
+               namespace: shopping
+               user: bob
+           ```
+         - So bob has access by default to that namespace (so he doesn't have to type `-n shopping` when wanting to list pods in that namespace i.e. `kubectl get pods` will list pods in `shopping` namespace instead of `default` namespace (the default used if this field is not specified).
+       - The `current-context` is the context that the user are going to connect to when they run `kubectl`. To set this, you (or the user) can run:
+         - `kubectl config use-context cluster1`
+       - You can indeed create more user in `users` and context in `contexts` for defining multiple users and contexts, and bind them appropriately.
+ - If now bob runs the `kubectl get pods`, he will get `Error from server (Forbidden): pods is forbidden: User `Bob Smith` cannot list resource "pods" in API group "" in the namespace "shopping"` But we gave him access above????
+ - This is because in the above we gave **ACCESSS** to Bob, but we still haven't given him **PERMISSION** to access resources.
+ - To give **PERMISSION**, we need to give bob a `Role`. A Role example for the namespace `sh:
+ ```
+ apiVersion: rbac.authorization.k8s.io/v1
+ kind: Role
+ metadata:
+  namespace: shopping
+  name: somenameforthisrole
+ rules:
+ - apiGroups: [""]
+   resources: ["pods", "pods/exec"]
+   verbs: ["get", "watch", "list", "create", "delete"]
+ - apiGroups: ["apps"]
+   resources: ["deployments"]
+   verbs: ["get", "watch", "list", "delete", "create"]
+ ```
+  - The critical sections explained:
+    - What the hell is `apiGroups` and `resources`??? This confuses me a lot when I was at asml!!!
+      - So k8s groups assigns objects to apiGroups in different versions of its API. For example for API v1, for different k8s objects, you will always see these section at the top:
+        For deployment:
+        ```
+        ---
+        apiVersion: apps/v1
+        kind: Deployment
+        ```
+        For statefulset:
+        ```
+        ---
+        apiVersion: apps/v1
+        kind: StatefulSet
+        ```
+        For Pods:
+        ```
+        apiVersion: v1
+        kind: Pod
+        ```
+        You see how Deployment and statefulset is in apiGroup apps, and pod is in apiGroup "" (nothing before the version). This "pairing" is what you supply to the apiGroups and resources in the rules section of your role. For example, if you want to set rule for deployment and statefulset, you will need to set as (as also shown in example above, but in the above it only shows for deployments):
+        ```
+        - apiGroups: ["apps"]
+          resources: ["deployments", "statefulsets]
+          verbs: ["get", "watch", "list", "delete", "create"]
+        ```
+        So this means in V1 of the API, k8s puts `pods` in group `""` and `deployments` and `statefulsets` in `apps` group. When I say group here it refers to some internal group within its systems (idontcare what it really is, just that its like that). So it's like a **boilerplate** or **ceremony** that you need to do to use this feature.
+     - The verbs is simply what `kubectl` commands you can do to the resources within the namespace.
+ - Still Bob wont have **permission** to e.g. list pods within the namespace! This is because we need to bind the `Role` above to a `RoleBinding` k8s object, which will actually give the permission. Example:
+   ```
+   apiVersion: rbac.authorization.k8s.io/v1
+   kind: RoleBinding
+   metadata:
+     name: manage-pods
+     namespace: shopping
+   subjects:
+   - kind: User
+     name: "Bob Smith"  // THIS IS THE NAME EMBEDDED IN YOUR CA CERTIFICATE I.E. THE CN ENTRY WE SET IN THE CERTIFICATE ABOVE!!
+     apiGroup: rbac.authorization.k8s.io  // Like I explained above, this is the boilerplate/ceremony; for RoleBinding and Roles, they are inside apiGroup rbac.authorization.k8s.io so need to specify
+   roleRef:
+     kind: Role
+     name: somenameforthisrole
+     apiGroup: rbac.authorization.k8s.io
+   ```
+   Note that in the metadata you specify namespace. If you don't specify namespace, the role and rolebinding will be applied to default namespace!
+- Finally, Bob can run `kubectl get pods` successfully; it will list all pods in the `shopping` namespace.
+
+
+------------------
 
 # Services, NGINX, and kubeproxy, how it works
 
