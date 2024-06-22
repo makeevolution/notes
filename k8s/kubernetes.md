@@ -313,7 +313,7 @@ Thus we see that the difference is that the PersistentVolume is created dynamica
 ### RBAC for humans
 - K8S uses certificates to authorize users access to the cluster.
 - The flow is:
-    - When you provision a k8s cluster, a `ca.crt` and `ca.key` file is created under (for Kind clusters) `/etc/kubernetes/pki` in the master node(s)
+    - When you provision a k8s cluster, a `ca.crt` and `ca.key` file is created under (for Kind clusters) `/etc/kubernetes/pki` in the node(s)
     - We use this file to sign user certificates. We can create a certificate for a user named Bob by:
     - Running `openssl genrsa -out bob.key 2048`. This will generate a private key file called `bob.key`
     - Then, we need the create a Certificate Signing Request (CSR) by running `openssl req -new -key bob.key -out bob.csr -subj "/CN=Bob Smith/O=Shopping"`; where CN is Common Name and O is Organization `https://knowledge.digicert.com/general-information/what-is-a-distinguished-name`; CN can be your user name and O is the namespace this person is allowed to access (e.g. like the scope in OAuth)
