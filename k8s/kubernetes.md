@@ -481,7 +481,9 @@ Thus we see that the difference is that the PersistentVolume is created dynamica
   - The pod finally then has also access to do `kubectl` stuff, with permissions defined in the 
 ------------------
 
-# Services, NGINX, and kubeproxy, how it works
+# Services
+
+### NGINX, and kubeproxy, how it works
 
 - kube-proxy is a key component of any Kubernetes deployment.  Its role is to load-balance traffic that is destined for services (via cluster IPs and node ports) to the correct backend pods.
 
@@ -497,6 +499,63 @@ Thus we see that the difference is that the PersistentVolume is created dynamica
 
 - More discussions and info here https://www.reddit.com/r/kubernetes/comments/161xrdb/am_i_load_balancing_correctly/ https://kubernetes.io/docs/reference/networking/virtual-ips/ 
 
+### Difference between a headless service and a load balanced service
+Headless services and load-balanced services in Kubernetes serve different purposes and have distinct characteristics. Here's a detailed comparison to help understand their differences:
+
+Headless Service and example: 
+
+    ClusterIP:
+        Headless Service: The clusterIP field is set to None. This means the service does not get a single, stable IP address.
+    Service Discovery:
+        Headless Service: Each pod behind the service gets its own DNS A record. When you query the DNS for the service, you get a list of IP addresses corresponding to the individual pods. This allows clients to connect directly to each pod.
+    Use Case:
+        Headless Service: Suitable for stateful applications where each pod needs to be addressed individually, such as databases (e.g., Cassandra, MongoDB) or applications requiring custom load balancing logic. 
+        For example, a RabbitMQ cluster, see here for more info: https://github.com/makeevolution/messaging/blob/9e0f8425c5b46d5caec3088daa86679d9d3d67c1/rabbitmq/kubernetes/rabbit-statefulset.yaml#L1
+    DNS Records:
+        Headless Service: DNS queries return multiple A records, one for each pod. For example, my-app-0.my-headless-service.default.svc.cluster.local, my-app-1.my-headless-service.default.svc.cluster.local, etc.
+    Load Balancing:
+        Headless Service: Clients are responsible for implementing their own load balancing or connection logic.
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-headless-service
+spec:
+  clusterIP: None  # This makes it none
+  selector:
+    app: my-app
+  ports:
+  - port: 80
+    targetPort: 8080
+```
+
+
+Load-Balanced Service
+
+    ClusterIP:
+        Load-Balanced Service: The clusterIP is assigned by Kubernetes. This provides a single stable IP address for the service.
+    Service Discovery:
+        Load-Balanced Service: A single DNS A record is created for the service name. Clients use this single DNS name to connect to the service, which resolves to the service’s ClusterIP.
+    Use Case:
+        Load-Balanced Service: Suitable for stateless applications where clients can connect to any instance of the application, such as web servers, APIs, or microservices.
+    DNS Records:
+        Load-Balanced Service: DNS queries return a single A record corresponding to the service’s ClusterIP. For example, my-service.default.svc.cluster.local resolves to the ClusterIP.
+    Load Balancing:
+        Load-Balanced Service: Kubernetes handles the load balancing. The traffic is distributed among the pods behind the service using round-robin or other strategies.
+
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-loadbalanced-service # my-loadbalanced-service.whatevernamespace.svc.cluster.local
+spec:
+  selector:
+    app: my-app
+  ports:
+  - port: 80
+    targetPort: 8080
+  type: ClusterIP  # Default is ClusterIP, other types are NodePort, LoadBalancer, etc.
+```
 ---------------------------
 # Get logs of applications using Loki and display in Grafana
 
