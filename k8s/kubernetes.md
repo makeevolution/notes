@@ -5,6 +5,44 @@ course: https://app.pluralsight.com/library/courses/kubernetes-installation-conf
 - How to copy file or folder from pod container to host: `kubectl cp -c yourbackendcontainernameinthepod <your-namespace>/<your-backend-pod-name-get-it-from-kubectl-get-pods>:mydesireddatabase.sqlite mydesireddatabase.sqlite`; you may get warning but ignore it, file/folder is copied
 - If you wanna talk, from outside your cluster (e.g. VDI terminal when you were at AMLS) to a pod whose port is exposed to a service with name aldo-elasticsearch in your namespace: `kubectl port-forward --namespace aldo-elasticsearch svc/aldo-elasticsearch 9200:9200`
 ------------------------------------------------------------
+### Throwaway pod
+If you need a pod that runs forever, copy paste below and kubectl apply it:
+```
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysecret
+data:
+  .dockerconfigjson: someJWTtokentopullyourimagefromyourprivatereg
+type: kubernetes.io/dockerconfigjson
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test
+spec:
+  selector:
+    matchLabels:
+      app: mypod
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mypod
+    spec:
+      imagePullSecrets:
+      - name: mysecret  # only relevant really if you pull from private regs
+      containers:
+        - name: kubectlexecintome
+          image: busybox  # or some other image you wanna get into in k8s
+          imagePullPolicy: Always
+          command:                                                                                                                                 
+            - "/bin/sh"                                                                                                                               
+            - "-c"                                                                                                                                     
+            - "tail -f /dev/null"
+```
+------------------------------------------------------------
 Get all objects currently registered: kubectl get all
 
 Context related
