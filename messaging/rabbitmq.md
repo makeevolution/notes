@@ -1,5 +1,6 @@
 # General
 
+https://github.com/makeevolution/messaging/tree/rabbit-mq/rabbitmq
 
 - Notes about rabbitmq:
   - `Broker`: refers to a RabbitMQ server, responsible for receiving messages from producers (applications that send messages) and delivering them to consumers (applications that receive messages).
