@@ -1,7 +1,7 @@
 # notes
 
 ## Notes on shortcuts/lessons learned for different topics
-
+```
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -21,3 +21,4 @@ data:
         fi
       fi
     done
+```
