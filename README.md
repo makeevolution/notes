@@ -15,9 +15,11 @@ data:
     
     for folder in "$directory"/*; do
       if [ -d "$folder" ]; then
-        if [ ! -f "$folder/pod_in_use_marker.txt" ]; then
+        # Check if the folder is empty
+        if [ -z "$(ls -A "$folder")" ]; then
+          # Remove the folder if it is empty
           rm -rf "$folder"
-          echo "Removed folder: $folder"
+          echo "Removed empty folder: $folder"
         fi
       fi
     done
