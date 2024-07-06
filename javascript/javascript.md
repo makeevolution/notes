@@ -9,6 +9,7 @@ for (var i = 0 ; i < highestTimeoutId ; i++) {
 - Various notes about Rxjs with examples:
 https://stackblitz.com/edit/rxjs-dwwryf?devtoolsheight=60&file=index.ts
 
+- How to sleep in javascript: https://stackblitz.com/edit/rxjs-dwwryf?devtoolsheight=60&file=index.ts%3AL120
 - How to debug Angular tests using vscode:
   1. Set in your karma.conf.js
      ```
