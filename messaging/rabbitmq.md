@@ -104,5 +104,5 @@ def consume_messages(queue):
 if __name__ == "__main__":
     try:
         consume_messages('my_quorum_queue')
-    except KeyboardInterrupt: # Remember: KeyboardInterrupt doesn't inherit from Exception so will be caught here!
+    except KeyboardInterrupt: # Remember: KeyboardInterrupt doesn't inherit from Exception so will be caught by the finally above and then here!
         print("Consumer stopped")
