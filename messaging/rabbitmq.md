@@ -34,3 +34,5 @@ https://github.com/makeevolution/messaging/tree/rabbit-mq/rabbitmq
 - High availability:
     - If you deploy a cluster, you then have multiple nodes. You want messages in queues in a node to stay available if the node is down and still consumable. To have this HA setup, use quorum queue feature of RabbitMQ:  `https://www.rabbitmq.com/docs/quorum-queues#what-is-quorum` and `https://www.rabbitmq.com/docs/quorum-queues#declaring`
     - Well this means that the producer and the consumer needs to know all hosts that have the "mirrored" queue, so that if the host is down, the producer/consumer can then try contact the other host and get the message from the queue
+
+- Best practice info: https://www.rabbitmq.com/blog/2020/08/10/deploying-rabbitmq-to-kubernetes-whats-involved
