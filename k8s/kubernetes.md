@@ -645,3 +645,347 @@ spec:
         image: kodekloud/loki-demo
 ```
 `kubectl apply -f deployment.yaml`
+
+‐------------------------------------
+# K8S operator, what is this thing? What is RabbitMqCluster type in the recommended way to deploy rabbitmq in k8s?
+
+The kind `RabbitmqCluster` is not the operator itself. Instead, it is a custom resource defined by the operator. Here's a clearer breakdown of the terminology and components:
+
+### Components:
+
+1. **Custom Resource Definition (CRD)**:
+   - This defines a new type of resource in Kubernetes. For instance, `RabbitmqCluster` is a custom resource defined by the RabbitMQ operator.
+   - The CRD is used to extend the Kubernetes API with new custom resources that the operator manages.
+
+2. **Custom Resource (CR)**:
+   - This is an instance of a CRD. When you create a `RabbitmqCluster` resource in Kubernetes, you're creating a CR based on the `RabbitmqCluster` CRD.
+   - Example:
+     ```yaml
+     apiVersion: rabbitmq.com/v1beta1
+     kind: RabbitmqCluster
+     metadata:
+       name: my-rabbitmq-cluster
+     spec:
+       replicas: 3
+     ```
+
+3. **Operator**:
+   - The operator is a controller that watches for changes to custom resources and ensures that the actual state of the system matches the desired state specified in the custom resources.
+   - The operator is responsible for the logic of managing the application, such as deploying and scaling the `RabbitmqCluster` instances.
+
+### How They Work Together:
+
+1. **CRD (Defining the Resource)**:
+   - The operator defines one or more CRDs to specify the schema for custom resources it will manage. For RabbitMQ, a CRD might be `RabbitmqCluster`.
+
+2. **CR (Using the Resource)**:
+   - You, as a user, create instances of these custom resources (CRs) using the defined CRDs. This involves writing YAML files specifying your desired configuration, such as a `RabbitmqCluster` with a specific number of replicas.
+
+3. **Operator (Managing the Resource)**:
+   - The operator watches for changes to these custom resources. When it detects a new `RabbitmqCluster` resource or a change to an existing one, it takes the necessary actions to ensure the actual state matches the desired state (e.g., creating RabbitMQ pods, setting up services, etc.).
+
+### Example:
+
+1. **Define the CRD** (this is done by the operator developer):
+   ```yaml
+   apiVersion: apiextensions.k8s.io/v1
+   kind: CustomResourceDefinition
+   metadata:
+     name: rabbitmqclusters.rabbitmq.com
+   spec:
+     group: rabbitmq.com
+     versions:
+       - name: v1beta1
+         served: true
+         storage: true
+         schema:
+           openAPIV3Schema:
+             type: object
+             properties:
+               spec:
+                 type: object
+                 properties:
+                   replicas:
+                     type: integer
+     scope: Namespaced
+     names:
+       plural: rabbitmqclusters
+       singular: rabbitmqcluster
+       kind: RabbitmqCluster
+       shortNames:
+         - rmq
+   ```
+
+2. **Create a CR** (this is done by the user):
+   ```yaml
+   apiVersion: rabbitmq.com/v1beta1
+   kind: RabbitmqCluster
+   metadata:
+     name: my-rabbitmq-cluster
+   spec:
+     replicas: 3
+   ```
+
+3. **Operator Logic** (implemented by the operator developer):
+   - The operator watches for `RabbitmqCluster` resources.
+   - When a `RabbitmqCluster` is created or modified, the operator takes action to ensure the RabbitMQ cluster is deployed and configured according to the specification in the `RabbitmqCluster` resource.
+
+#### How do you create an operator? 
+
+To create a RabbitMQ operator using Python and `kopf`, we'll follow a similar process to the previous example. The goal is to create a custom resource (`RabbitmqCluster`) and an operator to manage RabbitMQ instances.
+
+### Step-by-Step Example
+
+#### 1. **Install Required Packages**
+
+First, install `kopf`, `kubernetes`, and other dependencies:
+
+```bash
+pip install kopf kubernetes pyyaml
+```
+
+#### 2. **Define the Custom Resource Definition (CRD)**
+
+Create a YAML file for the `RabbitmqCluster` CRD:
+
+```yaml
+# rabbitmq-crd.yaml
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: rabbitmqclusters.rabbitmq.com
+spec:
+  group: rabbitmq.com
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                size:
+                  type: integer
+  scope: Namespaced
+  names:
+    plural: rabbitmqclusters
+    singular: rabbitmqcluster
+    kind: RabbitmqCluster
+    shortNames:
+      - rmq
+```
+
+Apply the CRD to your cluster:
+
+```bash
+kubectl apply -f rabbitmq-crd.yaml
+```
+
+#### 3. **Create the Operator Logic**
+
+Write the operator logic using `kopf` in a Python script (e.g., `rabbitmq_operator.py`):
+
+```python
+# rabbitmq_operator.py
+import kopf
+import kubernetes.client
+from kubernetes.client.rest import ApiException
+
+def create_rabbitmq_statefulset(namespace, name, size):
+    # Define the StatefulSet template
+    statefulset_template = {
+        "apiVersion": "apps/v1",
+        "kind": "StatefulSet",
+        "metadata": {
+            "name": name
+        },
+        "spec": {
+            "serviceName": name,
+            "replicas": size,
+            "selector": {
+                "matchLabels": {
+                    "app": name
+                }
+            },
+            "template": {
+                "metadata": {
+                    "labels": {
+                        "app": name
+                    }
+                },
+                "spec": {
+                    "containers": [{
+                        "name": "rabbitmq",
+                        "image": "rabbitmq:3-management",
+                        "ports": [
+                            {"containerPort": 5672, "name": "amqp"},
+                            {"containerPort": 15672, "name": "management"}
+                        ]
+                    }]
+                }
+            },
+            "volumeClaimTemplates": [{
+                "metadata": {
+                    "name": "rabbitmq-data"
+                },
+                "spec": {
+                    "accessModes": ["ReadWriteOnce"],
+                    "resources": {
+                        "requests": {
+                            "storage": "1Gi"
+                        }
+                    }
+                }
+            }]
+        }
+    }
+
+    # Create the StatefulSet
+    api_instance = kubernetes.client.AppsV1Api()
+    try:
+        api_instance.create_namespaced_stateful_set(namespace, statefulset_template)
+    except ApiException as e:
+        if e.status != 409:  # Ignore error if the StatefulSet already exists
+            raise
+
+@kopf.on.create('rabbitmq.com', 'v1', 'rabbitmqclusters')
+def create_fn(spec, name, namespace, **kwargs):
+    size = spec.get('size', 1)
+    create_rabbitmq_statefulset(namespace, name, size)
+
+@kopf.on.update('rabbitmq.com', 'v1', 'rabbitmqclusters')
+def update_fn(spec, name, namespace, **kwargs):
+    size = spec.get('size', 1)
+    api_instance = kubernetes.client.AppsV1Api()
+    statefulset = api_instance.read_namespaced_stateful_set(name, namespace)
+    if statefulset.spec.replicas != size:
+        statefulset.spec.replicas = size
+        api_instance.replace_namespaced_stateful_set(name, namespace, statefulset)
+
+@kopf.on.delete('rabbitmq.com', 'v1', 'rabbitmqclusters')
+def delete_fn(name, namespace, **kwargs):
+    api_instance = kubernetes.client.AppsV1Api()
+    try:
+        api_instance.delete_namespaced_stateful_set(name, namespace)
+    except ApiException as e:
+        if e.status != 404:  # Ignore error if the StatefulSet does not exist
+            raise
+```
+
+#### 4. ** deploy the Operator in the cluster**
+make a dockerfile that will run the operator
+```
+# Dockerfile
+FROM python:3.9-slim
+
+RUN pip install kopf kubernetes pyyaml
+
+COPY rabbitmq_operator.py /rabbitmq_operator.py
+
+ENTRYPOINT ["kopf", "run", "/rabbitmq_operator.py"]
+```
+
+deploy to the cluster; it will watch any RabbitmqCluster k8s object created in the cluster and act accordingly
+```
+# rabbitmq-operator-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rabbitmq-operator
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rabbitmq-operator
+  template:
+    metadata:
+      labels:
+        app: rabbitmq-operator
+    spec:
+      serviceAccountName: rabbitmq-operator
+      containers:
+      - name: rabbitmq-operator
+        image: <your-username>/rabbitmq-operator:latest
+        imagePullPolicy: Always
+```
+
+As seen above we have a serviceAccountName so the operator can contact the k8s API to monitor the cluster and watch for any deployment of this new CRD. This means we also need to ask the cluster so the operator can monitor!
+
+```
+# rabbitmq-operator-rbac.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: rabbitmq-operator
+  namespace: default
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: rabbitmq-operator
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["create", "update", "patch", "delete", "get", "list", "watch"]
+- apiGroups: ["apps"]
+  resources: ["statefulsets"]
+  verbs: ["create", "update", "patch", "delete", "get", "list", "watch"]
+- apiGroups: ["rabbitmq.com"]
+  resources: ["rabbitmqclusters"]
+  verbs: ["create", "update", "patch", "delete", "get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: rabbitmq-operator
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: rabbitmq-operator
+subjects:
+- kind: ServiceAccount
+  name: rabbitmq-operator
+  namespace: default
+```
+
+Apply
+```
+kubectl apply -f rabbitmq-operator-rbac.yaml
+kubectl apply -f rabbitmq-operator-deployment.yaml
+```
+#### 5. **Create a Custom Resource**
+
+Define a `RabbitmqCluster` custom resource in a YAML file and apply it to your cluster:
+
+```yaml
+# rabbitmq-cr.yaml
+apiVersion: rabbitmq.com/v1
+kind: RabbitmqCluster
+metadata:
+  name: example-rabbitmq
+  namespace: default
+spec:
+  size: 3
+```
+
+Apply the custom resource:
+
+```bash
+kubectl apply -f rabbitmq-cr.yaml
+```
+
+### Summary
+
+In this example, you created a simple Kubernetes operator for managing RabbitMQ instances using Python and `kopf`. The operator includes:
+
+- **CRD**: Defines the schema for the custom resource `RabbitmqCluster`.
+- **Operator Logic**: Contains the logic to reconcile the desired state of `RabbitmqCluster` instances by creating, updating, and deleting the necessary StatefulSets.
+- **Custom Resource**: An instance of `RabbitmqCluster` specifying the desired number of replicas.
+
+This example can be extended with more complex logic to handle various operational tasks specific to RabbitMQ.
+
+In summary, the kind `RabbitmqCluster` is a custom resource defined by the CRD, and the operator is the software that manages the lifecycle of these custom resources. The operator ensures that the actual state of the system matches the desired state specified in the custom resources.
