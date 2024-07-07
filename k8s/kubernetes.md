@@ -43,6 +43,7 @@ spec:
             - "tail -f /dev/null"
 ```
 ------------------------------------------------------------
+# commands
 Get all objects currently registered: kubectl get all
 
 Context related
@@ -646,8 +647,13 @@ spec:
 ```
 `kubectl apply -f deployment.yaml`
 
+-------------------------------------
+# Helm
+
+- Deleting a statefulset through `helm uninstall` does not remove the PVC associated with it! `https://github.com/helm/helm/issues/5156` It's a bug?
+
 ‐------------------------------------
-# K8S operator, what is this thing? What is RabbitMqCluster type in the recommended way to deploy rabbitmq in k8s?
+# K8S operators and Custom Resources, what is this thing? What is RabbitMqCluster type in the recommended way to deploy rabbitmq in k8s?
 
 The kind `RabbitmqCluster` is not the operator itself. Instead, it is a custom resource defined by the operator. Here's a clearer breakdown of the terminology and components:
 
