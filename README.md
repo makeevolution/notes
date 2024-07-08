@@ -1,4 +1,4 @@
-# notes
+3# notes
 
 ## Notes on shortcuts/lessons learned for different topics
 ```
@@ -55,32 +55,36 @@ data:
 ```
 
 ```
-            word_test_pattern = r"\b(t(?:e(?:s(?:t)?)?)?)\b"
-            word_case_pattern = r"\b(c(?:a(?:s(?:e)?)?)?)\b"
-            word_suite_pattern = r"\b(s(?:u(?:i(?:t(?:e)?)?)?)?)\b"
-            regex_word_test_pattern = re.compile(word_test_pattern, re.IGNORECASE)
-            regex_word_case_pattern = re.compile(word_case_pattern, re.IGNORECASE)
-            regex_word_suite_pattern = re.compile(word_suite_pattern, re.IGNORECASE)
-            word_test_in_keystring = regex_word_test_pattern.search(key_string.lower())
-            word_case_in_keystring = regex_word_case_pattern.search(key_string.lower())
-            word_suite_in_keystring = regex_word_suite_pattern.search(key_string.lower())
-            if word_test_in_keystring:
-                if word_case_in_keystring:
-                    query_search_on_execution_type = Q() | Q(test_suite_execution__isnull=True)
-                    key_string = re.sub(word_case_pattern, "", key_string, flags=re.IGNORECASE)
-                elif word_suite_in_keystring:
-                    query_search_on_execution_type = Q() | Q(test_suite_execution__isnull=False)
-                    key_string = re.sub(word_suite_pattern, "", key_string, flags=re.IGNORECASE)
-                else:
-                    return queryset
-                key_string = re.sub(word_test_pattern, "", key_string, flags=re.IGNORECASE)
-            elif word_case_in_keystring:
-                query_search_on_execution_type = Q() | Q(test_suite_execution__isnull=True)
-                key_string = re.sub(word_case_pattern, "", key_string, flags=re.IGNORECASE)
-                if word_suite_in_keystring:
-                    query_search_on_execution_type = Q() | Q(test_suite_execution__isnull=False)
-                    key_string = re.sub(word_suite_pattern, "", key_string, flags=re.IGNORECASE)
-            elif word_suite_in_keystring:
-                query_search_on_execution_type = Q() | Q(test_suite_execution__isnull=False)
-                key_string = re.sub(word_suite_pattern, "", key_string, flags=re.IGNORECASE)
+import re
+from django.db.models import Q
+
+def simplify_key_string(key_string):
+    # Define regex patterns with word boundaries
+    patterns = [
+        r"\b(t(?:e(?:s(?:t)?)?)?)\b",
+        r"\b(c(?:a(?:s(?:e)?)?)?)\b",
+        r"\b(s(?:u(?:i(?:t(?:e)?)?)?)?)\b"
+    ]
+    
+    # Initialize query and modified key_string
+    query_search_on_execution_type = Q()
+    modified_key_string = key_string
+    
+    # Iterate through patterns and modify key_string
+    for pattern in patterns:
+        regex_pattern = re.compile(pattern, re.IGNORECASE)
+        match = regex_pattern.search(modified_key_string.lower())
+        if match:
+            query_search_on_execution_type |= (
+                Q(test_suite_execution__isnull=True) if pattern == patterns[1]
+                else Q(test_suite_execution__isnull=False) if pattern == patterns[2]
+                else Q()
+            )
+            modified_key_string = re.sub(pattern, "", modified_key_string, flags=re.IGNORECASE)
+    
+    return query_search_on_execution_type, modified_key_string.strip()
+
+# Example usage:
+key_string = "This is a test case with suite."
+queryset = YourModel.objects.filter(*simplify_key_string(key_string))
 ```
