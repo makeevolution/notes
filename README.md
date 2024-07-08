@@ -88,3 +88,21 @@ def simplify_key_string(key_string):
 key_string = "This is a test case with suite."
 queryset = YourModel.objects.filter(*simplify_key_string(key_string))
 ```
+```
+import pytest
+from django.db.models import Q
+from your_module import simplify_key_string  # Replace with actual module name
+
+@pytest.mark.parametrize("input_string, expected_query, expected_modified_string", [
+    ("This is a test case with suite.", Q(test_suite_execution__isnull=True), "This is a  with ."),
+    ("Example with Test and Case.", Q(test_suite_execution__isnull=True), "Example with  and ."),
+    ("Test Suite example.", Q(test_suite_execution__isnull=False), " example."),
+    ("No matches here.", Q(), "No matches here."),
+    ("Test Case and Suite.", Q(test_suite_execution__isnull=True) | Q(test_suite_execution__isnull=False), "  and ."),
+    ("Just t for testing.", Q(), "Just t for testing.")
+])
+def test_simplify_key_string(input_string, expected_query, expected_modified_string):
+    query_search_on_execution_type, modified_key_string = simplify_key_string(input_string)
+    assert query_search_on_execution_type == expected_query
+    assert modified_key_string == expected_modified_string
+```
