@@ -1,3 +1,9 @@
+- check if status code is 2xx
+```
+from rest_framework import status
+status.is_success(yourcode)
+```
+
 - Find which db is used from a model instance (useful when debugging), if you use multiple database other than 'default': modelInstance._state.db. 
 - How to ascertain which db is currently used (useful when debugging, run in console)
   ```
