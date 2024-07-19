@@ -37,6 +37,17 @@ https://github.com/makeevolution/messaging/tree/rabbit-mq/rabbitmq
 
 - Best practice info: https://www.rabbitmq.com/blog/2020/08/10/deploying-rabbitmq-to-kubernetes-whats-involved
 
+------
+# More uitgebreid info/explanation
+![Alt text](pics/20240719_174939.jpg "Title")
+![Alt text](pics/20240719_174946.jpg "Title")
+![Alt text](pics/20240719_174955.jpg "Title")
+![Alt text](pics/20240719_175003-2.jpg "Title")
+![Alt text](pics/20240719_175009.jpg "Title")
+![Alt text](pics/20240719_175015.jpg "Title")
+![Alt text](pics/20240719_175021.jpg "Title")
+![Alt text](pics/20240719_191524.jpg "Title")
+![Alt text](pics/20240719_175032.jpg "Title")
 
 ‐-----
 # Example rabbitmq python consumer with reconnection logic and HA using multi node cluster and quorum queue
