@@ -49,7 +49,7 @@ def get_id_from_auth_header(request: HttpRequest):
 import base64
 import pytest
 from django.test import RequestFactory
-from myapp.utils import get_id_from_auth_header # adjust the import based on your project structure
+from myapp.utils import get_id_from_auth_header  # adjust the import based on your project structure
 
 @pytest.fixture
 def request_factory():
@@ -86,6 +86,22 @@ def test_invalid_base64_encoding(request_factory):
     assert user_id is None
 
 def test_missing_colon_in_decoded_credentials(request_factory):
-    encoded_credentials
-	
+    encoded_credentials = base64.b64encode('test_id_test_secret'.encode('utf-8')).decode('utf-8')
+    request = request_factory.get('/example/', HTTP_AUTHORIZATION=f'Basic {encoded_credentials}')
+    user_id = get_id_from_auth_header(request)
+    assert user_id is None
 
+def test_empty_basic_auth(request_factory):
+    request = request_factory.get('/example/', HTTP_AUTHORIZATION='Basic ')
+    user_id = get_id_from_auth_header(request)
+    assert user_id is None
+
+def test_empty_id_in_basic_auth(request_factory):
+    request = request_factory.get('/example/', HTTP_AUTHORIZATION=encode_credentials('', 'test_secret'))
+    user_id = get_id_from_auth_header(request)
+    assert user_id == ''
+
+def test_empty_secret_in_basic_auth(request_factory):
+    request = request_factory.get('/example/', HTTP_AUTHORIZATION=encode_credentials('test_id', ''))
+    user_id = get_id_from_auth_header(request)
+    assert user_id == 'test_id'
