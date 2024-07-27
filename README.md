@@ -47,8 +47,10 @@ def get_id_from_auth_header(request: HttpRequest):
 
 
 import base64
+import base64
 import pytest
 from django.test import RequestFactory
+from django.http import QueryDict
 from myapp.utils import get_id_from_auth_header  # adjust the import based on your project structure
 
 @pytest.fixture
@@ -60,48 +62,38 @@ def encode_credentials(id, secret):
     encoded_credentials = base64.b64encode(credentials.encode('utf-8')).decode('utf-8')
     return f'Basic {encoded_credentials}'
 
-def test_client_id_in_body(request_factory):
-    request = request_factory.post('/example/', data={'client_id': 'test_client_id'})
+@pytest.mark.parametrize("body, auth_header, expected", [
+    # Test client_id in body
+    (QueryDict('client_id=test_client_id'), None, 'test_client_id'),
+    
+    # Test valid Basic Auth
+    (QueryDict(), encode_credentials('test_id', 'test_secret'), 'test_id'),
+    
+    # Test missing Authorization header
+    (QueryDict(), None, None),
+    
+    # Test non-Basic Authorization header
+    (QueryDict(), 'Bearer some_token', None),
+    
+    # Test invalid Base64 encoding
+    (QueryDict(), 'Basic invalid_base64', None),
+    
+    # Test missing colon in decoded credentials
+    (QueryDict(), 'Basic ' + base64.b64encode(b'test_id_test_secret').decode('utf-8'), None),
+    
+    # Test empty Basic Auth
+    (QueryDict(), 'Basic ', None),
+    
+    # Test empty ID in Basic Auth
+    (QueryDict(), encode_credentials('', 'test_secret'), ''),
+    
+    # Test empty secret in Basic Auth
+    (QueryDict(), encode_credentials('test_id', ''), 'test_id'),
+])
+def test_get_id_from_auth_header(request_factory, body, auth_header, expected):
+    request = request_factory.post('/example/', data=body)
+    if auth_header:
+        request.META['HTTP_AUTHORIZATION'] = auth_header
+    
     user_id = get_id_from_auth_header(request)
-    assert user_id == 'test_client_id'
-
-def test_valid_basic_auth(request_factory):
-    request = request_factory.get('/example/', HTTP_AUTHORIZATION=encode_credentials('test_id', 'test_secret'))
-    user_id = get_id_from_auth_header(request)
-    assert user_id == 'test_id'
-
-def test_missing_authorization_header(request_factory):
-    request = request_factory.get('/example/')
-    user_id = get_id_from_auth_header(request)
-    assert user_id is None
-
-def test_non_basic_authorization_header(request_factory):
-    request = request_factory.get('/example/', HTTP_AUTHORIZATION='Bearer some_token')
-    user_id = get_id_from_auth_header(request)
-    assert user_id is None
-
-def test_invalid_base64_encoding(request_factory):
-    request = request_factory.get('/example/', HTTP_AUTHORIZATION='Basic invalid_base64')
-    user_id = get_id_from_auth_header(request)
-    assert user_id is None
-
-def test_missing_colon_in_decoded_credentials(request_factory):
-    encoded_credentials = base64.b64encode('test_id_test_secret'.encode('utf-8')).decode('utf-8')
-    request = request_factory.get('/example/', HTTP_AUTHORIZATION=f'Basic {encoded_credentials}')
-    user_id = get_id_from_auth_header(request)
-    assert user_id is None
-
-def test_empty_basic_auth(request_factory):
-    request = request_factory.get('/example/', HTTP_AUTHORIZATION='Basic ')
-    user_id = get_id_from_auth_header(request)
-    assert user_id is None
-
-def test_empty_id_in_basic_auth(request_factory):
-    request = request_factory.get('/example/', HTTP_AUTHORIZATION=encode_credentials('', 'test_secret'))
-    user_id = get_id_from_auth_header(request)
-    assert user_id == ''
-
-def test_empty_secret_in_basic_auth(request_factory):
-    request = request_factory.get('/example/', HTTP_AUTHORIZATION=encode_credentials('test_id', ''))
-    user_id = get_id_from_auth_header(request)
-    assert user_id == 'test_id'
+    assert user_id == expected'
