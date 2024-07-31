@@ -2,98 +2,98 @@
 
 ## Notes on shortcuts/lessons learned for different topics
 
-None selected
-
-Skip to content
-Using Gmail with screen readers
-Conversations
-12.18 GB of 15 GB (81%) used
-Terms · Privacy · Program Policies
-Last account activity: 0 minutes ago
-Details
-Compose:
-New Message
-	MinimizePop-outClose
-	
-Recipients
-import base64
-from django.http import HttpRequest
-
-def get_id_from_auth_header(request: HttpRequest):
-    user_id = None
-
-    # First, check if the request body has a 'client_id' key
-    client_id = request.POST.get('client_id')
-    if client_id:
-        user_id = client_id
-    else:
-        # If 'client_id' is not in the body, check the Authorization header
-        auth_header = request.headers.get('Authorization')
-        if auth_header and auth_header.startswith('Basic '):
-            # Extract the Base64 encoded part
-            encoded_credentials = auth_header.split(' ')[1]
-            try:
-                # Decode the Base64 encoded string
-                decoded_credentials = base64.b64decode(encoded_credentials).decode('utf-8')
-                # Ensure the decoded credentials are in the format id:secret
-                if ':' in decoded_credentials:
-                    user_id = decoded_credentials.split(':', 1)[0]
-            except (TypeError, ValueError):
-                pass
-
-    return user_id
-
-
-
-
-import base64
-import base64
+# tests/test_clear_expired_tokens.py
 import pytest
-from django.test import RequestFactory
-from django.http import QueryDict
-from myapp.utils import get_id_from_auth_header  # adjust the import based on your project structure
+from django.utils import timezone
+from django.urls import reverse
+from rest_framework.test import APIClient
+from myapp.models import CustomToken, AccessToken, RefreshToken
+from datetime import timedelta
+from oauth2_provider.settings import oauth2_settings
+from typing import Tuple
 
 @pytest.fixture
-def request_factory():
-    return RequestFactory()
+def create_tokens(db) -> Tuple[AccessToken, AccessToken, RefreshToken, RefreshToken]:
+    """
+    Fixture to create access and refresh tokens for testing.
+    
+    Args:
+        db: The database fixture for creating tokens.
 
-def encode_credentials(id, secret):
-    credentials = f'{id}:{secret}'
-    encoded_credentials = base64.b64encode(credentials.encode('utf-8')).decode('utf-8')
-    return f'Basic {encoded_credentials}'
+    Returns:
+        Tuple containing expired access token, valid access token, expired refresh token, valid refresh token.
+    """
+    def _create_tokens(access_expired: bool, refresh_expired: bool) -> Tuple[AccessToken, AccessToken, RefreshToken, RefreshToken]:
+        now = timezone.now()
+        REFRESH_TOKEN_EXPIRE_SECONDS = oauth2_settings.REFRESH_TOKEN_EXPIRE_SECONDS
+        if not isinstance(REFRESH_TOKEN_EXPIRE_SECONDS, timedelta):
+            REFRESH_TOKEN_EXPIRE_SECONDS = timedelta(seconds=REFRESH_TOKEN_EXPIRE_SECONDS)
 
-@pytest.mark.parametrize("body, auth_header, expected", [
-    # Test client_id in body
-    (QueryDict('client_id=test_client_id'), None, 'test_client_id'),
-    
-    # Test valid Basic Auth
-    (QueryDict(), encode_credentials('test_id', 'test_secret'), 'test_id'),
-    
-    # Test missing Authorization header
-    (QueryDict(), None, None),
-    
-    # Test non-Basic Authorization header
-    (QueryDict(), 'Bearer some_token', None),
-    
-    # Test invalid Base64 encoding
-    (QueryDict(), 'Basic invalid_base64', None),
-    
-    # Test missing colon in decoded credentials
-    (QueryDict(), 'Basic ' + base64.b64encode(b'test_id_test_secret').decode('utf-8'), None),
-    
-    # Test empty Basic Auth
-    (QueryDict(), 'Basic ', None),
-    
-    # Test empty ID in Basic Auth
-    (QueryDict(), encode_credentials('', 'test_secret'), ''),
-    
-    # Test empty secret in Basic Auth
-    (QueryDict(), encode_credentials('test_id', ''), 'test_id'),
-])
-def test_get_id_from_auth_header(request_factory, body, auth_header, expected):
-    request = request_factory.post('/example/', data=body)
-    if auth_header:
-        request.META['HTTP_AUTHORIZATION'] = auth_header
-    
-    user_id = get_id_from_auth_header(request)
-    assert user_id == expected'
+        refresh_expire_time = now - REFRESH_TOKEN_EXPIRE_SECONDS if refresh_expired else now + REFRESH_TOKEN_EXPIRE_SECONDS
+        access_expire_time = now - REFRESH_TOKEN_EXPIRE_SECONDS if access_expired else now + REFRESH_TOKEN_EXPIRE_SECONDS
+
+        expired_access_token = AccessToken.objects.create(user_id=1, expires=access_expire_time)
+        valid_access_token = AccessToken.objects.create(user_id=2, expires=now + timedelta(days=1))
+        expired_refresh_token = RefreshToken.objects.create(user_id=1, revoked=refresh_expire_time)
+        valid_refresh_token = RefreshToken.objects.create(user_id=2, revoked=now + timedelta(days=1))
+
+        return expired_access_token, valid_access_token, expired_refresh_token, valid_refresh_token
+
+    return _create_tokens
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    "access_expired, refresh_expired, expected_deleted_access, expected_deleted_refresh",
+    [
+        (True, True, True, True),     # Both expired
+        (True, False, True, False),   # Access expired, refresh not
+        (False, True, False, True),   # Access not, refresh expired
+        (False, False, False, False), # Neither expired
+    ]
+)
+def test_clear_expired_tokens(
+    create_tokens,
+    access_expired: bool,
+    refresh_expired: bool,
+    expected_deleted_access: bool,
+    expected_deleted_refresh: bool
+) -> None:
+    """
+    Test the clear_expired_tokens endpoint to ensure expired tokens are correctly deleted.
+
+    Args:
+        create_tokens: Fixture to create tokens for testing.
+        access_expired: Whether the access token should be expired.
+        refresh_expired: Whether the refresh token should be expired.
+        expected_deleted_access: Whether the expired access token should be deleted.
+        expected_deleted_refresh: Whether the expired refresh token should be deleted.
+    """
+    client = APIClient()
+    url = reverse('token-clear-expired-tokens')  # Adjust the name based on your URL configuration
+
+    expired_access_token, valid_access_token, expired_refresh_token, valid_refresh_token = create_tokens(access_expired, refresh_expired)
+
+    # Ensure tokens are in the database
+    assert AccessToken.objects.count() == 2
+    assert RefreshToken.objects.count() == 2
+
+    # Call the clear_expired_tokens endpoint
+    response = client.delete(url)
+
+    # Verify the response
+    assert response.status_code == 202
+
+    # Verify expired tokens are removed
+    if expected_deleted_access:
+        assert not AccessToken.objects.filter(id=expired_access_token.id).exists()
+    else:
+        assert AccessToken.objects.filter(id=expired_access_token.id).exists()
+
+    if expected_deleted_refresh:
+        assert not RefreshToken.objects.filter(id=expired_refresh_token.id).exists()
+    else:
+        assert RefreshToken.objects.filter(id=expired_refresh_token.id).exists()
+
+    # Verify valid tokens are still present
+    assert AccessToken.objects.filter(id=valid_access_token.id).exists()
+    assert RefreshToken.objects.filter(id=valid_refresh_token.id).exists()
