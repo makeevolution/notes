@@ -398,6 +398,47 @@ So use that only to test custom made endpoints. Otherwise, use either of the two
 - Always use `HttpResponse` of django or `Response` of rest framework to make response objects for testing, and `RequestFactory` of Django to make requests; they are the most robust
 - There are two types of Requests that you can make for testing in DRF: `WSGIRequest` (obtained from using `django.http.client.RequestFactory` or `rest_framework.test.APIRequestFactory`) or `rest_framework.request.Request`. `WSGIRequest` is a class that inherits Django `HttpRequest` object, but without extra attributes like `request.data` that you can use in serializers (which is in `rest_framework.request.Request`). You can convert `WSGIRequest` to `rest_framework.request.Request` using `rest_framework.views.APIView().initialize_request(request)`
 - To check if response is ok or not, don't compare to specific code; your test will be brittle. Use `rest_framework.status.is_success(response.status_code)` and other methods inside that class to check.
+
+- If you want to make a mock response object with a `.json()` implemented i.e. make the content type compatible with `application/json` accept headers, this is a general request stub:
+  ```
+  def create_response(status_code=200, content: typing.Any=None, **kwargs: typing.Any) -> requests.Response:
+    """
+    make response obj with json body type to set the attributes of the response to what we want.
+
+    Example use:
+        stubs.create_response({"myjsonkey": "someretval", "hahaha": 1111},
+                             {
+                                "mycustomattributeforthisresponseobject1":"someval",
+                                "mycustomattributeforthisresponseobject2":"someval"
+                             })
+        The above will create a response with attributes:
+        status_code = 200
+        content = '{"myjsonkey": "someretval", "hahaha": 1111}',
+        mycustomattributeforthisresponseobject1 = someval
+        mycustomattributeforthisresponseobject2 = someval
+
+    """
+    response = requests.Response()
+    response._content = bytes(json.dumps(content), "UTF-8")  # noqa: WPS437 Found protected attribute usage
+    for response_attribute, stub_value in kwargs.items():
+        setattr(response, response_attribute, stub_value)
+    response.status_code = status_code
+    return response
+  ```
+
+  - Use DjangoModelFactory `https://factoryboy.readthedocs.io/en/stable/orms.html#using-factory-boy-with-orms` for Django to quickly and reliably create models that are consistent (i.e. respects all validations of the model) and robust; example use that works:
+    ```
+    import factory
+    
+    class TestSuiteExecutionGroupFactory(factory.django.DjangoModelFactory):
+        class Meta:
+            model = myModelWithAnAttributeCallednameInIt
+            django_get_or_create = ("name",)
+
+        name = "some_group_name"
+    ```
+    
+
 --------------------
 ### Profiling slow code
 
