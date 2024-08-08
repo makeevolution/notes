@@ -10,7 +10,7 @@
 ```
 function myssh()
 {
-ssh myname@myserver.com
+ssh -m hmac-sha2-512 myname@myserver.com
 }
 ```
 
