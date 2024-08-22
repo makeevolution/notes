@@ -520,40 +520,37 @@ Thus we see that the difference is that the PersistentVolume is created dynamica
   - The pod finally then has also access to do `kubectl` stuff, with permissions defined in the 
 ------------------
 
-# Services
+# Services and Ingresses, more info https://cloud.google.com/kubernetes-engine/docs/concepts/service
+- There are 5 types of services objects:
+  - ClusterIP (default)
+    - Headless (ClusterIP with IP: None)
+  - NodePort
+  - LoadBalancer
+  - ExternalName
 
-### NGINX, and kubeproxy, how it works
+- Difference in client behavior:
+  - ClusterIP (default): Internal clients send requests to a stable internal IP address.
+  - NodePort: Clients send requests to the IP address of a node on one or more nodePort values that are specified by the Service.
+  - LoadBalancer: Clients send requests to the IP address of a network load balancer.
 
-- kube-proxy is a key component of any Kubernetes deployment.  Its role is to load-balance traffic that is destined for services (via cluster IPs and node ports) to the correct backend pods.
+### ClusterIP
+Exposes the service on an internal IP within the cluster. This IP is only accessible within the cluster, mainly used for internal communication between services.
 
-- Kube-proxy can run in one of three modes, each implemented with different data plane technologies: userspace, iptables, or IPVS.
-
-- The service object load balances requests to the pods in its selector based on the load balancing setting of the chosen dataplane. The IPVS has much more load balancing options. Iptables only has random way of selection (it selects a random pod to serve the request)
-
-- The service object sits behind an Ingress object, which in your case is of type NGINX. NGINX has and implements its own load balancing skills.
-- 
-- By default, the NGINX bypasses the services object and targets directly the pods underneath. Thus the pods benefit directly from NGINX's more advanced load balancing capabilities (rather than the Service's iptables random load balancing strategy). However, the NGINX does not consult the iptables for the available pods. Thus if a pod is terminating even after its ip address has been removed from the iptable, that pod can still be requested by NGINX and thus users can still see `connection refused`. This would not happen with Services; it always checks with the iptable first.
-
-- To make NGINX not bypass Service, set this annotation https://github.com/kubernetes/ingress-nginx/issues/257#issuecomment-335835670. But this means your pods are not load balanced by NGINX anymore and you have to set IPVS rules on your service object for more advanced load balancing rules.
-
-- More discussions and info here https://www.reddit.com/r/kubernetes/comments/161xrdb/am_i_load_balancing_correctly/ https://kubernetes.io/docs/reference/networking/virtual-ips/ 
-
-### Difference between a headless service and a load balanced service
-Headless services and load-balanced services in Kubernetes serve different purposes and have distinct characteristics. Here's a detailed comparison to help understand their differences:
-
-Headless Service and example: 
-
-    ClusterIP:
-        Headless Service: The clusterIP field is set to None. This means the service does not get a single, stable IP address.
-    Service Discovery:
-        Headless Service: Each pod behind the service gets its own DNS A record. When you query the DNS for the service, you get a list of IP addresses corresponding to the individual pods. This allows clients to connect directly to each pod.
-    Use Case:
-        Headless Service: Suitable for stateful applications where each pod needs to be addressed individually, such as databases (e.g., Cassandra, MongoDB) or applications requiring custom load balancing logic. 
-        For example, a RabbitMQ cluster, see here for more info: https://github.com/makeevolution/messaging/blob/9e0f8425c5b46d5caec3088daa86679d9d3d67c1/rabbitmq/kubernetes/rabbit-statefulset.yaml#L1
-    DNS Records:
-        Headless Service: DNS queries return multiple A records, one for each pod. For example, my-app-0.my-headless-service.default.svc.cluster.local, my-app-1.my-headless-service.default.svc.cluster.local, etc.
-    Load Balancing:
-        Headless Service: Clients are responsible for implementing their own load balancing or connection logic.
+#### Headless service
+Headless Service is a special type of ClusterIP:
+```
+  ClusterIP:
+      Headless Service: The clusterIP field is set to None. This means the service does not get a single, stable IP address.
+  Service Discovery:
+      Headless Service: Each pod behind the service gets its own DNS A record. When you query the DNS for the service, you get a list of IP addresses corresponding to the individual pods. This allows clients to connect directly to each pod.
+  Use Case:
+      Headless Service: Suitable for stateful applications where each pod needs to be addressed individually, such as databases (e.g., Cassandra, MongoDB) or applications requiring custom load balancing logic. 
+      For example, a RabbitMQ cluster, see here for more info: https://github.com/makeevolution/messaging/blob/9e0f8425c5b46d5caec3088daa86679d9d3d67c1/rabbitmq/kubernetes/rabbit-statefulset.yaml#L1
+  DNS Records:
+      Headless Service: DNS queries return multiple A records, one for each pod. For example, my-app-0.my-headless-service.default.svc.cluster.local, my-app-1.my-headless-service.default.svc.cluster.local, etc.
+  Load Balancing:
+      Headless Service: Clients are responsible for implementing their own load balancing or connection logic.
+```
 ```
 apiVersion: v1
 kind: Service
@@ -567,34 +564,97 @@ spec:
   - port: 80
     targetPort: 8080
 ```
+### NodePort vs. LoadBalancer vs. Ingress (https://medium.com/google-cloud/kubernetes-nodeport-vs-loadbalancer-vs-ingress-when-should-i-use-what-922f010849e0, demo https://www.youtube.com/watch?v=V0uKqYXJRF4)
+ClusterIP only allows communication inside the cluster. To allow communication from outside the cluster, there are 3 main ways:
 
-
-Load-Balanced Service
-
-    ClusterIP:
-        Load-Balanced Service: The clusterIP is assigned by Kubernetes. This provides a single stable IP address for the service.
-    Service Discovery:
-        Load-Balanced Service: A single DNS A record is created for the service name. Clients use this single DNS name to connect to the service, which resolves to the service’s ClusterIP.
-    Use Case:
-        Load-Balanced Service: Suitable for stateless applications where clients can connect to any instance of the application, such as web servers, APIs, or microservices.
-    DNS Records:
-        Load-Balanced Service: DNS queries return a single A record corresponding to the service’s ClusterIP. For example, my-service.default.svc.cluster.local resolves to the ClusterIP.
-    Load Balancing:
-        Load-Balanced Service: Kubernetes handles the load balancing. The traffic is distributed among the pods behind the service using round-robin or other strategies.
-
+#### NodePort
+`NodePort`: Exposes the service on each node's IP at a static port (the NodePort). A NodePort service maps a port on all nodes in the cluster to the service, making it accessible from outside the cluster using `<AnyOfTheNodesIP>:<NodePort>`. This means on each node you need to open the firewall rules to allow traffic to that particular port you expose.
+![alt text](image-4.png)
 ```
 apiVersion: v1
 kind: Service
 metadata:
-  name: my-loadbalanced-service # my-loadbalanced-service.whatevernamespace.svc.cluster.local
+  name: my-np-service
 spec:
+  type: NodePort
   selector:
-    app: my-app
+    app: metrics
+    department: engineering
   ports:
-  - port: 80
-    targetPort: 8080
-  type: ClusterIP  # Default is ClusterIP, other types are NodePort, LoadBalancer, etc.
+  - protocol: TCP
+    port: 80
+    targetPort: 30000
 ```
+How does the service (in the picture above) then decide which pod to route the request to?
+
+The process of deciding which pod receives the request is handled by Kubernetes’ internal load balancing mechanism. Kubernetes uses Round Robin (or similar algorithms) to distribute incoming traffic across all the available pods. The kube-proxy component running on each node is responsible for handling the load balancing. It watches for changes in services and endpoints and configures iptables (or IPVS) rules accordingly.
+
+There are many downsides to using NodePort:
+  - You can only have one service per port
+  - You can only use ports 30000–32767
+  - If your Node/VM IP address change, you need to deal with that
+
+#### LoadBalancer
+`LoadBalancer` object: Instead of contacting the Node IPs directly, we can setup something called a load balancer manually, which has a single IP address. We then configure our `service` object to be of type `LoadBalancer`. This load balancer is external to the Kubernetes cluster and is responsible for efficiently distributing incoming traffic across the nodes that are running the service’s pods. 
+![alt text](image-5.png)
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-lb-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: products
+    department: sales
+  ports:
+  - protocol: TCP
+    port: 60000
+    targetPort: 50001
+```
+If you run in the cloud, this external load balancer is provisioned automatically when you create this service object with type LoadBalancer, see `https://cloud.google.com/kubernetes-engine/docs/how-to/exposing-apps#creating_a_service_of_type_loadbalancer`. If you run on premise, you can set up and configure your own load balancer such as `metallb`, see `https://metallb.universe.tf/` and `https://www.youtube.com/watch?v=Yl8JKffmhuE&t=364s`
+
+Note: Do not confuse this with k8s' load balancing! So there are two load balancers here: one is the external load balancer you (or your cloud provider) has set up, that will balance the request load across the nodes. Once the request hits a node, there is another load balancer (k8s' load balancer) that will balance the load across the pods!
+
+### Ingress
+Now, both `NodePort` and `LoadBalancer` above only exposes one service. If we have more services:
+- For `NodePort` we need to open more ports in each node for each new service
+- For `LoadBalancer` we need to have a new load balancer for each new service e.g.
+![alt text](image-6.png)
+
+Both approaches can get very expensive and time consuming. Is there a way we can just use one entrypoint and make multiple services accessible through it?
+
+Yes, and that is called `ingress`.
+![alt text](image-7.png)
+
+So now we only have one load balancer and it can balance load across multiple services, cheaper.
+
+The ingress controller is its own k8s workload, a namespace within the k8s cluster. Example of setting up https://spacelift.io/blog/kubernetes-ingress#setting-up-ingress-with-nginx--step-by-step
+![alt text](image-8.png)
+![alt text](image-10.png)
+Thus the external load balancer will connect to the controller's `LoadBalancer` service (so as usual). Clients contact the external-IP in the above to communicate.
+
+Note: the key difference with `LoadBalancer` (and `NodePort` or even `ClusterIP`) here is that we then don't use k8s' internal load balancing to balance load across the pods, but rather we use the Ingress controller's, which is more advanced (see the section NGINX and kube proxy below)
+
+#### In the context of GKE
+In Google Kubernetes Engine (GKE):
+- When you create a service of type `LoadBalancer`, they will auto provision you an external load balancer of type `external passthrough load balancer` `https://cloud.google.com/load-balancing/docs/network/networklb-backend-service`, so you can access from internet
+- When you create an Ingress, they will auto provision an external load balancer of type `external application load balancer` `https://cloud.google.com/load-balancing/docs/https`, so you can access from internet
+
+### NGINX, and kubeproxy, how it works
+
+- kube-proxy is a key component of any Kubernetes deployment.  Its role is to load-balance traffic that is destined for services (via cluster IPs and NodePort) to the correct backend pods.
+
+- Kube-proxy can run in one of three modes, each implemented with different data plane technologies: userspace, iptables, or IPVS.
+
+- The service object load balances requests to the pods in its selector based on the load balancing setting of the chosen dataplane. The IPVS has much more load balancing options. Iptables only has random way of selection (it selects a random pod to serve the request)
+
+- NOTE: If you use an ingress object in front of your service, which in your case is of type NGINX, NGINX has and implements its own load balancing skills (see `ingress` section above). By default, the NGINX bypasses the services object and targets directly the pods underneath (see `ingress` section above). Thus the pods benefit directly from NGINX's more advanced load balancing capabilities (rather than the Service's iptables random load balancing strategy). However, the NGINX does not consult the iptables for the available pods. Thus if a pod is terminating even after its ip address has been removed from the iptable, that pod can still be requested by NGINX and thus users can still see `connection refused`. This would not happen with Services; it always checks with the iptable first.
+
+- To make NGINX not bypass Service, set this annotation https://github.com/kubernetes/ingress-nginx/issues/257#issuecomment-335835670. But this means your pods are not load balanced by NGINX anymore and you have to set IPVS rules on your service object for more advanced load balancing rules.
+
+- More discussions and info here https://www.reddit.com/r/kubernetes/comments/161xrdb/am_i_load_balancing_correctly/ https://kubernetes.io/docs/reference/networking/virtual-ips/ 
+
 ---------------------------
 # Get logs of applications using Loki and display in Grafana
 
