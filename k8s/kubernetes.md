@@ -596,7 +596,9 @@ There are many downsides to using NodePort:
 
 #### LoadBalancer
 `LoadBalancer` object: Instead of contacting the Node IPs directly, we can setup something called a load balancer manually, which has a single IP address. We then configure our `service` object to be of type `LoadBalancer`. This load balancer is external to the Kubernetes cluster and is responsible for efficiently distributing incoming traffic across the nodes that are running the service’s pods. 
+
 ![alt text](image-5.png)
+
 ```
 apiVersion: v1
 kind: Service
@@ -612,6 +614,7 @@ spec:
     port: 60000
     targetPort: 50001
 ```
+
 If you run in the cloud, this external load balancer is provisioned automatically when you create this service object with type LoadBalancer, see `https://cloud.google.com/kubernetes-engine/docs/how-to/exposing-apps#creating_a_service_of_type_loadbalancer`. If you run on premise, you can set up and configure your own load balancer such as `metallb`, see `https://metallb.universe.tf/` and `https://www.youtube.com/watch?v=Yl8JKffmhuE&t=364s`
 
 Note: Do not confuse this with k8s' load balancing! So there are two load balancers here: one is the external load balancer you (or your cloud provider) has set up, that will balance the request load across the nodes. Once the request hits a node, there is another load balancer (k8s' load balancer) that will balance the load across the pods!
@@ -620,26 +623,35 @@ Note: Do not confuse this with k8s' load balancing! So there are two load balanc
 Now, both `NodePort` and `LoadBalancer` above only exposes one service. If we have more services:
 - For `NodePort` we need to open more ports in each node for each new service
 - For `LoadBalancer` we need to have a new load balancer for each new service e.g.
+
 ![alt text](image-6.png)
 
 Both approaches can get very expensive and time consuming. Is there a way we can just use one entrypoint and make multiple services accessible through it?
 
 Yes, and that is called `ingress`.
+
 ![alt text](image-7.png)
 
 So now we only have one load balancer and it can balance load across multiple services, cheaper.
 
 The ingress controller is its own k8s workload, a namespace within the k8s cluster. Example of setting up https://spacelift.io/blog/kubernetes-ingress#setting-up-ingress-with-nginx--step-by-step
+
 ![alt text](image-8.png)
 ![alt text](image-10.png)
+
 Thus the external load balancer will connect to the controller's `LoadBalancer` service (so as usual). Clients contact the external-IP in the above to communicate.
 
 Note: the key difference with `LoadBalancer` (and `NodePort` or even `ClusterIP`) here is that we then don't use k8s' internal load balancing to balance load across the pods, but rather we use the Ingress controller's, which is more advanced (see the section NGINX and kube proxy below)
 
-#### In the context of GKE
+### In the context of GKE
 In Google Kubernetes Engine (GKE):
 - When you create a service of type `LoadBalancer`, they will auto provision you an external load balancer of type `external passthrough load balancer` `https://cloud.google.com/load-balancing/docs/network/networklb-backend-service`, so you can access from internet
 - When you create an Ingress, they will auto provision an external load balancer of type `external application load balancer` `https://cloud.google.com/load-balancing/docs/https`, so you can access from internet
+
+### Static IP
+If the load balancer is restarted, the IP address may change! Thus, we need to configure a static IP for the load balancer! In GKE, you can do this like this https://cloud.google.com/kubernetes-engine/docs/tutorials/configuring-domain-name-static-ip
+
+To associate your IP address with a domain name, see website_administration.md under linux folder for more information.
 
 ### NGINX, and kubeproxy, how it works
 
