@@ -1,7 +1,8 @@
 course: https://app.pluralsight.com/library/courses/kubernetes-installation-configuration-fundamentals/table-of-contents
 ---------------------------------
-### Debugging issues
-- How to get into a `crashloopbackoff` container: in the container yaml, set this: `command: ["sh", "-c", "while true; do echo hello; sleep 86400; done"]` and thus you can investigate the container's contents (e.g. whoami, ls -la, pwd, etc.) easily!!!
+# Debugging issues
+### From experience
+- How to get into a `crashloopbackoff` container: in the container yaml, set this: `command: ["sh", "-c", "while true; do echo hello; sleep 86400; done"]` to override the image's entrypoint, and thus you can investigate the container's contents (e.g. whoami, ls -la, pwd, etc.) easily!!!, and also run the supposed command one by one.
 - How to copy file or folder from pod container to host: `kubectl cp -c yourbackendcontainernameinthepod <your-namespace>/<your-backend-pod-name-get-it-from-kubectl-get-pods>:mydesireddatabase.sqlite mydesireddatabase.sqlite`; you may get warning but ignore it, file/folder is copied
 - If you wanna talk, from outside your cluster (e.g. VDI terminal when you were at AMLS) to a pod whose port is exposed to a service with name aldo-elasticsearch in your namespace: `kubectl port-forward --namespace aldo-elasticsearch svc/aldo-elasticsearch 9200:9200`
 ------------------------------------------------------------
@@ -43,7 +44,7 @@ spec:
             - "tail -f /dev/null"
 ```
 ------------------------------------------------------------
-# commands
+# Introduction to theories
 Get all objects currently registered: kubectl get all
 
 Context related
@@ -589,6 +590,79 @@ Thus we see that the difference is that the PersistentVolume is created dynamica
 
 - A pvc needs to be ReadWriteMany if possible, otherwise pods claiming it cannot respawn on a different node if the node it is running on initially is being serviced!
 ------------------
+
+# Secrets
+We use this to store sensitive info that our app need.
+
+This info will be exposed as an env var in our container, where our app will access it from.
+
+So for example, create a secret (for example) `kubectl create secret generic colour-secret --from-literal=COLOUR=red --from-literal=KEY=value`
+
+and access the secret in your deployment like
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: ubuntu
+  name: ubuntu
+spec:
+  containers:
+  - command:
+    - bash
+    - -c
+    - env; sleep infinity
+    image: ubuntu
+    name: ubuntu
+    resources: {}
+    envFrom:
+    - secretRef:
+        name: colour-secret
+  dnsPolicy: ClusterFirst
+  restartPolicy: Never
+```
+
+NOTE: The secret is by default base64 encoded. So in your app/command you need to manual decode it. For example, in bash, you can do `echo ${colour-secret} | base64 -d`
+
+Secrets are saved in etcd (if you use that as backing storage in your cluster)
+
+## Secrets and security management
+
+We can show the yaml of the secret created above as shown:
+```
+root@control-plane:~# kubectl get secret colour-secret -o yaml
+
+apiVersion: v1
+data:
+  COLOUR: cmVk
+  KEY: dmFsdWU=
+kind: Secret
+metadata:
+  creationTimestamp: "2024-08-31T17:51:48Z"
+  name: colour-secret
+  namespace: default
+  resourceVersion: "555"
+  uid: 4f4ba275-ac2e-481c-9e20-e1864e581dfa
+type: Opaque
+```
+
+`cmVk` is base64 `red` and `dmFsdWU=` is base64 for `VALUE`.
+
+Thus if you create secrets as YAML, store the value as the encoded version.
+
+In VFM, we store secrets (e.g. token, passwords) as a yaml file in our Helm charts and it is commited and thus visible in git history. This is wrong! A person who gains access to our git can see the yaml, and thus can decode the key, by trying against all existing encoding algorithms in this world! 
+
+To make it truly secure, we should have:
+- Create the secret through CLI
+- Set the secret name in `values.yaml` of our Helm chart
+- When we want to update the secret, do it again through CLI, and update the `values.yaml`
+- How do we then track history of secret updates if not through git? Use `Auditing` feature of k8s https://blog.kubesimplify.com/the-ultimate-guide-to-audit-logging-in-kubernetes-from-setup-to-analysis
+- We can store this auditing yaml in our helm chart (since we want to probably audit secrets in a specific namespace) for backup/if we want to change what we want to audit.
+- Or even the cluster manager (if we use cloud) already implement at a cluster level this as part of their service (so all secrets in all namespaces are audited), and so we don't have to do anything!!
+
+Therefore, in this way our encoded secrets are located only in one location (k8s) and not also in git, reducing risk of bocor.
+
 # RBAC (https://www.youtube.com/watch?v=jvhKOAyD8S8)
 
 ### RBAC for humans
@@ -596,7 +670,7 @@ Thus we see that the difference is that the PersistentVolume is created dynamica
 - The flow is:
     - When you provision a k8s cluster, a `ca.crt` and `ca.key` file is created under (for Kind clusters) `/etc/kubernetes/pki` in the node(s)
     - We use this file to sign user certificates. We can create a certificate for a user named Bob by:
-    - Running `openssl genrsa -out bob.key 2048`. This will generate a private key file called `bob.key`
+      - Running `openssl genrsa -out bob.key 2048`. This will generate a private key file called `bob.key`
     - Then, we need the create a Certificate Signing Request (CSR) by running `openssl req -new -key bob.key -out bob.csr -subj "/CN=Bob Smith/O=Shopping"`; where CN is Common Name and O is Organization `https://knowledge.digicert.com/general-information/what-is-a-distinguished-name`; CN can be your user name and O is the namespace this person is allowed to access (e.g. like the scope in OAuth)
     - Then we can generate a certificate by `signing` this `request`: `openssl x509 -req -in bob.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out bob.crt -days 1`
     - (So flow is create private key ->  create certificate signing request from key -> sign the request using `ca.key` and `ca.crt` -> you get a certificate)
@@ -910,6 +984,7 @@ To associate your IP address with a domain name, see website_administration.md u
 - More discussions and info here https://www.reddit.com/r/kubernetes/comments/161xrdb/am_i_load_balancing_correctly/ https://kubernetes.io/docs/reference/networking/virtual-ips/ 
 
 ---------------------------
+
 # Get logs of applications using Loki and display in Grafana
 
 Followed the following with some modifications https://www.youtube.com/watch?v=Mn2YpMJaEBY&t=1359s
@@ -962,11 +1037,13 @@ spec:
 `kubectl apply -f deployment.yaml`
 
 -------------------------------------
+
 # Helm
 
 - Deleting a statefulset through `helm uninstall` does not remove the PVC associated with it! `https://github.com/helm/helm/issues/5156` It's a bug?
 
 ‐------------------------------------
+
 # K8S operators and Custom Resources, what is this thing? What is RabbitMqCluster type in the recommended way to deploy rabbitmq in k8s?
 
 The kind `RabbitmqCluster` is not the operator itself. Instead, it is a custom resource defined by the operator. Here's a clearer breakdown of the terminology and components:
