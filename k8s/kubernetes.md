@@ -253,7 +253,56 @@ REVISION  CHANGE-CAUSE
 
 # Selector and labels
 
-  A YAML like this:
+A `label` is used to identify and organize resources.
+
+A `selector` is used to select resources that has a given label.
+
+Example: If we have a `pod` template
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: nginx
+  name: nginx
+spec:
+  containers:
+  - image: nginx
+    name: nginx
+    ports:
+    - containerPort: 80
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}`
+```
+It will have a label `run: nginx`. For a service to select this pod, make a service that has this value in selector section of it:
+
+```
+root@control-plane:~# kubectl expose pod/nginx --dry-run=client -o yaml
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    run: nginx
+  name: nginx
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    run: nginx
+status:
+  loadBalancer: {}
+```
+
+Note that in creating the above we use `kubectl expose` command, which makes a service object having a label with value equal to the object it is exposing; but the important part for this is the `selector: run: nginx` part
+
+Another example: A YAML like this:
   ```
   apiVersion: v1
 kind: ReplicationController        ❶
@@ -278,7 +327,7 @@ spec:
   Means that the ReplicationController set will track pods with label `app=kubia`, and additionally create pods with `app=kubia` such that there are 3 pods of such label in the cluster. If you manually rename the label of one of the pods, it will not be tracked by this object anymore.
 
   Changing a ReplicationController’s pod template `labels` only affects pods created afterward and has no effect on existing pods.
-
+ 
  ---------------
  ### Liveliness
 
@@ -651,9 +700,9 @@ type: Opaque
 
 Thus if you create secrets as YAML, store the value as the encoded version.
 
-In VFM, we store secrets (e.g. token, passwords) as a yaml file in our Helm charts and it is commited and thus visible in git history. This is wrong! A person who gains access to our git can see the yaml, and thus can decode the key, by trying against all existing encoding algorithms in this world! 
+In VFM, we store secrets (e.g. token, passwords) as a yaml file in our Helm charts and it is commited and thus visible in git history, or even in some `config.yaml` or `enums.py`. This is wrong! Although the secret is encoded, the person who gains access to our git can see the yaml, and thus can decode by trying against all existing encoding algorithms in this universe! 
 
-To make it truly secure, we should have:
+To make it more secure, we should have:
 - Create the secret through CLI
 - Set the secret name in `values.yaml` of our Helm chart
 - When we want to update the secret, do it again through CLI, and update the `values.yaml`
