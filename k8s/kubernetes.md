@@ -1096,6 +1096,29 @@ To associate your IP address with a domain name, see website_administration.md u
 
 ---------------------------
 
+# Network Policies
+- By default, if we have a service object, the pods are accessible from anywhere inside the cluster
+- Sometimes we don't want this. We can create a `NetworkPolicy` object to restrict this. 
+  - Example: This YAML
+  ```
+  apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    name: allow-nginx-access
+    namespace: default
+  spec:
+    podSelector:
+      matchLabels:
+        run: nginx
+    policyTypes:
+      - Ingress
+    ingress:
+      - from:
+        - podSelector:
+            matchLabels:
+              run: curl
+    ```
+    will only allow traffic to the pod `run: nginx` from pods with label `run: curl`
 # Get logs of applications using Loki and display in Grafana
 
 Followed the following with some modifications https://www.youtube.com/watch?v=Mn2YpMJaEBY&t=1359s
