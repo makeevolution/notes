@@ -784,7 +784,7 @@ Therefore, in this way our encoded secrets are located only in one location (k8s
       - Running `openssl genrsa -out bob.key 2048`. This will generate a private key file called `bob.key`
     - Then, we need the create a Certificate Signing Request (CSR) by running `openssl req -new -key bob.key -out bob.csr -subj "/CN=Bob Smith/O=Shopping"`; where CN is Common Name and O is Organization `https://knowledge.digicert.com/general-information/what-is-a-distinguished-name`; CN can be your user name and O is the namespace this person is allowed to access (e.g. like the scope in OAuth)
     - Then we can generate a certificate by `signing` this `request`: `openssl x509 -req -in bob.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out bob.crt -days 1`
-    - (So flow is create private key ->  create certificate signing request from key -> sign the request using `ca.key` and `ca.crt` -> you get a certificate)
+    - (So flow is `create private key ->  create certificate signing request from key -> sign the certificate signing request using ca.key and ca.crt -> you get a certificate`)
     - Then, we use this certificate to create the .kubeconfig file for access to the cluster. This kubeconfig is what we give Bob.
 - What does a kubeconfig file contain?
     - It contains 4 sections: `clusters`, `users`, `contexts`, and `current-context`
@@ -797,57 +797,78 @@ Therefore, in this way our encoded secrets are located only in one location (k8s
           - cluster:
               certificate-authority-data: ASDFWETAHTHAWHTWHHRTAWHERHAW_I_AM_SOME_LONG_STRING
               server: https://my-cluster-api:someport
-            name: cluster1
+            name: dev-cluster
           ```
       - The `users` section contain a name field, as well as the user's certificate data and key we generated for the user. The user in the cluster is not in the name; it is the data inside this certificate
-        - Generate using `kubectl config set-credentials bob --client-certificate=bob.crt --client-key=bob.key --embed-certs=true`. This will create a section in the kubeconfig like:
+       - Generate using `kubectl config set-credentials bob --client-certificate=bob.crt --client-key=bob.key --embed-certs=true`. This will create a section in the kubeconfig like:
+         ```
+         - users:
+             name: bob
+             user:
+               client-certificate-data: SOMELONGSTRING
+               client-key-data: SOMELONGSTRING
+         ```
+       - In AsML, we used token instead, which creates section
+         ```
+         user:
+           token: some JWT token
+         ```
+      - The `context` BINDS a user to a cluster
+        - Create section in the kubeconfig using `kubectl config set-context dev-cluster --cluster=cluster1 --namespace=shopping --user=bob`
+        - In this above example, it will bind the user `bob` to the cluster `dev-cluster`. The `namespace` argument makes it such that if bob does kubectl commands, he will by default do it against the namespace `shopping`, unless he specifies `-n` switch.
+        - Result:
           ```
-          - users:
-            name: bob
-            user:
-              client-certificate-data: SOMELONGSTRING
-              client-key-data: SOMELONGSTRING
+          contexts:
+            - context:
+                cluster: dev-cluster
+                namespace: shopping
+                user: bob
           ```
-        - In AsML, we used token instead, which creates section
-          ```
+      - The `current-context` is the context that the user are going to connect to when they run `kubectl`. To set this, you (or the user) can run:
+        - `kubectl config use-context cluster1`
+      - You can indeed create more user in `users` and context in `contexts` for defining multiple users and contexts, and bind them appropriately.
+      - So, a full .kubeconfig file for bob will look like this
+      ```
+      apiVersion: v1
+      kind: Config
+      clusters:
+      - cluster:
+           certificate-authority-data: ASDFWETAHTHAWHTWHHRTAWHERHAW_I_AM_SOME_LONG_STRING
+           server: https://my-cluster-api:someport       
+        name: dev-cluster
+      - users:
+        - name: bob
           user:
-            token: some JWT token
-          ```
-       - The `context` BINDS a user to a cluster
-         - Create section in the kubeconfig using `kubectl config set-context dev --cluster=cluster1 --namespace=shopping --user=bob`
-         - In this above example, it will bind the user `bob` to the cluster `cluster1`, and gives access to resources in namespace `shopping`
-         - Result:
-           ```
-           contexts:
-             - context:
-               cluster: cluster1
-               namespace: shopping
-               user: bob
-           ```
-         - So bob has access only to that `shopping` namespace (I think! but not sure about this point, need to test further)
-       - The `current-context` is the context that the user are going to connect to when they run `kubectl`. To set this, you (or the user) can run:
-         - `kubectl config use-context cluster1`
-       - You can indeed create more user in `users` and context in `contexts` for defining multiple users and contexts, and bind them appropriately.
- - If now bob runs the `kubectl get pods`, he will get `Error from server (Forbidden): pods is forbidden: User `Bob Smith` cannot list resource "pods" in API group "" in the namespace "shopping"` But we gave him access above????
- - This is because in the above we gave **ACCESSS** to Bob, but we still haven't given him **PERMISSION** to access resources.
- - To give **PERMISSION**, we need to give bob a `Role`. A Role example for the namespace `sh:
- ```
- apiVersion: rbac.authorization.k8s.io/v1
- kind: Role
- metadata:
-  namespace: shopping
-  name: somenameforthisrole
- rules:
- - apiGroups: [""]
-   resources: ["pods", "pods/exec"]
-   verbs: ["get", "watch", "list", "create", "delete"]
- - apiGroups: ["apps"]
-   resources: ["deployments"]
-   verbs: ["get", "watch", "list", "delete", "create"]
- ```
-  - The critical sections explained:
+            client-certificate: SOMELONGSTRING
+            client-key-data: SOMELONGSTRING
+      - contexts:
+        - context:
+            cluster: dev-cluster
+            namespace: shopping
+            user: bob
+      - current-context: dev-cluster
+      ```
+  - Now, let's say some other person installed this YAML in our cluster without us knowing:
+  ```
+  apiVersion: rbac.authorization.k8s.io/v1
+  kind: Role
+  metadata:
+   namespace: shopping
+   name: somenameforthisrole
+  rules:
+  - apiGroups: [""]
+    resources: ["pods", "pods/exec"]
+    verbs: ["get", "watch", "list", "create", "delete"]
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["get", "watch", "list", "delete", "create"]
+  ```
+  - If now bob runs the `kubectl get pods`, he will get `Error from server (Forbidden): pods is forbidden: User `Bob Smith` cannot list resource "pods" in API group "" in the namespace "shopping"` But we gave him the kubeconfig above????
+  - This is because in the above we gave **ACCESS** to Bob, but we still haven't given him **PERMISSION** to access resources.
+  - The guy above installed something called a `Role`. To give **PERMISSION**, we need to give bob this `Role`.
+  - The critical sections of the `Role` YAML explained:
     - What the hell is `apiGroups` and `resources`??? This confuses me a lot when I was at asml!!!
-      - So k8s groups assigns objects to apiGroups in different versions of its API. For example for API v1, for different k8s objects, you will always see these section at the top:
+      - So k8s, out of the box, assigns k8s objects to apiGroups in different versions of its API. For example for API v1, for different k8s objects, you will always see these section at the top:
         For deployment:
         ```
         ---
@@ -873,24 +894,24 @@ Therefore, in this way our encoded secrets are located only in one location (k8s
         ```
         So this means in V1 of the API, k8s puts `pods` in group `""` and `deployments` and `statefulsets` in `apps` group. When I say group here it refers to some internal group within its systems (idontcare what it really is, just that its like that). So it's like a **boilerplate** or **ceremony** that you need to do to use this feature.
      - The verbs is simply what `kubectl` commands you can do to the resources within the namespace.
- - Still Bob wont have **permission** to e.g. list pods within the namespace! This is because we need to bind the `Role` above to a `RoleBinding` k8s object, which will actually give the permission. Example:
-   ```
-   apiVersion: rbac.authorization.k8s.io/v1
-   kind: RoleBinding
-   metadata:
-     name: manage-pods
-     namespace: shopping
-   subjects:
-   - kind: User  // NOTE THE KIND HEREEEEEE!!!!!!!!! NOTE THIS WILL BE DIFFERENT FOR SERVICE ACCOUNTS (LATER BELOW)
-     name: "Bob Smith"  // THIS IS THE NAME EMBEDDED IN YOUR CA CERTIFICATE I.E. THE CN ENTRY WE SET IN THE CERTIFICATE ABOVE!!
-     apiGroup: rbac.authorization.k8s.io  // Like I explained above, this is the boilerplate/ceremony; for RoleBinding and Roles, they are inside apiGroup rbac.authorization.k8s.io so need to specify
-   roleRef:
-     kind: Role
-     name: somenameforthisrole
-     apiGroup: rbac.authorization.k8s.io
-   ```
-   Note that in the metadata you specify namespace. If you don't specify namespace, the role and rolebinding will be applied to default namespace!
-- Finally, Bob can run `kubectl get pods -n shopping` successfully; it will list all pods in the `shopping` namespace.
+  - Still Bob wont have **permission** to e.g. list pods within the namespace! This is because we need to bind the `Role` above to a `RoleBinding` k8s object, which will actually give the permission. Example:
+    ```
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: RoleBinding
+    metadata:
+      name: manage-pods
+      namespace: shopping
+    subjects:
+    - kind: User  // NOTE THE KIND HEREEEEEE!!!!!!!!! NOTE THIS WILL BE DIFFERENT FOR SERVICE ACCOUNTS (LATER BELOW)
+      name: "Bob Smith"  // THIS IS THE NAME EMBEDDED IN YOUR CA CERTIFICATE I.E. THE CN ENTRY WE SET IN THE CERTIFICATE ABOVE!!
+      apiGroup: rbac.authorization.k8s.io  // Like I explained above, this is the boilerplate/ceremony; for RoleBinding and Roles, they are inside apiGroup rbac.authorization.k8s.io so need to specify
+    roleRef:
+      kind: Role
+      name: somenameforthisrole
+      apiGroup: rbac.authorization.k8s.io
+    ```
+    Note that in the metadata you specify namespace. If you don't specify namespace, the role and rolebinding will be applied to default namespace!
+- Finally, Bob can run `kubectl get pods` successfully; it will list all pods in the `shopping` namespace (note this is because we set the `namespace` to `shopping` in the .kubeconfig context binding, see above)
 
 ### ServiceAccount (RBAC for apps)
 - Usually, `kubectl` stuff is done by humans through CLI. But what if your pod/your k8s objects needs to `kubectl` stuff against the k8s API (usually it will do curl to the kubernetes API of the cluster instead of bare `kubectl`, example command: `curl --cacert ${CACERT} --header "Authorization: Bearer $TOKEN" -s ${APISERVER}/api/v1/namespaces/shopping/pods/`)? How do we manage permissions for it?
@@ -1197,8 +1218,9 @@ To associate your IP address with a domain name, see website_administration.md u
   - It validates your `yaml` (now already turned into JSON as shown in diagram above) and rejects it if it has some illegal stuff in it
   - An example of a `static` `dynamic admission` controller is the `PodSecurity` controller, which checks if the JSON has the correct security contexts. This comes out of the box (thus `static`) but has to be turned on manually.
   - You need to edit the `kube-apiserver.yaml` and then the server needs to restart; since the API server is a static pod, it restarts automatically
-  - Example `dynamic admission controllers` tailored for security in the wild include `kyverno`, `open policy agent`, `kubewarden`, etc.
-   
+- Example plugins tailored for security in the wild include `kyverno`, `open policy agent`, `kubewarden`, etc.
+  - They enforce securities on different levels, differences below
+   (add pic of differences here)
 # Get logs of applications using Loki and display in Grafana
 
 Followed the following with some modifications https://www.youtube.com/watch?v=Mn2YpMJaEBY&t=1359s
