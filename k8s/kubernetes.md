@@ -787,7 +787,7 @@ Therefore, in this way our encoded secrets are located only in one location (k8s
     - (So flow is create private key ->  create certificate signing request from key -> sign the request using `ca.key` and `ca.crt` -> you get a certificate)
     - Then, we use this certificate to create the .kubeconfig file for access to the cluster. This kubeconfig is what we give Bob.
 - What does a kubeconfig file contain?
-    - It contains 3 sections: `clusters`, `users`, `contexts`, and `current-context`
+    - It contains 4 sections: `clusters`, `users`, `contexts`, and `current-context`
       - `clusters` section contain info on the cluster URL API server and the certificate-authority-data of the cluster. The certificate-authority-data is a CA certificate that `kubectl` can later use when connecting to the cluster URL aforementioned. When the kubectl connects to the API server, it expects the server to return a certificate. `kubectl` will compare this returned cert with the value in `certificate-authority-data` to ensure the URL is legit and prevent man in the middle attack.
         - Create the section in the kubeconfig using: `kubectl config set-cluster dev-cluster --server=https://127.0.0.1:52807 --certificate-authority=ca.crt --embed-certs=true `
         - This will create a section like:
