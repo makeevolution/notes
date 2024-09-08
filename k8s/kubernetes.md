@@ -1119,6 +1119,86 @@ To associate your IP address with a domain name, see website_administration.md u
               run: curl
     ```
     will only allow traffic to the pod `run: nginx` from pods with label `run: curl`
+
+----------------------------
+
+# Security
+- There are two important aspects of security for k8s:
+  - `SecurityContext`
+  - `Admission Controller`
+- `SecurityContext`
+  - I think you struggled with this a lot already with Kubewarden back in ASLM :) but for refresher
+  ```
+  apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: null
+    labels:
+      run: ubuntu
+    name: ubuntu
+  spec:
+    securityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+    containers:
+    - args:
+      - sleep
+      - infinity
+      image: spurin/rootshell:latest
+      name: ubuntu
+      resources: {}
+    dnsPolicy: ClusterFirst
+    restartPolicy: Always
+  status: {}
+  ```
+  If you run this using `kubectl exec -it ubuntu --bash`, you will see you are non root (run the command `id`)
+  - However, in the above, if we run the command `/rootshell`, we can still execute commands that require root access!
+  - To further restrict this, use `AllowPrivilegeEscalation`
+  ```
+  apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: null
+    labels:
+      run: ubuntu
+    name: ubuntu
+  spec:
+    securityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+    containers:
+    - args:
+      - sleep
+      - infinity
+      image: spurin/rootshell:latest
+      name: ubuntu
+      resources: {}
+      securityContext:
+        allowPrivilegeEscalation: false
+    dnsPolicy: ClusterFirst
+    restartPolicy: Always
+  status: {}
+  ```
+- This is good for a pod to pod basis, but what if you want to restrict this for cluster level?
+  - Before k8s 1.25, we use a `PodSecurityPolicy` object.
+  - But since 1.25, we use `AdmissionControllers`
+- `AdmissionControllers`
+  - Act as gatekeepers controlling what pods can and cannot do
+  - Intercepts and processes requests to the Kubernetes API prior to persistence of the object, but after the request is authenticated and authorized.
+  - When you make a request to create a pod, before your `yaml` is saved in `etcd` it goes through middelwares as shown below (lifecycle of a k8s api request):
+  ![](lifecycleapik8s.png)
+  - An `Admission Controller` can either be `static` i.e. comes out of the box by k8s, or `dynamic`, i.e. you implement it yourself through `admission webhooks`
+  - As you can see above, there are two types of `Admission Controllers`: `Mutating Admission` and `Validating Admission`. 
+- `Mutating Admission` controller:
+  - It changes your `yaml` and adds stuff to it
+  - An example of a `static` `mutating admission` controller is the `AlwaysPullImages`; if you don't specify this in your pod spec, it gets added by this controller!
+  - An example of a `dynamic` `mutating admission` controller is a controller that automatically adds a label e.g. `cluster: mycluster` to a pod, or injecting a sidecar container into incoming pod e.g. for service mesh
+- `Validating Admission` controller:
+  - It validates your `yaml` (now already turned into JSON as shown in diagram above) and rejects it if it has some illegal stuff in it
+  - An example of a `static` `dynamic admission` controller is the `PodSecurity` controller, which checks if the JSON has the correct security contexts. This comes out of the box (thus `static`) but has to be turned on manually.
+  - You need to edit the `kube-apiserver.yaml` and then the server needs to restart; since the API server is a static pod, it restarts automatically
+  - Example `dynamic admission controllers` tailored for security in the wild include `kyverno`, `open policy agent`, `kubewarden`, etc.
+   
 # Get logs of applications using Loki and display in Grafana
 
 Followed the following with some modifications https://www.youtube.com/watch?v=Mn2YpMJaEBY&t=1359s
