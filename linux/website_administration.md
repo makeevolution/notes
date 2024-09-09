@@ -108,3 +108,6 @@ Response Back to Resolver: The authoritative DNS servers send the resolved infor
 Caching: The resolver caches the received information locally for future use, reducing the need to repeat the entire process if someone else requests the same domain name in the near future.
 
 This recursive process allows DNS resolvers to efficiently find the IP address associated with a domain name by querying various DNS servers in a hierarchical manner, starting from the root servers down to the authoritative servers responsible for the specific domain.
+
+# SSL, CA, HTTPS how do they work
+- Your browser by default contains a list of wh
