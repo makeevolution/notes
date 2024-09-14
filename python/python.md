@@ -312,6 +312,21 @@ mocked_queue_test_case_execution.side_effect = mock_queue_test_case_execution
 
 - If you use pytest and structlog, caplog will not work; use https://pypi.org/project/pytest-structlog/ instead!
 
+- How to write Django DRF tests using APIClient:
+
+```
+from rest_framework.test import APIClient
+from django.urls import reverse
+
+client = APIClient()
+# If you want to transmit data as query params in url, add it as args in the get method
+query_params = {"param1": 1, "param2": 2}
+import urllib
+request_helper.client.get(reverse('v2:some-file'), args=urllib.parse.urlencode(query_params), headers={"accept": "application/json"})
+# If you have the data as post body instead, put it as data argument
+request_helper.client.post(reverse('v2:some-file'), data=urllib.parse.urlencode(query_params), headers={"accept": "application/json"})
+```
+
 - A clean way to write Django tests and mock:
 ```
 from django.test import TestCase
