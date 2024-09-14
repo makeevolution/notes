@@ -133,10 +133,11 @@ Let's follow the arrows, along the way we will explain what each component are.
   - The `kubelet` Linux process is run.
       - It is a process that maintains pods.
       - It creates containers based on the `yaml` files it is fed. In our case here it is the manifest files aforementioned.
-  - The `kubelet` will call `containerD` which in turn will call `runc`, which will then create `static pods`.
+  - The `kubelet` will call `containerD` which in turn will call `runc`, which will then create containers inside `static pods`.
       - `containerD` is a high-level container runtime, while `runc` is a low level container runtime.
       - The low level container spawns and runs containers, and interacts with low level Linux components e.g. namespaces and cgroups
       - The high level container runtime operates at a higher level and do higher level things e.g. manages the container's lifecycle, pull container images and stores them.
+      - See notes in Docker for more info
       - `static pods` are pods that are required in control plane
   - There are 4 `static pods` created:
       - `etcd`:
