@@ -33,3 +33,24 @@
   - The above is time consuming and error prone; we may forgot to push feature branch and make PR. Manual things like this can make the Helm chart deployed and what is in master in git go out of sync easily!!! It was ok because it was only I who did anything with k8s; but if there are 10 people working on it, it will go awry.
   - Had we used GitOps instead (e.g. with the Argo CD), we only need to make the PR and merge to master, and the upgrade is done automatically by `Argo CD`! Less error prone!
 
+# Pricing
+- A VM in the cloud's pricing can be in 3 categories:
+  - On-demand
+  - Reserved
+  - Spot
+- On-demand:
+  - Most flexible but most expensive
+- Reserved:
+  - Less flexible (need to commit at least for a given time period), but is less expensive
+- Spot:
+  - Can be deleted by the cloud provider at any time, if the VM is sitting idle for too long, but is the cheapest
+
+# KCNA specific things
+- logs can be output as text or json
+- kubectl logs get both stdout and stderr
+- prometheus expose liveness probe on `metrics` endpoint
+- `APM server` uses a push model metric collection i.e. the apps send the metrics to the APM server (through `opentelemetry-sdk apm sdk` for Django as example, see powerpoint)
+- `Prometheus` uses a pull model metric colelction i.e. the app needs to have a special endpoint open for prometheus to collect data from
+  - Prometheus provides client libraries for most programming languages that you can use to instrument in-house apps for Prometheus integration.
+  - If you don’t have access to the source code of 3rd-party apps, you won’t be able to directly instrument them via client libraries. In these situations, you can run a Prometheus exporter in a sidecar container that will reformat data for Prometheus.
+- 
