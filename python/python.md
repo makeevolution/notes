@@ -193,7 +193,7 @@ This is because the default is a reference type and so every assignment will ref
   ```
         from requests.sessions import HTTPAdapter
         with requests.Session() as s:
-            retries = Retry(total=2,  # total retries
+            retries = Retry(total=2,  # total retries; will retry on all connection errors (e.g. ReadTimeoutError, etc.) and response status codes specified below
                     backoff_factor=0.1,  # see docs for more info
                     status_forcelist=[ 500, 502, 503, 504 ])  # will also retry if response is in these
             s.mount(f"{self.host}/", HTTPAdapter(max_retries=retries))
