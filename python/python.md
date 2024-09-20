@@ -191,6 +191,7 @@ This is because the default is a reference type and so every assignment will ref
 - My own generic retry function for API requests:
   use generic library:
   ```
+        from requests.sessions import HTTPAdapter
         with requests.Session() as s:
             retries = Retry(total=2,  # total retries
                     backoff_factor=0.1,  # see docs for more info
