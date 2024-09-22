@@ -1,4 +1,4 @@
-- DO NOT USE `.all()` method! See `https://nextlinklabs.com/resources/insights/django-big-data-iteration` for alternatives
+- DO NOT USE `.all()` method! Remember `populate_from_artifactory()` so slow that we had so many issues!!!!!! See `https://nextlinklabs.com/resources/insights/django-big-data-iteration` for alternatives
 - check if status code is 2xx
 ```
 from rest_framework import status
