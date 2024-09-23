@@ -66,4 +66,6 @@
 - Zipkin Jaeger is for tracing
 - Traefik is competitor of nginx
 - kubectl upgrades support one v up and one v down
+- k8s has 3 release every year (every 4 months)
 - Linkerd and Istio: same thing
+- KNative is serverless like OpenFaas 
