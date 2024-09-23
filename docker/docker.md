@@ -57,3 +57,146 @@
   - More secure alternwtives are `gVisor` or `Kata`
   - `gVisor` creates a user space kernel called `Sentry`, which intercepts and handl2s host system calls (e.g. `open(/etc/passwd), connect(sockfd)`) made by the container and perform them in a more secure environment.
   - `Kata` creates a lightweight VM to run the container, even more secure
+
+- `namespaces` and `cgroups` example
+Example of cgroups and namespaces (General)
+
+Scenario: Isolating Processes on a Linux System
+
+Let’s consider a general example where we use cgroups and namespaces to isolate two different applications running on the same Linux host.
+
+1. Using cgroups
+
+Goal: Limit resource usage for a process group.
+
+Example:
+
+1. Create a cgroup:
+
+sudo cgcreate -g memory,cpu:/mygroup
+
+
+2. Set resource limits:
+
+sudo cgset -r memory.limit_in_bytes=500M mygroup
+sudo cgset -r cpu.shares=512 mygroup
+
+
+3. Run a process within the cgroup:
+
+sudo cgexec -g memory,cpu:mygroup ./my_application
+
+
+
+Explanation:
+
+This creates a cgroup named mygroup that limits memory usage to 500 MB and CPU shares to 512 (relative weight). Running my_application within this cgroup enforces these limits.
+
+
+2. Using namespaces
+
+Goal: Isolate the network and process IDs for two different applications.
+
+Example:
+
+1. Create a new network namespace:
+
+sudo ip netns add mynamespace
+
+
+2. Run a process in the new namespace:
+
+sudo ip netns exec mynamespace ./my_networked_application
+
+
+3. Verify the network namespace:
+
+ip netns list
+
+
+
+Explanation:
+
+This creates a new network namespace called mynamespace. Running my_networked_application in this namespace allows it to have its own network stack, separate from other applications on the host.
+
+
+Key Concepts Illustrated:
+
+cgroups: Control resource limits to prevent a single application from consuming too many resources on the host.
+
+Namespaces: Isolate application environments to ensure they operate independently, with separate views of system resources.
+
+
+Conclusion
+
+In this general example, we demonstrated how to use cgroups to limit resource usage and how to create and use namespaces for process isolation on a Linux system. These mechanisms are essential for managing multiple applications securely and efficiently on a single host.
+
+- example with containers:
+Example: Using cgroups and namespaces in a Container Environment
+
+Scenario: Running a Web Application in a Container
+
+Goal: Isolate resources and provide controlled access for a web application running in a Docker container.
+
+1. Using cgroups
+
+Setting Resource Limits:
+
+Scenario: You want to limit the memory and CPU usage of your web application to ensure it doesn't consume too many resources on the host.
+
+
+Command:
+
+docker run --memory=256m --cpus=1 my-web-app
+
+Explanation:
+
+This command runs the container for my-web-app with a memory limit of 256 MB and 1 CPU core. If the application tries to exceed these limits, it will be throttled or killed, ensuring that it does not impact other applications running on the host.
+
+
+2. Using Namespaces
+
+Isolating Network and Process IDs:
+
+Scenario: You want your web application to have its own network stack and process IDs, ensuring that it does not interfere with other applications.
+
+
+Command:
+
+docker run --name web-app --net my-network --rm my-web-app
+
+Explanation:
+
+The --net my-network option creates a custom network namespace for the container. This means that the container has its own network interfaces and IP addresses, isolated from the host and other containers.
+
+The --rm flag ensures that the container is removed after it stops, cleaning up resources automatically.
+
+
+3. Running a User Kernel (e.g., gVisor)
+
+Adding an Extra Layer of Security:
+
+Scenario: You want to run the same web application but with enhanced security against potential vulnerabilities.
+
+
+Command (using gVisor):
+
+docker run --runtime=runsc --name secure-web-app --memory=256m --cpus=1 my-web-app
+
+Explanation:
+
+This command uses runsc (the gVisor runtime) instead of the default Docker runtime. By running the application inside gVisor, all system calls from the container are intercepted and handled by the gVisor user-space kernel, which provides additional isolation from the host kernel.
+
+
+Summary of the Example
+
+Cgroups are used to manage and limit the resources (CPU and memory) allocated to the web application.
+
+Namespaces isolate the container's network and process IDs, preventing interference with other applications on the host.
+
+A user kernel (gVisor) adds an extra layer of security by handling system calls in user space, minimizing the risk of vulnerabilities that could affect the host.
+
+
+This example demonstrates how cgroups and namespaces work together in a containerized environment and how using a user kernel can enhance security for applications running in containers.
+
+
