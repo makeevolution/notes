@@ -63,3 +63,4 @@
 - Cluster network policies only manage traffic between pods, but they cant do zecurity like encrypt traffic etc
 - Zipkin Jaeger is for tracing
 - Traefik is competitor of nginx
+- kubectl upgrades support one v up and one v down
