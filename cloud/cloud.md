@@ -66,3 +66,4 @@
 - Zipkin Jaeger is for tracing
 - Traefik is competitor of nginx
 - kubectl upgrades support one v up and one v down
+- Linkerd and Istio: same thing
