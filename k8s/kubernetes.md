@@ -895,7 +895,7 @@ Therefore, in this way our encoded secrets are located only in one location (k8s
         ```
         So this means in V1 of the API, k8s puts `pods` in group `""` and `deployments` and `statefulsets` in `apps` group. When I say group here it refers to some internal group within its systems (idontcare what it really is, just that its like that). So it's like a **boilerplate** or **ceremony** that you need to do to use this feature.
      - The verbs is simply what `kubectl` commands you can do to the resources within the namespace.
-  - Still Bob wont have **permission** to e.g. list pods within the namespace! This is because we need to bind the `Role` above to a `RoleBinding` k8s object, which will actually give the permission. Example:
+  - lets bind the `Role` above to a `RoleBinding` k8s object, which will actually give the permission. Example:
     ```
     apiVersion: rbac.authorization.k8s.io/v1
     kind: RoleBinding
