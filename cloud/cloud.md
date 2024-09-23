@@ -54,6 +54,7 @@
   - Prometheus provides client libraries for most programming languages that you can use to instrument in-house apps for Prometheus integration.
   - If you don’t have access to the source code of 3rd-party apps, you won’t be able to directly instrument them via client libraries. In these situations, you can run a Prometheus exporter in a sidecar container that will reformat data for Prometheus.
   - If the app is a cron job (so it will die by the time prometheus tries to collect from it), it can push metrics to a tool called `PushGateway` that Prometheus offers, and then Prometheus will scrape it periodically
+  - Prometheus also offer tool called `AlertManager` to alert people on things not going well/when certain metrics values are reached
 - `namespaced vs virtualized vs sandboxed`;
   - namespaced resources isolated at kernel level ie process ids, network, file systems all are isolated, but they share the host kernel (less secure) e.g. Linux Containers LXC or Docker
      - if container host has kernel vulnerability, the host is vulnerable (kernel escape)
@@ -65,4 +66,3 @@
 - Zipkin Jaeger is for tracing
 - Traefik is competitor of nginx
 - kubectl upgrades support one v up and one v down
--`Pushgateway` is a tool to accept metrics pushed 
