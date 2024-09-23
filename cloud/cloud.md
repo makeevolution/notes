@@ -60,3 +60,4 @@
   - virtualized is VMWare, VirtualBox, Hyper V etc
     - expensive resource wise
   - Sandboxed is like running browser plugins or third party libraries ie run only one process pid in a secured environment
+- Cluster network policies only manage traffic between pods, but they cant do zecurity like encrypt traffic etc
