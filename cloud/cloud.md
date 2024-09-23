@@ -61,3 +61,5 @@
     - expensive resource wise
   - Sandboxed is like running browser plugins or third party libraries ie run only one process pid in a secured environment
 - Cluster network policies only manage traffic between pods, but they cant do zecurity like encrypt traffic etc
+- Zipkin Jaeger is for tracing
+- Traefik is competitor of nginx
