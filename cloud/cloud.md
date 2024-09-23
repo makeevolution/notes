@@ -53,4 +53,4 @@
 - `Prometheus` uses a pull model metric colelction i.e. the app needs to have a special endpoint open for prometheus to collect data from
   - Prometheus provides client libraries for most programming languages that you can use to instrument in-house apps for Prometheus integration.
   - If you don’t have access to the source code of 3rd-party apps, you won’t be able to directly instrument them via client libraries. In these situations, you can run a Prometheus exporter in a sidecar container that will reformat data for Prometheus.
-- 
+- `namespaced vs virtualized vs sandboxed`; namespaced is
