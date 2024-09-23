@@ -32,9 +32,9 @@
 - Every node that wants to run containers need a `container runtime`
   - A runtime can be either `high level` or `low level`
   - A `low level` container directly runs containers
-    - Example: `runc`, `crun`, `kata-runtime`
+    - Example: `runc`, `cri-o`, `kata-runtime`
   - A `high level` container manages containers and its images
-    - Example: `containerd`, `rkt`, `Docker`, `Podman`
+    - Example: `containerd`, `rkt`, `Docker`, `Podman`, `Kata`, `gVisor`
     - They talk to the `runc` low level `container runtime` to run the containers
     - Some are limited in capability (e.g. `containerd` cannot build images), while others are more powerful but more bloated (e.g. `Docker` can build images)
     - However, some depend on each other to work (e.g. `Docker` needs specifically `containerd` to talk to `runc`; it cannot talk to `runc` directly)
@@ -52,3 +52,8 @@
     - OCI compliant so it can run standard images
     - Most high-level container runtimes need a translator (i.e. `shim`) to translate the `CRI` so that kubelet can talk to it
     - Below image explains many possible alternatives
+
+- Docker uses `Linux namespaces` and `cgroups` to isolate pids, which is not so secure.
+  - More secure alternwtives are `gVisor` or `Kata`
+  - `gVisor` creates a user space kernel called `Sentry`, which intercepts and handl2s host system calls (e.g. `open(/etc/passwd), connect(sockfd)`) made by the container and perform them in a more secure environment.
+  - `Kata` creates a lightweight VM to run the container, even more secure
