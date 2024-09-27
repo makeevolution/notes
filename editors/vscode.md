@@ -1,2 +1,3 @@
 - From normal mode of vim: ctrl+d until all matches desired are selected, then escape, then i. But first disable ctrl+d from vim settings (go to file preferences ctrl+d remove vim handling)
-- Also disable ctrl + u, ctrl + k. To skip the current selection, do ctrl + k + d. To remove selection and go back use ctrl + u. 
+- Also disable ctrl + u, ctrl + k. To skip the current selection, do ctrl + k + d. To remove selection and go back use ctrl + u.
+- Get Pycharm's compare current commit with other branch (e.g. master) in VSCode for free, use Git Graph instead of Git Lens: https://stackoverflow.com/a/74624857 
