@@ -15,12 +15,12 @@
 ### JWT:
     - After login, user gets an access and refresh token in the response body
     - Users then need to embed this token as header with value Authorization: Bearer
-    - When server gets this, they will use some algorithm to decode the token and authenticates user if token is valid and not yet expired
- expired  
+    - When server gets this, they will use some algorithm to decode the token and authenticates user if token is valid and not yet expired  
     - Since an algorithm is used to check the token, the approach is serverless (no db reads) and thus scales well
     - if token expires, client can create a middleware to catch 401, send refresh token, get a new access token, and retry the request
     - JWT is a way of encoding a token. Other alternatives include having opaque tokens, CWT (cbor web tokens, RFC-8392), etc                       
-- OAuth:
+
+### OAuth:
     - OAuth is a specification for an authorization protocol/flow (i.e. specifying what a principal, that is, a user or service, can do to a resource in a particular server)
     - Thus comparing it with JWT is like comparing apples and oranges; they are different things
     - There are 3 key players:
@@ -30,8 +30,7 @@
     - Simple guide to understand the above https://darutk.medium.com/the-simplest-guide-to-oauth-2-0-8c71bd9a15bb
     - There are 5 different authorization flows (only 4 shown here):
     ![alt text](oauth_flows.png "These are also the grant_types parameter")
-    Read the following article, very useful:
-https://darutk.medium.com/diagrams-and-movies-of-all-the-oauth-2-0-flows-194f3c3ade85
+    Read the following article, very useful: https://darutk.medium.com/diagrams-and-movies-of-all-the-oauth-2-0-flows-194f3c3ade85
     - We have done the password one with VFM
         -  But even with this one we didn't really have a separate web app (the frontend of VFM don't really count as a separate web app I think)
         - The OAuth protocol is actually made to replace this way of authorizing (since now the web app now knows the username and password of the user's backend resource); but it was made here for backwards compatibility
