@@ -40,7 +40,8 @@
 
 ### OAuth2 scopes, Groups, Roles, Permissions, explanation
 
-After my studying, here is a summary of how OAuth2 Scopes works with in tandem with Groups and Roles concept:
+After my studying, here is a summary of how OAuth2 Scopes can wors with in tandem with Groups and Roles (RBAC) security:
+0. There are 3 actors here: clients, a backend/resource server and a auth server
 1. A scope is a permission to interact with a certain resource in the Resource Server (e.g. `view:food`)
 2. An OAuth2 client (i.e. an `Application` in `Django-oauth-toolkit`) has a particular set of scopes to interact with
    the resources in the Resource Server (e.g. `view:food view:car`); this is set by the backend server and is to be registered in the authorization server; the auth server will then need to be updated if there are new resources made and is to be protected.
