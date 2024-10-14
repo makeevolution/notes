@@ -2,7 +2,8 @@ course: https://app.pluralsight.com/library/courses/kubernetes-installation-conf
 ---------------------------------
 # Debugging issues
 ### From experience
-- Easily get pod name from output of `kubectl get pods` given row name
+- set default namespace for easy kubectl `kubectl config set-context --current --namespace=mynamespace`
+- Easily get pod name from output of `kubectl get pods` given row name (for namespace set in your kubeconfig)
   ```
   #!/bin/bash
 
