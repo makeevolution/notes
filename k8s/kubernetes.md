@@ -6,30 +6,30 @@ course: https://app.pluralsight.com/library/courses/kubernetes-installation-conf
   ```
   #!/bin/bash
 
-# Check if a row number was provided
-if [ -z "$1" ]; then
-  echo "Usage: $0 <row_number>"
-  exit 1
-fi
+  # Check if a row number was provided
+  if [ -z "$1" ]; then
+    echo "Usage: $0 <row_number>"
+    exit 1
+  fi
 
-# Set the row number from the first argument
-ROW_NUMBER=$1
+  # Set the row number from the first argument
+  ROW_NUMBER=$1
 
-# Get the pod name for the given row number
-POD_NAME=$(kubectl get pods --no-headers | sed -n "${ROW_NUMBER}p" | awk '{print $1}')
+  # Get the pod name for the given row number
+  POD_NAME=$(kubectl get pods --no-headers | sed -n "${ROW_NUMBER}p" | awk '{print $1}')
 
-# Check if the pod name was found
-if [ -z "$POD_NAME" ]; then
-  echo "No pod found at row $ROW_NUMBER"
-  exit 1
-fi
+  # Check if the pod name was found
+  if [ -z "$POD_NAME" ]; then
+    echo "No pod found at row $ROW_NUMBER"
+    exit 1
+  fi
 
-# Output the pod name
-echo "Pod at row $ROW_NUMBER: $POD_NAME"
+  # Output the pod name
+  echo "Pod at row $ROW_NUMBER: $POD_NAME"
 
-# Now you can use this variable for further kubectl commands if needed
+  # Now you can use this variable for further kubectl commands if needed
 
-# ./get-pod-by-row.sh 5
+  # ./get-pod-by-row.sh 5
   ```
 
 - How to get into a `crashloopbackoff` container: in the container yaml, set this: `command: ["sh", "-c", "while true; do echo hello; sleep 86400; done"]` to override the image's entrypoint, and thus you can investigate the container's contents (e.g. whoami, ls -la, pwd, etc.) easily!!!, and also run the supposed command one by one.
