@@ -25,3 +25,29 @@
         }
         this.enableAddTestCasesToSuiteButton();
     }
+
+
+
+
+
+updateTestCasesToAddToSuite(tc_id: number): void {
+    const testCaseAlreadyAdded = this.testCasesToAddToSuite.some((test_case) => test_case.id === tc_id);
+
+    if (testCaseAlreadyAdded) {
+        this.testCasesToAddToSuite = this.testCasesToAddToSuite.filter((test_case) => test_case.id !== tc_id);
+    } else {
+        const sourceTestCases = this.isSearchOnBackendEnabled ? this.filteredSearchedTestCases : this.filteredTestCases;
+        const testCaseToAdd = sourceTestCases.find((test_case) => test_case.id === tc_id);
+
+        if (testCaseToAdd) {
+            this.testCasesToAddToSuite.push(testCaseToAdd);
+        }
+    }
+
+    this.cdr.detectChanges();
+
+    const totalTestCases = this.isSearchOnBackendEnabled ? this.filteredSearchedTestCases.length : this.filteredTestCases.length;
+    this.selectAllCheckboxesChecked = this.testCasesToAddToSuite.length === totalTestCases;
+
+    this.enableAddTestCasesToSuiteButton();
+}
