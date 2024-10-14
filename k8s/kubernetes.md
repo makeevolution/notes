@@ -10,7 +10,7 @@ course: https://app.pluralsight.com/library/courses/kubernetes-installation-conf
   # Check if a row number was provided
   if [ -z "$1" ]; then
     echo "Usage: $0 <row_number>"
-    exit 1
+    return
   fi
 
   # Set the row number from the first argument
@@ -22,12 +22,12 @@ course: https://app.pluralsight.com/library/courses/kubernetes-installation-conf
   # Check if the pod name was found
   if [ -z "$POD_NAME" ]; then
     echo "No pod found at row $ROW_NUMBER"
-    exit 1
+    return
   fi
 
   # Output the pod name
   echo "Pod at row $ROW_NUMBER: $POD_NAME"
-
+  echo "POD_NAME env var contains this pod name"
   # Now you can use this variable for further kubectl commands if needed
 
   # ./get-pod-by-row.sh 5
