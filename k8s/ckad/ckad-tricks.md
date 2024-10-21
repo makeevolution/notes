@@ -7,7 +7,10 @@
   kubectl get pods <PODNAME> -o yaml
   ```
 - Edit yaml: `kubectl edit resource/resourcename` e.g. `kubectl edit deployment/name`
-
+- `k explain po.spec > po-spec
+k explain po --recursive=true > po-full`
+- Run a throwaway, rm will ensure it is deleted once complete, and restart makes sure it doesnt restart `k run busybox --image=busybox --rm -it --restart=Never -- wget -qO- https://www.google.com`
+- 
 ### DEployment
 - Deployment history: `kubectl rollout deployment/deplname`
 - Deployment strategies:
@@ -21,9 +24,6 @@
     - To use Helm to do Blue-Green deployment, use `flagger` https://docs.flagger.app/tutorials/kubernetes-blue-green
   - Canary	Gradually releases the new version to a subset of users before full rollout.	Fine-grained control, risk mitigation	Requires custom implementation
 
-
-- °k explain po.spec > po-spec
-k explain po --recursive=true > po-full`
 ## NetworkPolicies
 - `Network Policies`: If you configure it for ingress, only those configured for that ingress will be allowed! Other connections won't work!
 Example:
