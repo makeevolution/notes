@@ -10,7 +10,7 @@
 - `k explain po.spec > po-spec
 k explain po --recursive=true > po-full`
 - Run a throwaway, rm will ensure it is deleted once complete, and restart makes sure it doesnt restart `k run busybox --image=busybox --rm -it --restart=Never -- wget -qO- https://www.google.com`
-- 
+- `alias kn='kubectl config set-context --current --namespace'`
 ### DEployment
 - Deployment history: `kubectl rollout deployment/deplname`
 - Deployment strategies:
