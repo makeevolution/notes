@@ -1,10 +1,26 @@
 
 - `https://killercoda.com/playgrounds/scenario/ckad`
 
+## General
 - Do not write YAML, but use cmd line and output to yaml to check e.g.
   ```
   kubectl get pods <PODNAME> -o yaml
   ```
+- Edit yaml: `kubectl edit resource/resourcename` e.g. `kubectl edit deployment/name`
+
+### DEployment
+- Deployment history: `kubectl rollout deployment/deplname`
+- Deployment strategies:
+  - RollingUpdate	Gradually replaces old Pods with new ones, ensuring minimal downtime. This is the default   strategy.	Zero downtime, rollback possible	Takes longer for large updates
+  - Recreate	Deletes all old Pods first, then creates new Pods.	Simple, no overlap between versions	Causes downtime during updates
+  - Blue-Green	Deploys the new version alongside the old version and switches traffic once validation is complete.	Zero downtime, easy rollback	Resource-intensive, custom setup needed
+    - To do this, edit the yaml using `kubectl edit` and put in the updates (e.g. new image version), and afterwards, make the `podSelector` label point to a new label, then apply it.
+    - The service object will still point to the old pods with old label, so existing stuff is fine
+    - We have the new deployment. Then we can test it out.
+    - Once it's found to be fine, `kubcetl edit` the service to target the pods with the new labels.
+    - To use Helm to do Blue-Green deployment, use `flagger` https://docs.flagger.app/tutorials/kubernetes-blue-green
+  - Canary	Gradually releases the new version to a subset of users before full rollout.	Fine-grained control, risk mitigation	Requires custom implementation
+
 
 ## NetworkPolicies
 - `Network Policies`: If you configure it for ingress, only those configured for that ingress will be allowed! Other connections won't work!
