@@ -22,6 +22,8 @@
   - Canary	Gradually releases the new version to a subset of users before full rollout.	Fine-grained control, risk mitigation	Requires custom implementation
 
 
+- °k explain po.spec > po-spec
+k explain po --recursive=true > po-full`
 ## NetworkPolicies
 - `Network Policies`: If you configure it for ingress, only those configured for that ingress will be allowed! Other connections won't work!
 Example:
