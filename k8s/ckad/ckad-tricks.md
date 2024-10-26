@@ -14,6 +14,57 @@ k explain po --recursive=true > po-full`
 - If you use `-it`, you don't need to do `/bin/sh -c` in your command!
 - If you make a command in yaml though, need to still include sh:
   `command: ['sh', '-c', "echo 'test 123' > somefile.txt"]
+
+### ConfigMap
+- The `data` field is always a key-value pair.
+```
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: complex-config
+data:
+  # This will be a multi-line file, e.g., a configuration file or certificate
+  config-file.yaml: |
+    setting1: value1
+    setting2: value2
+    setting3: value3
+    # Multiline data can include complex configurations
+    database:
+      host: db.example.com
+      port: 5432
+  # This is a simple key-value pair that could be used as an environment variable
+  ENVIRONMENT: "production"
+```
+- This `data` can be used in two ways in the pod: as a file mounted into the pod or as a env var:
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-using-complex-config
+spec:
+  containers:
+  - name: my-container
+    image: nginx
+    # Using the simple key as an environment variable
+    env:
+    - name: ENVIRONMENT
+      valueFrom:
+        configMapKeyRef:
+          name: complex-config
+          key: ENVIRONMENT
+    # Mounting the multi-line YAML file as a volume
+    volumeMounts:
+    - name: config-volume
+      mountPath: /etc/config
+  volumes:
+  - name: config-volume
+    configMap:
+      name: complex-config
+```
+In this pod, there will be two files then created, `ENVIRONMENT` and `config.yaml`, in the path `/etc/config`, with the contents appropriately. Also, the env var `ENVIRONMENT` with value `production` will be available.
+
+So for env var, you can choose which key to inject, but for volume mount, all data in the configmap will be written!
+
 ### Deployment
 - Deployment history: `kubectl rollout deployment/deplname`
 - Deployment strategies:
