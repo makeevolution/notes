@@ -14,7 +14,7 @@ k explain po --recursive=true > po-full`
 - If you use `-it`, you don't need to do `/bin/sh -c` in your command!
 - If you make a command in yaml though, need to still include sh:
   `command: ['sh', '-c', "echo 'test 123' > somefile.txt"]
-### DEployment
+### Deployment
 - Deployment history: `kubectl rollout deployment/deplname`
 - Deployment strategies:
   - RollingUpdate	Gradually replaces old Pods with new ones, ensuring minimal downtime. This is the default   strategy.	Zero downtime, rollback possible	Takes longer for large updates
