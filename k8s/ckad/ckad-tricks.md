@@ -16,7 +16,7 @@ k explain po --recursive=true > po-full`
   `command: ['sh', '-c', "echo 'test 123' > somefile.txt"]
 
 ### ConfigMap
-- The `data` field is always a key-value pair.
+- Stores data. The `data` field is always a key-value pair.
 ```
 apiVersion: v1
 kind: ConfigMap
@@ -35,7 +35,7 @@ data:
   # This is a simple key-value pair that could be used as an environment variable
   ENVIRONMENT: "production"
 ```
-- This `data` can be used in two ways in the pod: as a file mounted into the pod or as a env var:
+- This `data` can be used in two ways in the pod: as a file mounted into the pod or as a env var. Here we show both! :
 ```
 apiVersion: v1
 kind: Pod
@@ -65,6 +65,59 @@ In this pod, there will be two files then created, `ENVIRONMENT` and `config.yam
 
 So for env var, you can choose which key to inject, but for volume mount, all data in the configmap will be written!
 
+### Volumes and VolumeMounts!
+- All the bullshit that always makes you feel overwhelmed and lose time in the exam (e.g. `emptyDir`, `persistentVolumeClaim`) is ALWAYS in the `volumes` section; in `volumeMounts` you only be a customer and ask hey I want this volume with this name, I wanna mount it in this location within me!
+- All the posssibilities of the bullshit:
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-app
+spec:
+  containers:
+  - name: app-container
+    image: nginx
+    volumeMounts:
+    - name: config-volume          # Mounting ConfigMap as files
+      mountPath: /etc/config       # Files will be accessible in /etc/config with filenames of keys and content of each file being the value of each key
+    - name: persistent-storage      # Mounting PersistentVolume for persistent storage
+      mountPath: /data              # Files will be accessible in /data
+    - name: secret-volume           # Mounting Secret as files
+      mountPath: /etc/secret        # will create files with filenames of keys and content of each file being the value of each key
+    - name: temp-storage            # Mounting EmptyDir for temporary storage
+      mountPath: /tmp               # Files will be accessible in /tmp by all containers in the pod claiming temp-storage
+    - name: host-volume             # Mounting HostPath for access to host filesystem
+      mountPath: /host              # Files will be accessible in /host
+    - name: nfs-volume              # Mounting NFS for network storage
+      mountPath: /mnt/nfs           # Files will be accessible in /mnt/nfs
+    - name: downward-api-volume     # Mounting Downward API for pod metadata
+      mountPath: /etc/podinfo       # Pod metadata will be accessible in /etc/podinfo
+  volumes:
+  - name: config-volume
+    configMap:
+      name: my-config               # Reference to a ConfigMap named 'my-config'
+  - name: persistent-storage
+    persistentVolumeClaim:
+      claimName: my-pvc              # Reference to a PersistentVolumeClaim named 'my-pvc'
+  - name: secret-volume
+    secret:
+      secretName: my-secret          # Reference to a Secret named 'my-secret'
+  - name: temp-storage
+    emptyDir: {}                    # Creates an EmptyDir volume
+  - name: host-volume
+    hostPath:
+      path: /host/path               # Reference to a path on the host node
+  - name: nfs-volume
+    nfs:
+      server: nfs-server.example.com  # NFS server hostname
+      path: /path/to/share            # Path on the NFS server
+  - name: downward-api-volume
+    downwardAPI:
+      items:
+      - path: "pod_name"
+        fieldRef:
+          fieldPath: metadata.name     # Accesses pod name through Downward API
+```
 ### Deployment
 - Deployment history: `kubectl rollout deployment/deplname`
 - Deployment strategies:
