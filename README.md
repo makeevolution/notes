@@ -145,6 +145,101 @@ def test_stale_xxx_error_during_deletion(mocker):
     request = MagicMock()
     response = view.stale_xxx(request)
 
+
+
+
+
+    import pytest
+from unittest.mock import MagicMock
+from django.db import transaction
+
+# Assuming the class is in a file named `services.py` and imported as follows:
+# from services import TestCaseService
+
+
+def test_remove_stale_tc_normal_execution(mocker):
+    """Test normal execution where stale test case and its dependencies are removed."""
+    # Mock dependencies
+    mock_hhhhh = mocker.patch("services.hhhhh")
+    mock_logger = mocker.patch("services.logger")
+
+    # Mock objects and behavior
+    mock_tc_instance = MagicMock()
+    mock_hhhhh.objects.get.return_value = mock_tc_instance
+    mock_tce_instance = MagicMock()
+    mock_tc_instance.testcaseexecution_set.order_by.return_value = [mock_tce_instance]
+    mock_tce_instance.testcycle.testcaseexecution_set.get.return_value = mock_tce_instance
+
+    # Call the method
+    stale_latest = [("key1", "value1")]
+    TestCaseService.remove_stale_tc(stale_latest)
+
+    # Assertions
+    mock_hhhhh.objects.get.assert_called_once_with(**dict(stale_latest))
+    mock_logger.info.assert_any_call(f"Processing tc '{mock_tc_instance.id}, {mock_tc_instance}' by removing dependencies")
+    mock_tc_instance.tags.clear.assert_called_once()
+    mock_tce_instance.testcycle.testcaseexecution_set.get.assert_called_once_with(id=mock_tce_instance.id)
+    mock_tce_instance.delete.assert_called_once()
+    mock_tc_instance.delete.assert_called_once()
+    mock_logger.info.assert_any_call(f"Removing stale tc '{mock_tc_instance}'")
+
+
+def test_remove_stale_tc_transaction_error(mocker):
+    """Test when a transaction error occurs."""
+    mock_hhhhh = mocker.patch("services.hhhhh")
+    mock_logger = mocker.patch("services.logger")
+
+    # Simulate a transaction error
+    mock_hhhhh.objects.get.side_effect = transaction.TransactionManagementError("Transaction error")
+
+    # Call the method and expect an exception
+    stale_latest = [("key1", "value1")]
+    with pytest.raises(transaction.TransactionManagementError, match="Transaction error"):
+        TestCaseService.remove_stale_tc(stale_latest)
+
+    # Assertions
+    mock_hhhhh.objects.get.assert_called_once_with(**dict(stale_latest))
+    mock_logger.info.assert_not_called()
+
+
+def test_remove_stale_tc_empty_dependencies(mocker):
+    """Test execution when no dependencies are present."""
+    mock_hhhhh = mocker.patch("services.hhhhh")
+    mock_logger = mocker.patch("services.logger")
+
+    # Mock objects and behavior
+    mock_tc_instance = MagicMock()
+    mock_hhhhh.objects.get.return_value = mock_tc_instance
+    mock_tc_instance.testcaseexecution_set.order_by.return_value = []
+
+    # Call the method
+    stale_latest = [("key1", "value1")]
+    TestCaseService.remove_stale_tc(stale_latest)
+
+    # Assertions
+    mock_hhhhh.objects.get.assert_called_once_with(**dict(stale_latest))
+    mock_logger.info.assert_any_call(f"Processing tc '{mock_tc_instance.id}, {mock_tc_instance}' by removing dependencies")
+    mock_tc_instance.tags.clear.assert_called_once()
+    mock_tc_instance.delete.assert_called_once()
+
+
+def test_remove_stale_tc_missing_test_case(mocker):
+    """Test execution when the test case is not found."""
+    mock_hhhhh = mocker.patch("services.hhhhh")
+    mock_logger = mocker.patch("services.logger")
+
+    # Simulate a missing test case
+    mock_hhhhh.objects.get.side_effect = hhhhh.DoesNotExist("Test case not found")
+
+    # Call the method and expect an exception
+    stale_latest = [("key1", "value1")]
+    with pytest.raises(hhhhh.DoesNotExist, match="Test case not found"):
+        TestCaseService.remove_stale_tc(stale_latest)
+
+    # Assertions
+    mock_hhhhh.objects.get.assert_called_once_with(**dict(stale_latest))
+    mock_logger.info.assert_not_called()
+
     # Assertions
     assert response.status_code == status.HTTP_202_ACCEPTED
     mock_logger.warning.assert_called_once_with(
