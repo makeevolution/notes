@@ -31,3 +31,20 @@
             {DETAIL_STRING: resp_msg},
             status=status.HTTP_202_ACCEPTED,
         )
+
+
+
+    @classmethod
+    def remove_stale_tc(cls, stale_latest: typing.Iterable[tuple[str, str]]) -> None:  # noqa: WPS213
+        with transaction.atomic():
+            tc = hhhhh.objects.get(**dict(stale_latest))
+            logger.info(f"Processing tc '{tc.id}, {tc}' by removing dependencies")
+            tc.tags.clear()
+            for tce in tc.testcaseexecution_set.order_by("-run_number"):
+                logger.info(f"Removing tce '{tce}' from hhhhhhhhhhh {tce.testcycle}")
+                tce.testcycle.testcaseexecution_set.get(id=tce.id).delete()
+                tce.testcycle.save()
+                logger.info(f"Removing tce '{tce}")
+                tce.delete()
+            logger.info(f"Removing stale tc '{tc}")
+            tc.delete()
