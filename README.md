@@ -48,3 +48,106 @@
                 tce.delete()
             logger.info(f"Removing stale tc '{tc}")
             tc.delete()
+
+
+
+
+
+
+
+    import pytest
+from rest_framework import status
+from unittest.mock import MagicMock
+
+# Assuming the view is in a file named `views.py` and imported as follows:
+# from views import YourViewClass
+
+def test_stale_xxx_normal_execution(mocker):
+    """Test normal execution where stale records are deleted successfully."""
+    mock_fsfsfs = mocker.patch("views.fsfsfs")
+    mock_testcase_objects = mocker.patch("views.TestCase.objects")
+    mock_testcase_service = mocker.patch("views.TestCaseService")
+
+    # Mock return values
+    mock_fsfsfs.return_value.get_all_testcases.return_value = [{"key1": "value1"}]
+    mock_testcase_objects.values.return_value = [{"key1": "value1"}, {"key2": "value2"}]
+
+    # Call the function
+    view = YourViewClass()
+    request = MagicMock()
+    response = view.stale_xxx(request)
+
+    # Assertions
+    assert response.status_code == status.HTTP_202_ACCEPTED
+    assert response.data == {"detail": "Deletion of stale xxx in db is complete!"}
+    mock_testcase_service.return_value.remove_stale_tc.assert_called_once_with(("key2", "value2"))
+
+
+def test_stale_xxx_no_stale_records(mocker):
+    """Test when no stale records are found."""
+    mock_fsfsfs = mocker.patch("views.fsfsfs")
+    mock_testcase_objects = mocker.patch("views.TestCase.objects")
+    mock_logger = mocker.patch("views.logger")
+
+    # Mock return values
+    mock_fsfsfs.return_value.get_all_testcases.return_value = [{"key1": "value1"}]
+    mock_testcase_objects.values.return_value = [{"key1": "value1"}]
+
+    # Call the function
+    view = YourViewClass()
+    request = MagicMock()
+    response = view.stale_xxx(request)
+
+    # Assertions
+    assert response.status_code == status.HTTP_202_ACCEPTED
+    assert response.data == {"detail": "Deletion of stale xxx in db is complete!"}
+    mock_logger.warning.assert_not_called()
+
+
+def test_stale_xxx_error_during_deletion(mocker):
+    """Test when an error occurs during the deletion of stale records."""
+    mock_fsfsfs = mocker.patch("views.fsfsfs")
+    mock_testcase_objects = mocker.patch("views.TestCase.objects")
+    mock_testcase_service = mocker.patch("views.TestCaseService")
+    mock_logger = mocker.patch("views.logger")
+    mock_traceback = mocker.patch("views.traceback.format_exc", return_value="Mock Traceback")
+
+    # Mock return values
+    mock_fsfsfs.return_value.get_all_testcases.return_value = [{"key1": "value1"}]
+    mock_testcase_objects.values.return_value = [{"key1": "value1"}, {"key2": "value2"}]
+
+    # Simulate an exception during deletion
+    mock_testcase_service.return_value.remove_stale_tc.side_effect = Exception("Deletion Error")
+
+    # Call the function
+    view = YourViewClass()
+    request = MagicMock()
+    response = view.stale_xxx(request)
+
+    # Assertions
+    assert response.status_code == status.HTTP_500_INTERNAL_SERVER_ERROR
+    assert response.data == {"detail": "Deletion Error"}
+    mock_logger.error.assert_called_once_with("Mock Traceback")
+
+
+    def test_stale_xxx_logs_warning(mocker):
+        """Test that a warning is logged when discrepancies are found."""
+        mock_fsfsfs = mocker.patch("views.fsfsfs")
+        mock_testcase_objects = mocker.patch("views.TestCase.objects")
+        mock_logger = mocker.patch("views.logger")
+    
+    # Mock return values
+    mock_fsfsfs.return_value.get_all_testcases.return_value = [{"key1": "value1"}]
+    mock_testcase_objects.count.return_value = 2
+
+    # Call the function
+    view = YourViewClass()
+    request = MagicMock()
+    response = view.stale_xxx(request)
+
+    # Assertions
+    assert response.status_code == status.HTTP_202_ACCEPTED
+    mock_logger.warning.assert_called_once_with(
+        "There are 1 xxx, but sfsfsf db has more: 2! source of truth; deleting these xxx from db"
+    )
+    
