@@ -4,44 +4,20 @@
 
 # To start the services, run: docker-compose up -d
 # To manually create the network beforehand, run: docker network create mynetwork
+from rest_framework import serializers
 
-version: '3.9'
-services:
-  mongo:
-    image: bitnami/mongodb:8.0.3-debian-12-r0
-    container_name: mongo
-    ports:
-      - "27017:27017"
-    environment:
-      # The username for the MongoDB root user (admin user).
-      - MONGO_INITDB_ROOT_USERNAME=ramen
-      # The password for the MongoDB root user (admin user).
-      - MONGO_INITDB_ROOT_PASSWORD=iLoveJapan
-    networks:
-      - mynetwork
+class RootCauseSerializer(serializers.Serializer):
+    id = serializers.CharField(read_only=True)  # MongoDB's ObjectId
+    root_cause = serializers.ListField(
+        child=serializers.CharField(max_length=200)
+    )
 
-  mongo-express:
-    image: mongo-express
-    container_name: mongo-express
-    ports:
-      - "8081:8081"
-    environment:
-      # The connection string to access the MongoDB database.
-      # Format: mongodb://<host>:<port>/
-      # It points to the "mongo" service created in this file.
-      - ME_CONFIG_MONGODB_URL=mongodb://mongo:27017/
-      # Disables basic authentication for accessing the Mongo Express UI.
-      # Set to "true" to enable authentication.
-      - ME_CONFIG_BASICAUTH=false
-      # The username for MongoDB administrative access, required by Mongo Express.
-      # Must match the MongoDB root username set in the "mongo" service.
-      - ME_CONFIG_MONGODB_ADMINUSERNAME=ramen
-      # The password for MongoDB administrative access, required by Mongo Express.
-      # Must match the MongoDB root password set in the "mongo" service.
-      - ME_CONFIG_MONGODB_ADMINPASSWORD=iLoveJapan
-    networks:
-      - mynetwork
+    def create(self, validated_data):
+        # Create a new document in MongoDB
+        return RootCause.objects.create(**validated_data)
 
-networks:
-  mynetwork:
-    driver: bridge
+    def update(self, instance, validated_data):
+        # Update the existing document
+        instance.root_cause = validated_data.get("root_cause", instance.root_cause)
+        instance.save()
+        return instance
