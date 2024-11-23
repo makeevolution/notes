@@ -5,43 +5,106 @@
 # To start the services, run: docker-compose up -d
 # To manually create the network beforehand, run: docker network create mynetwork
 
-
-from rest_framework import serializers
+from rest_framework import viewsets
+from rest_framework.response import Response
 from myapp.models import RootCause
-from typing import Any, Dict
+from myapp.serializers import RootCauseSerializer
+from typing import Any
 
 
-class RootCauseSerializer(serializers.Serializer):
+class RootCauseViewSet(viewsets.ModelViewSet):
     """
-    Serializer for the RootCause model. It converts RootCause documents into
-    JSON format and validates incoming data for creating or updating documents.
+    A viewset for handling CRUD operations on the RootCause model.
+    Provides actions to list, retrieve, create, update, and delete root cause documents.
     """
-    id: str  # MongoDB ObjectId (as a string)
-    root_cause: list[str]  # List of strings representing the root cause items
+    queryset = RootCause.objects.all()
+    serializer_class = RootCauseSerializer
 
-    def create(self, validated_data: Dict[str, Any]) -> RootCause:
+    def list(self, request: Any) -> Response:
         """
-        Create a new RootCause document from the validated data.
+        List all RootCause documents in the database.
 
         Args:
-            validated_data (dict): The validated data for the new RootCause document.
+            request (HttpRequest): The incoming HTTP request.
 
         Returns:
-            RootCause: The created RootCause document.
+            Response: A DRF Response object containing the serialized data.
         """
-        return RootCause.objects.create(**validated_data)
+        root_causes = RootCause.objects.all()
+        serializer = self.get_serializer(root_causes, many=True)
+        return Response(serializer.data)
 
-    def update(self, instance: RootCause, validated_data: Dict[str, Any]) -> RootCause:
+    def retrieve(self, request: Any, pk: str = None) -> Response:
         """
-        Update an existing RootCause document with the validated data.
+        Retrieve a single RootCause document by its ID.
 
         Args:
-            instance (RootCause): The existing RootCause document to be updated.
-            validated_data (dict): The validated data for the update.
+            request (HttpRequest): The incoming HTTP request.
+            pk (str): The ID of the RootCause document to retrieve.
 
         Returns:
-            RootCause: The updated RootCause document.
+            Response: A DRF Response object containing the serialized data of the document.
         """
-        instance.root_cause = validated_data.get('root_cause', instance.root_cause)
-        instance.save()
-        return instance
+        try:
+            root_cause = RootCause.objects.get(id=pk)
+        except RootCause.DoesNotExist:
+            return Response({"detail": "Not found."}, status=404)
+
+        serializer = self.get_serializer(root_cause)
+        return Response(serializer.data)
+
+    def create(self, request: Any) -> Response:
+        """
+        Create a new RootCause document from the incoming request data.
+
+        Args:
+            request (HttpRequest): The incoming HTTP request containing the data for the new RootCause.
+
+        Returns:
+            Response: A DRF Response object containing the created RootCause data.
+        """
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+
+    def update(self, request: Any, pk: str = None) -> Response:
+        """
+        Update an existing RootCause document with the provided data.
+
+        Args:
+            request (HttpRequest): The incoming HTTP request containing the updated data.
+            pk (str): The ID of the RootCause document to update.
+
+        Returns:
+            Response: A DRF Response object containing the updated RootCause data.
+        """
+        try:
+            root_cause = RootCause.objects.get(id=pk)
+        except RootCause.DoesNotExist:
+            return Response({"detail": "Not found."}, status=404)
+
+        serializer = self.get_serializer(root_cause, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=400)
+
+    def destroy(self, request: Any, pk: str = None) -> Response:
+        """
+        Delete a RootCause document by its ID.
+
+        Args:
+            request (HttpRequest): The incoming HTTP request.
+            pk (str): The ID of the RootCause document to delete.
+
+        Returns:
+            Response: A DRF Response indicating the outcome of the delete operation.
+        """
+        try:
+            root_cause = RootCause.objects.get(id=pk)
+            root_cause.delete()
+            return Response(status=204)
+        except RootCause.DoesNotExist:
+            return Response({"detail": "Not found."}, status=404)
