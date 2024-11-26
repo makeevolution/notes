@@ -5,15 +5,11 @@
 # To start the services, run: docker-compose up -d
 # To manually create the network beforehand, run: docker network create mynetwork
 
-
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from myapp.views import RootCauseViewSet
-
-router = DefaultRouter()
-router.register(r'root-causes', RootCauseViewSet, basename='rootcause')
-
-urlpatterns = [
-    path('', include(router.urls)),
-]
-
+def dispatch(self, request, *args, **kwargs):
+        # Check MongoDB connection before processing any request
+        if not ensure_mongo_connection(self.db_name, self.host, self.port, self.username, self.password):
+            return Response(
+                {"error": "Database connection failed. Please check MongoDB settings."},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+        return super().dispatch(request, *args, **kwargs)
