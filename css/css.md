@@ -1,5 +1,6 @@
 # CSS
 
+use `vh` and `vw` to make windows proportional to viewport dimenstion (if you resize broswer it will nicely scae)
 ## Flexbox
 - https://codepen.io/enxaneta/full/adLPwv/ a good codepen to understand differences between Flexbox classes
 - For `flex-direction: row`, use `justify-content` to align all items horizontally and `align-items` to align items vertically; see https://flexboxfroggy.com/#en question 5
