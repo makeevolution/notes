@@ -6,3 +6,6 @@ Refactoring this code focuses on improving its efficiency, readability, and main
             for pattern in root_causes:
                 if re.search(pattern, line):
                     no_of_root_causes += 1
+     no_of_lines += 1
+
+ return no_of_lines, no_f_root_causes
