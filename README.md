@@ -1,88 +1,86 @@
 3# notes
 
 ## Notes on shortcuts/lessons learned for different topics
-pageContainsRootCause(isFirstRootCause: boolean): Promise<boolean> {
-    return new Promise((resolve, reject) => {
-        this.api.obtainLogContentForTce(
-            this.tce.id,
-            this.currentPage,
-            this.itemsPerPage,
-            isFirstRootCause, // Pass the parameter dynamically
-            !isFirstRootCause // Flip the value for the second flag
-        ).subscribe({
-            next: (response: LogFile) => {
-                resolve(response.page_contents.length === 0);
+    ngOnInit(): void {
+        this.loading = true;
+        this.populateTableWithData();
+    }
+
+    populateTableWithData(): void {
+        this.loading = true
+        this.api.getRootCauses().subscribe({
+            next: (response: RootCauseResponse) => {
+                this.response = response;
             },
-            error: (err) => {
-                console.error('Error fetching log content:', err);
-                reject(err);
+            error: (error: Error) => {
+                console.error(error)
+                this.loading = false
+            },
+            complete: () => {
+                this.getRootCausesComplete();
             },
         });
-    });
-}
+    }
 
-pageContainsLastRootCause(): Promise<boolean> {
-    return this.pageContainsRootCause(false);
-}
+    getRootCausesComplete(): void {
+        this.tableContents = [];
+        this.response.results.forEach((rootCause: RootCause, index: number) => {
+            this.tableContents.push({
+                param_id: index,
+                root_cause: rootCause.root_cause,
+                action: {
+                    delete: true,
+                },
+            });
+        });
+        this.loading = false;
+    }
 
-pageContainsFirstRootCause(): Promise<boolean> {
-    return this.pageContainsRootCause(true);
-}
+    openAddRootCauseDialog(): void {
+        this.dialog
+            .open(AddRootCauseComponent)
+            .afterClosed()
+            .subscribe((action: DialogData) => {
+                if (action && action.name) {
+                    this.addRootCause(action);
+                }
+            });
+    }
 
-
-
-
-
-import { of, throwError } from 'rxjs';
-
-describe('PageContainsRootCause Tests', () => {
-    let component: YourComponent; // Replace with your actual component name
-    let mockApiService: any;
-
-    beforeEach(() => {
-        mockApiService = {
-            obtainLogContentForTce: jest.fn(),
+    addRootCause(data: DialogData): void {
+        this.loading = true;
+        const root_cause: RootCause = {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            root_cause: data.name!
         };
-
-        // Mock your component and inject dependencies
-        component = new YourComponent(mockApiService);
-        component.tce = { id: 123 }; // Mock `tce` object
-        component.currentPage = 1;
-        component.itemsPerPage = 10;
-    });
-
-    it('should resolve true when pageContents is empty for first root cause', async () => {
-        // Mock the API response with an empty page_contents
-        mockApiService.obtainLogContentForTce.mockReturnValue(of({ page_contents: [] }));
-
-        const result = await component.pageContainsFirstRootCause();
-        expect(result).toBe(true);
-        expect(mockApiService.obtainLogContentForTce).toHaveBeenCalledWith(123, 1, 10, true);
-    });
-
-    it('should resolve false when pageContents is not empty for last root cause', async () => {
-        // Mock the API response with non-empty page_contents
-        mockApiService.obtainLogContentForTce.mockReturnValue(of({ page_contents: ['log1'] }));
-
-        const result = await component.pageContainsLastRootCause();
-        expect(result).toBe(false);
-        expect(mockApiService.obtainLogContentForTce).toHaveBeenCalledWith(123, 1, 10, false, true);
-    });
-
-    it('should reject with an error when API call fails for first root cause', async () => {
-        // Mock the API error
-        mockApiService.obtainLogContentForTce.mockReturnValue(throwError(() => new Error('API Error')));
-
-        await expect(component.pageContainsFirstRootCause()).rejects.toThrow('API Error');
-        expect(mockApiService.obtainLogContentForTce).toHaveBeenCalledWith(123, 1, 10, true);
-    });
-
-    it('should reject with an error when API call fails for last root cause', async () => {
-        // Mock the API error
-        mockApiService.obtainLogContentForTce.mockReturnValue(throwError(() => new Error('API Error')));
-
-        await expect(component.pageContainsLastRootCause()).rejects.toThrow('API Error');
-        expect(mockApiService.obtainLogContentForTce).toHaveBeenCalledWith(123, 1, 10, false, true);
-    });
-});
-
+        this.api.createRootCause(root_cause).subscribe({
+            error: (error: Error) => {
+                console.error(error);
+                this.loading = false;
+                this.notification.show(Messages.AddRootCauseFailed, Action.Close, Status.Fail);
+            },
+            complete: () => {
+                this.populateTableWithData();
+                this.notification.show(Messages.AddRootCauseSuccess, Action.Close, Status.Success);
+            },
+        });
+    }
+    deleteRootCause(data: DialogData): void {
+        this.loading = true
+        const rootCauseToDelete = this.tableContents.at(Number(data.id))?.root_cause
+        if (!rootCauseToDelete) {
+            this.notification.show(Messages.DeleteRootCauseFailed, Action.Close, Status.Fail);
+            return
+        }
+        this.api.deleteRootCause(rootCauseToDelete).subscribe({
+            error: (error: Error) => {
+                console.error(error);
+                this.loading = false;
+                this.notification.show(Messages.DeleteRootCauseFailed, Action.Close, Status.Fail);
+            },
+            complete: () => {
+                this.populateTableWithData();
+                this.notification.show(Messages.DeleteRootCauseSuccess, Action.Close, Status.Success);
+            },
+        });
+    
