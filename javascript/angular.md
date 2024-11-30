@@ -52,4 +52,76 @@ To mock this call when testing that component, it's different to a function, sin
             [], {'subject': new BehaviorSubject('somefakeusername')}
         )
 ```
-- JAsmine change ret val of spied function multiple times https://stackoverflow.com/questions/56118277/how-to-fix-function-has-already-been-spied-on-error-in-jasmine
+- Jasmine change ret val of spied function multiple times https://stackoverflow.com/questions/56118277/how-to-fix-function-has-already-been-spied-on-error-in-jasmine
+
+- In Jasmine, if you want to mock a dependency, you need to call it at least once in the beforeEach before you can use it/redefine it somewhere else! See the comment below in the `beforeEach` function!
+- Example also on how to mock a matdialog `open.afterclosed` (i.e. how to mock chained calls) is in below
+```
+describe('MyObjectPatternsComponent', () => {
+    let component: MyObjectPatternsComponent;
+    let fixture: ComponentFixture<MyObjectPatternsComponent>;
+    let apiService: jasmine.SpyObj<ApiService>;
+    let mockDialog: jasmine.SpyObj<MatDialog>;
+
+    const mockResponse: MyObjectResponse = { count: 1, results: [{ root_cause: 'Test Cause' }] };
+    beforeEach(() => {
+        apiService = jasmine.createSpyObj<ApiService>('ApiService', [
+            'createMyObject',
+            'deleteMyObject',
+            'getMyObjects',
+        ]);
+        mockDialog = jasmine.createSpyObj('MatDialog', ['open']);
+        TestBed.configureTestingModule({
+            imports: [MyObjectPatternsComponent, HttpClientModule, RouterTestingModule, BrowserAnimationsModule],
+            providers: [
+                { provide: ApiService, useValue: apiService },
+                { provide: MatDialog, useValue: mockDialog },
+
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        params: of({}),
+                    },
+                },
+                MatSnackBar,
+            ],
+        });
+        // YOU NEED TO DO THE THREE CALLS BELOW TO INITIALIZE THE STUBS!
+        apiService.getMyObjects.and.returnValue(of(mockResponse));
+        apiService.createMyObject.and.returnValue(of());
+        apiService.deleteMyObject.and.returnValue(
+            of({
+                count: 1,
+                results: [],
+            }),
+        );
+        const dialogRefSpy = jasmine.createSpyObj({ afterClosed: of({ name: 'New Cause' }) });
+        fixture = TestBed.createComponent(MyObjectPatternsComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
+
+    it('should call getMyObjectsComplete on observable complete', () => {
+        // WITHOUT THE CALLS IN THE BEFOREEACH, THIS WILL THROW UNDEFINED READING SUBSCRIBE!
+        apiService.getMyObjects.and.returnValue(of({ count: 1, results: [] }));
+
+        spyOn(component, 'getMyObjectsComplete');
+
+        component.populateTableWithData();
+
+        expect(component.getMyObjectsComplete).toHaveBeenCalled();
+    });
+
+    it('should not call addMyObject if dialog closes without valid data', () => {
+        // EXAMPLE ON HOW TO STUB A MOCKDIALOG OPEN METHOD'S AFTERCLOSED
+        spyOn(component.dialog, 'open').and.returnValue({
+            afterClosed: () => of({ somekey: 'InvalidKey' }),
+        } as MatDialogRef<typeof component>);
+        spyOn(component, 'addMyObject');
+
+        component.openAddMyObjectDialog();
+
+        expect(component.addMyObject).not.toHaveBeenCalled();
+    });
+})
+```
