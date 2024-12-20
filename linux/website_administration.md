@@ -98,7 +98,7 @@ Authoritative DNS Servers: The TLD servers then guide the resolver to the author
 So, how do we then register a domain to a nameserver(s) e.g. register `example.com` to the Hetzner nameservers above? 
 After we buy let's say the example.com domain from `namecheap`, we need to also find a nameserver provider that will "own" this domain, let's say `Hetzner`. So we go to Hetzner.com, and find its DNS provider service. We then can make an account and register our domain there. In `namecheap`, we also then need to specify that this domain we bought is owned by `Hetzner` nameservers.
 
-![alt text](image.png)
+![alt text](linux/image.png)
 
 There are many DNS server providers e.g. Cloudflare `https://developers.cloudflare.com/dns/nameservers/` or Google `https://cloud.google.com/dns/docs/tutorials/create-domain-tutorial`
 DNS Record Retrieval: The resolver sends a query directly to the authoritative DNS servers, asking for the specific DNS record it needs (like an A record for the IP address). The authoritative servers respond with the requested information.

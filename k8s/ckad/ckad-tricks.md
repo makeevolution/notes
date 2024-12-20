@@ -67,16 +67,18 @@ So for env var, you can choose which key to inject, but for volume mount, all da
 
 ### Volumes and VolumeMounts!
 - All the bullshit that always makes you feel overwhelmed and lose time in the exam (e.g. `emptyDir`, `persistentVolumeClaim`) is ALWAYS in the `volumes` section; in `volumeMounts` you only be a customer and ask hey I want this volume with this name, I wanna mount it in this location within me!
-- All the posssibilities of the bullshit:
+- All the posssibilities of the bullshit (with separators to really dumb down this thing)
 ```
 apiVersion: v1
 kind: Pod
 metadata:
   name: my-app
 spec:
+########################################################################
   containers:
   - name: app-container
     image: nginx
+    #!!!!!!!!!!!!!
     volumeMounts:
     - name: config-volume          # Mounting ConfigMap as files
       mountPath: /etc/config       # Files will be accessible in /etc/config with filenames of keys and content of each file being the value of each key
@@ -92,6 +94,8 @@ spec:
       mountPath: /mnt/nfs           # Files will be accessible in /mnt/nfs
     - name: downward-api-volume     # Mounting Downward API for pod metadata
       mountPath: /etc/podinfo       # Pod metadata will be accessible in /etc/podinfo
+      #!!!!!!!!!!!!!!!
+###################################################################################
   volumes:
   - name: config-volume
     configMap:
