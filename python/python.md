@@ -1,5 +1,7 @@
 ,# Python
 
+- https://pytest-with-eric.com/mocking/pytest-common-mocking-problems/#Common-Problems-with-Mocking
+
 - Check if you are running python from virtual environment: run python, import ```sys```, then ```sys.prefix```, or do ```pip -V``` or ```python -m pip -V```
 
 -  In python your ```.py``` file is regarded as an object, with the classes in it as attributes of the object.
