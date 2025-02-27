@@ -515,7 +515,10 @@ stats.sort_stats('cumulative').print_stats(10) # 10 is the no of results to show
         }
     ]
 }
-```
+
 ---------------------------
 ### MongoDB connection configuration; example how to make a singleton for it and how to test it
-![image](https://github.com/user-attachments/assets/66c68c52-73a5-4465-bb0c-2ca5c509f54a)
+Notice that in the test class, we need to access the singleton through importing the module instead of directly importing
+the singleton.
+This is so that changes to the singleton in the client module (or anywhere else), are reflected too in the test!
+![image](./pics/mongodb_singleton_setup.jpg)

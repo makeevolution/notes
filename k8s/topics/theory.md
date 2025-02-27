@@ -28,7 +28,7 @@ There are many other tools like `k3s` or `minikube`,  these will provision a clu
 
 When you use `kubeadm`, this diagram is what roughly will be generated when the whole cluster is up and running:
 
- ![Alt text](overall_architecture.png)
+ ![Alt text](../pics/overall_architecture.png)
 
 Let's follow the arrows, along the way we will explain what each component are.
 ## What happens when you provision a cluster?
