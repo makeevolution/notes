@@ -516,3 +516,6 @@ stats.sort_stats('cumulative').print_stats(10) # 10 is the no of results to show
     ]
 }
 ```
+---------------------------
+### MongoDB connection configuration; example how to make a singleton for it and how to test it
+![image](https://github.com/user-attachments/assets/66c68c52-73a5-4465-bb0c-2ca5c509f54a)
