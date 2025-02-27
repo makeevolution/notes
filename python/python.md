@@ -1,4 +1,4 @@
-,# Python
+# Python
 
 - https://pytest-with-eric.com/mocking/pytest-common-mocking-problems/#Common-Problems-with-Mocking
 
