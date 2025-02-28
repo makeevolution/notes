@@ -2,7 +2,9 @@
 3# notes
 
 ## Notes on shortcuts/lessons learned for different topics
-
+    ORCHES_0001 = "Test case execution workflow completed!"
+    ORCHES_0002 = "Got step data {data}"
+    ORCHES_0003 = "MongoDB configuration failed"
 
 347    def _append_auth_header( 
 
