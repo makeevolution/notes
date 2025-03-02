@@ -1,4 +1,4 @@
-### Sessions:
+### Sessions based auth:
     - Basics: 
         - After login, user gets a sessionid embedded in their cookies 
         - Sessionid is also stored in the database (has its own table)
@@ -12,7 +12,7 @@
           - Most online tutorials illustrate this only for POST requests, by sending it as a hidden field in the body of the form that is submitted. 
           - However, there are many other ways this can be done (e.g. sending it as a header with a specific name, which is what Django requires).
         - You can set the server to make the csrftoken per sessionid, or refresh it on every request
-### JWT:
+### JWT based auth:
     - After login, user gets an access and refresh token in the response body
     - Users then need to embed this token as header with value Authorization: Bearer
     - When server gets this, they will use some algorithm to decode the token and authenticates user if token is valid and not yet expired  
