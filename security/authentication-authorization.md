@@ -58,6 +58,7 @@ After my studying, here is a summary of how OAuth2 Scopes can wors with in tande
 ### Misc.:
   - CORS:
     - In short: cross domain requests should not be allowed by default.
-    - On every request, we always send a header called ORIGIN to indicate its hostname
+    - On every request, we always send a header called ORIGIN that indicates our hostname (e.g. `localhost:9000`, `google.com`)
     - The server will need to check this origin against a list of origins it allows (e.g. ACCESS_CONTROL_ALLOW_ORIGIN of Django)
     - If ok, then the server will send its response, with ACCESS_CONTROL_ALLOW_ORIGIN and its value in the header
+      - If response doesn't allow, then this header will be missing, and our modern browser will not want to display the data
