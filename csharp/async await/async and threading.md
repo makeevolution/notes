@@ -7,6 +7,7 @@
             {
                 var body = reader.ReadToEndAsync().Result;
             }
+        }
   ```
   The await in `ReadToEndAsync` will make the current executing thread go back to `reader.ReadToEndAsync().Result`. But since now there is no one processing
   the result of the `await`, the `reader.ReadToEndAsync().Result` will never complete, and the whole thing hangs (deadlock)
