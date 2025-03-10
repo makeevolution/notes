@@ -3,6 +3,12 @@
 Console.WriteLine("Cooking Started");
 
 var turkey = new Turkey();
+
+// Without async keyword, the main thread will continue immediately and continue executing the next line of code.
+
+// Another thread will be assigned to execute the Cook() method by the Task Parallel Library.
+// Then, the same thread will execute the ContinueWith callback.
+
 turkey.Cook()
 	.ContinueWith(_ =>
 	{
@@ -10,5 +16,5 @@ turkey.Cook()
 		gravy.Cook();
 	});
 
-//Code continues running on this line
+// block the main thread so the program doesn't end
 Console.ReadLine();
