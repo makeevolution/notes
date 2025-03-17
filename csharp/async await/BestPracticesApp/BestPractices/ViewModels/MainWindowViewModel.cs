@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -18,8 +21,8 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty] private ListItemTemplate? _selectedListItem;
     public ObservableCollection<ListItemTemplate> Items { get; } = new ObservableCollection<ListItemTemplate>()
     {
-        new ListItemTemplate(typeof(HomePageViewModel)),
-        new ListItemTemplate(typeof(ButtonPageViewModel)),
+        new ListItemTemplate(typeof(HomePageViewModel), "HomeRegular"),
+        new ListItemTemplate(typeof(ButtonPageViewModel), "CursorHoverRegular"),
     };
     
     /// <summary>
@@ -34,24 +37,28 @@ public partial class MainWindowViewModel : ViewModelBase
         if (value is null) return;
         var pageInstance = Activator.CreateInstance(value.ModelType);
         if (pageInstance is null) return;
-        CurrentPage = (ViewModelBase) pageInstance;
+        CurrentPage = (ViewModelBase)pageInstance;
     }
     
     [RelayCommand]
     private void TriggerPane()
     {
         IsPaneOpen = !IsPaneOpen;
-    } 
+    }
 
 }
 
 public class ListItemTemplate
 {
-    public ListItemTemplate(Type type)
+    public ListItemTemplate(Type type, string iconKey)
     {
         ModelType = type;
         Label = type.Name.Replace("PageViewModel", "");
+        Application.Current!.TryFindResource(iconKey, out var res);
+        if (res == null) return;
+        Icon = (StreamGeometry)res;
     }
     public string Label { get; }
     public Type ModelType { get; }
+    public StreamGeometry Icon { get; }
 }
