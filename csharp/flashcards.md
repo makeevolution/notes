@@ -1,5 +1,35 @@
 # Tricky C# Keywords and Common Methods for Interviews
 
+what does this do
+```
+public struct Person
+{
+    public string Name;  // Reference type field
+    public int Age;
+
+    public Person(string name, int age)
+    {
+        Name = name;
+        Age = age;
+    }
+}
+
+public class Example
+{
+    public static void Main()
+    {
+        Person p1 = new Person("Alice", 30);
+        Person p2 = p1;  // p2 gets a copy of p1, but the Name field is still a reference type
+
+        // Modify the Name of p2
+        p2.Name = "Bob";
+
+        Console.WriteLine($"p1 Name: {p1.Name}, p1 Age: {p1.Age}");  // Alice
+        Console.WriteLine($"p2 Name: {p2.Name}, p2 Age: {p2.Age}");  // Bob
+    }
+}
+```
+
 ### **Memory / Reference Keywords**
 - [`ref`](#ref)  
 - [`out`](#out)  
