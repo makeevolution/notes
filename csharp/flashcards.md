@@ -1,6 +1,6 @@
-# Tricky C# Keywords and Common Methods for Interviews
+# C# Keywords and Common Methods for Interviews
 
-what does this do
+what does this do?
 ```
 public struct Person
 {
@@ -24,16 +24,18 @@ public class Example
         // Modify the Name of p2
         p2.Name = "Bob";
 
-        Console.WriteLine($"p1 Name: {p1.Name}, p1 Age: {p1.Age}");  // Alice
-        Console.WriteLine($"p2 Name: {p2.Name}, p2 Age: {p2.Age}");  // Bob
+        Console.WriteLine($"p1 Name: {p1.Name}, p1 Age: {p1.Age}");
+        Console.WriteLine($"p2 Name: {p2.Name}, p2 Age: {p2.Age}");
     }
 }
 ```
 
+
+
 ### **Memory / Reference Keywords**
 - [`ref`](#ref)  
 - [`out`](#out)  
-- [`in`](#in)  
+- [`in`](#in)  and relation with structs
 - [`readonly`](#readonly)  
 - [`const`](#const)  
 
@@ -48,8 +50,12 @@ public class Example
 - await vs Wait()
 - ConfigureAwaitConfiguration Enum
 - IAsyncEnumerable()
-
----
+- await foreach
+- Task.WhenAll()
+- Task.WhenEach()
+- EnumeratorCancellation
+- WithCancellation()
+- 
 
 ### **Type Control**
 - [`var`](#var)  
