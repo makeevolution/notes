@@ -43,6 +43,11 @@ public class Example
 - [`async`](#async)  
 - [`await`](#await)  
 - [`ConfigureAwait(false)`](#configureawaitfalse)  
+- async void
+- WaitAsync()
+- await vs Wait()
+- ConfigureAwaitConfiguration Enum
+- IAsyncEnumerable()
 
 ---
 
