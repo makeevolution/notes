@@ -55,7 +55,6 @@ public class Example
 - Task.WhenEach()
 - EnumeratorCancellation
 - WithCancellation()
-- 
 
 ### **Type Control**
 - [`var`](#var)  
@@ -174,6 +173,27 @@ Provides a new implementation for a method or property that was marked as `virtu
 
 ### **`new`**
 Hides a base class member. It's not polymorphic (unlike `override`), and the member is called based on the compile-time type of the reference.
+
+```
+public class Animal
+{
+    public void Speak()
+    {
+        Console.WriteLine("Animal speaks.");
+    }
+}
+
+public class Dog : Animal
+{
+    public new void Speak()
+    {
+        Console.WriteLine("Dog barks.");
+    }
+}
+
+Animal a = new Dog();
+a.Speak();  // Output: Animal speaks (since defined as Animal and method is not overriden, uses base class method)
+```
 
 ### **`abstract`**
 Defines a method or class that cannot be instantiated directly and must be implemented or inherited by a derived class.
