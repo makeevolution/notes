@@ -55,6 +55,8 @@ public class Example
 - Task.WhenEach()
 - EnumeratorCancellation
 - WithCancellation()
+- Task
+- ValueTask
 
 ### **Type Control**
 - [`var`](#var)  
