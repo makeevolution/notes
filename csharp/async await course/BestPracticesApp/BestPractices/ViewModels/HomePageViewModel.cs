@@ -1,13 +1,9 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 namespace BestPractices.ViewModels;
+using CommunityToolkit.Mvvm.ComponentModel;
 
-// Class needs to be partial to allow use of ObservableProperty
-public partial class MainWindowViewModel : ViewModelBase
+public partial class HomePageViewModel : ViewModelBase
 {
     [ObservableProperty]
     private string _textBlockName = "pp";
@@ -35,5 +31,5 @@ public partial class MainWindowViewModel : ViewModelBase
     private void ButtonOnClick()  // The RelayCommand makes it possible to make this method private
     {
         TextBlockName = "Clicked";
-    }
+    } 
 }
