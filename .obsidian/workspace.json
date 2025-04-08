@@ -37,14 +37,13 @@
             "id": "fb9ed64a0666c596",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "diff-view",
               "state": {
-                "file": "k8s/general.md",
-                "mode": "source",
-                "source": false
+                "file": "csharp/async await/BestPracticesApp/BestPractices/Views/MainWindow.axaml",
+                "staged": true
               },
-              "icon": "lucide-file",
-              "title": "general"
+              "icon": "git-pull-request",
+              "title": "Diff View (MainWindow.axaml)"
             }
           }
         ],
@@ -67,7 +66,8 @@
             "state": {
               "type": "file-explorer",
               "state": {
-                "sortOrder": "alphabetical"
+                "sortOrder": "alphabetical",
+                "autoReveal": false
               },
               "icon": "lucide-folder-closed",
               "title": "Files"
@@ -104,7 +104,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 234.5
   },
   "right": {
     "id": "637498d0fb60adf3",
@@ -187,7 +187,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 200
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -203,17 +203,33 @@
   },
   "active": "fb9ed64a0666c596",
   "lastOpenFiles": [
-    "k8s/topics/job.md",
+    "csharp/General.md",
+    "csharp/async await/async-await-in-detail/6. .NET Internals/5. SynchronizationContext/src/HackerNews/obj/Debug/net9.0-windows10.0.19041.0/refint",
+    "csharp/async await/async-await-in-detail/6. .NET Internals/5. SynchronizationContext/src/HackerNews/obj/Debug/net9.0-windows10.0.19041.0/ref",
+    "csharp/async await/async-await-in-detail/6. .NET Internals/5. SynchronizationContext/src/HackerNews/obj/Debug/net9.0-maccatalyst/ref",
+    "csharp/async await/async-await-in-detail/6. .NET Internals/5. SynchronizationContext/src/HackerNews/obj/Debug/net9.0-maccatalyst/HackerNews.AssemblyInfo.cs",
+    "csharp/async await/async-await-in-detail/6. .NET Internals/5. SynchronizationContext/src/HackerNews/obj/Debug/net9.0-maccatalyst/HackerNews.AssemblyInfoInputs.cache",
+    "csharp/async await/async-await-in-detail/6. .NET Internals/5. SynchronizationContext/src/HackerNews/obj/Debug/net9.0-windows10.0.19041.0/resizetizer/m/Package.appxmanifest",
+    "csharp/async await/async-await-in-detail/6. .NET Internals/5. SynchronizationContext/src/HackerNews/obj/Debug/net9.0-windows10.0.19041.0/resizetizer/m",
+    "csharp/async await/async-await-in-detail/6. .NET Internals/5. SynchronizationContext/src/HackerNews/obj/Debug/net9.0-windows10.0.19041.0/resizetizer",
+    "csharp/async await/async-await-in-detail/6. .NET Internals/5. SynchronizationContext/src/HackerNews/obj/Debug/net9.0-maccatalyst/refint",
+    "csharp/async await/async-await-in-detail/6. .NET Internals/5. SynchronizationContext/src/HackerNews/obj/Debug/net9.0-android/refint",
+    "csharp/Functools.md",
+    "csharp/action, delegates.md",
+    "csharp/Testing.md",
+    "csharp/Enumerables.md",
+    "csharp/Reflection.md",
+    "csharp/Generics, boxing.md",
+    "csharp/extensions.md",
     "k8s/general.md",
+    "k8s/topics/job.md",
     "k8s/topics/theory.md",
     "k8s/topics/probes.md",
     "k8s/topics/selector and labels.md",
     "k8s/topics/deployment.md",
     "k8s/topics/debugging.md",
     "k8s/ckad/ckad-tricks.md",
-    "k8s/topics",
     "k8s/pics/grafanaloki.jpg",
-    "k8s/pics",
     "cloud/KCNA exam questions.md",
     "cloud/cloud.md",
     "cloud/pics/argocd.png",
@@ -221,28 +237,15 @@
     "docker/docker.md",
     "docker/pics/vmvscontainer.png",
     "docker/pics/containerruntimes.png",
-    "docker/pics",
     "docker/Untitled.md",
     "css/General.md",
     "css/HTML.md",
     "css/Flexbox.md",
     "cloud/pics/argocd_guestbookoutofsync.png",
     "cloud/pics/argocd_guestbookui.png",
-    "cloud/pics",
-    "Untitled",
-    "csharp/action, delegates.md",
-    "csharp/General.md",
-    "csharp/extensions.md",
     "editors/visual studio.md",
-    "csharp/Generics, boxing.md",
-    "csharp/Functools.md",
-    "csharp/Enumerables.md",
     "csharp/async and threading.md",
-    "csharp/Reflection.md",
-    "csharp/Testing.md",
-    "messaging/rabbitmq.md",
     "security/oauth_flows.png",
-    "k8s/ckad/courseresourceCKAD.pdf",
     "k8s/pics/overall_architecture.png",
     "k8s/pics/image-2.png"
   ]

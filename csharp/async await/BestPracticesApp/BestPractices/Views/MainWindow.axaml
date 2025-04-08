@@ -15,7 +15,20 @@
              to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <vm:MainWindowViewModel/>
     </Design.DataContext>
-
+    
+    <SplitView IsPaneOpen="True"
+               OpenPaneLength="300"
+               CompactPaneLength="48"
+               DisplayMode="CompactInline"
+               Background="Black"
+               PaneBackground="#1e1e1e">
+        <SplitView.Pane>
+            <StackPanel Spacing="5"
+                        Margin="5">
+                <Button Command="{Binding TriggerPaneCommand }">Toggle Pane</Button>
+            </StackPanel>
+        </SplitView.Pane>
+        <SplitView.Content>
     <StackPanel Width="200" Margin="16" Spacing="10">
         <TextBlock Text="{Binding TextBlockName}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         <Button HorizontalAlignment="Center" Command="{Binding ButtonOnClickCommand}">click here</Button>
@@ -25,4 +38,7 @@
         <Rectangle Fill="Green" Height="100"/>
         <Rectangle Fill="Orange" Height="50"/>
     </StackPanel>
+            
+            </SplitView.Content>
+    </SplitView>
 </Window>

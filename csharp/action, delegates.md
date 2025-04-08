@@ -1,7 +1,6 @@
 
-- How to return functions in c#:
-
-The return type needs to have type arguments equal to types of the input arguments and the output of the function e.g.
+- How do you return functions in c#?
+	 - The return type needs to have type arguments equal to types of the input arguments and the output of the function e.g.
  ```Func<typeInput1, typeInput2, typeOutput> theFunc = new function(Input1,Input2)```
  
  If the function does not have a return type, use Action instead e.g.
