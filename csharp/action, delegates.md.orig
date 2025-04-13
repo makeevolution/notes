@@ -1,4 +1,8 @@
-[[cloud/aws/EC2.md#^d4zZRTxc]]
+
+<<<<<<< HEAD
+- How do you return functions in c#?
+	 - The return type needs to have type arguments equal to types of the input arguments and the output of the function e.g.
+=======
 - A `delegate` is a general purpose type that points to any method (i.e. pointer to a method), having a specific signature 
 ```
 public delegate void DisplayMessage(string message);
@@ -37,6 +41,7 @@ public class Program
 - A `Func` is a special type of delegate with a return value
 
 The return type needs to have type arguments equal to types of the input arguments and the output of the function e.g.
+>>>>>>> cb2059b116598ca92a1c4f388623930e3a0e3606
  ```Func<typeInput1, typeInput2, typeOutput> theFunc = new function(Input1,Input2)```
  
  If the function does not have a return type, use Action instead e.g.
