@@ -1,4 +1,4 @@
-[[cloud/aws/EC2.md#^d4zZRTxc]]
+[[cloud/aws/EC2/General#^d4zZRTxc]]
 - A `delegate` is a general purpose type that points to any method (i.e. pointer to a method), having a specific signature 
 ```
 public delegate void DisplayMessage(string message);
