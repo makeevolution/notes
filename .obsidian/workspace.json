@@ -29,8 +29,8 @@
               "state": {
                 "file": "cloud/aws/Route53.md"
               },
-              "icon": "excalidraw-icon",
-              "title": "Route53"
+              "icon": "lucide-file",
+              "title": "Plugin no longer active"
             }
           },
           {
@@ -43,6 +43,66 @@
               },
               "icon": "excalidraw-icon",
               "title": "Flow"
+            }
+          },
+          {
+            "id": "b50ee7fa87b8f98e",
+            "type": "leaf",
+            "state": {
+              "type": "excalidraw",
+              "state": {
+                "file": "softwareTesting/bestPractices/General.md"
+              },
+              "icon": "excalidraw-icon",
+              "title": "General"
+            }
+          },
+          {
+            "id": "92b919735891b5ec",
+            "type": "leaf",
+            "state": {
+              "type": "excalidraw",
+              "state": {
+                "file": "softwareTesting/bestPractices/defineExplicitBehaviors/general.md"
+              },
+              "icon": "excalidraw-icon",
+              "title": "general"
+            }
+          },
+          {
+            "id": "2f1708e600476ae8",
+            "type": "leaf",
+            "state": {
+              "type": "excalidraw",
+              "state": {
+                "file": "softwareTesting/bestPractices/defineExplicitBehaviors/explicitErrorHandling.md"
+              },
+              "icon": "excalidraw-icon",
+              "title": "explicitErrorHandling"
+            }
+          },
+          {
+            "id": "8025859ac0e70004",
+            "type": "leaf",
+            "state": {
+              "type": "excalidraw",
+              "state": {
+                "file": "softwareTesting/bestPractices/defineExplicitBehaviors/separateConstructorFromLogic.md"
+              },
+              "icon": "excalidraw-icon",
+              "title": "separateConstructorFromLogic"
+            }
+          },
+          {
+            "id": "3e5b36851794119d",
+            "type": "leaf",
+            "state": {
+              "type": "excalidraw",
+              "state": {
+                "file": "softwareTesting/bestPractices/defineExplicitBehaviors/visibleStateChanges.md"
+              },
+              "icon": "excalidraw-icon",
+              "title": "visibleStateChanges"
             }
           },
           {
@@ -60,7 +120,7 @@
             }
           }
         ],
-        "currentTab": 2
+        "currentTab": 7
       }
     ],
     "direction": "vertical"
@@ -214,28 +274,39 @@
       "obsidian-excalidraw-plugin:Create new drawing": false
     }
   },
-  "active": "1bf889e7ac47d6be",
+  "active": "3e5b36851794119d",
   "lastOpenFiles": [
-    "cloud/aws/Route53.md",
+    "softwareTesting/bestPractices/defineExplicitBehaviors/refactoringExercise",
+    "softwareTesting/bestPractices/defineExplicitBehaviors/general.md",
+    "softwareTesting/bestPractices/defineExplicitBehaviors/visibleStateChanges.md",
+    "softwareTesting/bestPractices/defineExplicitBehaviors/separateConstructorFromLogic.md",
+    "Pasted Image 20250414093807_471.png",
+    "Pasted Image 20250414093751_549.png",
+    "softwareTesting/bestPractices/defineExplicitBehaviors/Untitled.md",
+    "softwareTesting/bestPractices/defineExplicitBehaviors/explicitErrorHandling.md",
+    "Pasted Image 20250413235315_924.png",
+    "Pasted Image 20250413235024_032.png",
+    "Pasted Image 20250413235024_024.png",
+    "softwareTesting/bestPractices/defineExplicitBehaviors/22",
+    "Pasted Image 20250413200911_734.png",
+    "Pasted Image 20250413194937_569.png",
+    "Pasted Image 20250413194937_553.png",
+    "Pasted Image 20250413191916_757.png",
+    "softwareTesting/bestPractices/General.md",
+    "softwareTesting/bestPractices/DefineExplicitBehaviors/Untitled.md",
+    "softwareTesting/bestPractices/defineExplicitBehaviors",
+    "softwareTesting/bestPractices/Untitled.md",
     "networking/DNS, A, AAAA, CName etc/Flow.md",
+    "cloud/aws/Route53.md",
     "cloud/aws/Terms/High Availability vs. Fault Tolerance.md",
     "Pasted Image 20250410171022_090.png",
     "networking/DNS, A, AAAA, CName etc/DNS, A, AAAA, CName etc..md",
     "cloud/aws/S3.md",
-    "Pasted Image 20250410165614_064.png",
-    "Pasted Image 20250410165408_593.png",
-    "Pasted Image 20250410164738_123.png",
-    "Pasted Image 20250410164414_501.png",
-    "Pasted Image 20250410163939_532.png",
-    "Pasted Image 20250410163023_739.png",
-    "Pasted Image 20250410144743_885.png",
     "networking/DNS, A, AAAA, CName etc/Explanation as flow.md",
     "linux/linux.md",
-    "Pasted Image 20250409151613_506.png",
     "networking/DNS, A, AAAA, CName etc",
     "networking/nginx.md",
     "networking/ssl.md",
-    "networking/images/image.png",
     "networking/images",
     "messaging/readme.md.md",
     "messaging/rabbitmq.md",
@@ -246,20 +317,9 @@
     "cloud/aws/cloudwatch/metrics.md",
     "cloud/aws/cloudwatch/overview.md",
     "cloud/aws/cloudwatch/Untitled.md",
-    "cloud/aws/cloudformation/Overview.md",
     "cloud/aws/cloudwatch",
-    "cloud/aws/cloudformation/TemplateResource.md",
-    "cloud/aws/cloudformation/Untitled.md",
     "cloud/aws/cloudformation",
-    "cloud/aws/IAM.md",
-    "another-file.md",
-    "csharp/action, delegates.md",
     "cloud/aws/Excalidraw",
-    "cloud/k8s in cloud/KCNA exam questions.md",
-    "cloud/aws",
-    "cloud/deployment/cloud.md",
-    "cloud/deployment",
-    "Untitled 1",
-    "k8s/general.md"
+    "cloud/aws"
   ]
 }
