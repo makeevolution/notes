@@ -1,10 +1,12 @@
 ﻿namespace Converter.Tests;
-using VerifyTests;
-using VerifyXunit;
 using Xunit;
-[UsesVerify]
 public class ConverterApprovalTests
 {
+    [Fact]
+    public void Test()
+    {
+        
+    }
     [Fact]
     public Task Should_return_csv()
     {
