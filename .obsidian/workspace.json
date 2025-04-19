@@ -97,12 +97,88 @@
             "id": "3e5b36851794119d",
             "type": "leaf",
             "state": {
+              "type": "markdown",
+              "state": {
+                "file": "csharp/My Style.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "My Style"
+            }
+          },
+          {
+            "id": "7ef1b4d3a1fa0a70",
+            "type": "leaf",
+            "state": {
               "type": "excalidraw",
               "state": {
-                "file": "cloud/aws/EC2.md"
+                "file": "csharp/about null/General, default.md"
               },
               "icon": "excalidraw-icon",
-              "title": "EC2"
+              "title": "General, default"
+            }
+          },
+          {
+            "id": "54c2083a46f6e374",
+            "type": "leaf",
+            "state": {
+              "type": "excalidraw",
+              "state": {
+                "file": "csharp/about null/1. nullable aware context.md"
+              },
+              "icon": "excalidraw-icon",
+              "title": "1. nullable aware context"
+            }
+          },
+          {
+            "id": "ba26d0edfdf1c5d0",
+            "type": "leaf",
+            "state": {
+              "type": "excalidraw",
+              "state": {
+                "file": "csharp/null/3. communicating null intent in class design/using null operator.md"
+              },
+              "icon": "excalidraw-icon",
+              "title": "using null operator"
+            }
+          },
+          {
+            "id": "8a051697a617aac6",
+            "type": "leaf",
+            "state": {
+              "type": "excalidraw",
+              "state": {
+                "file": "csharp/null/1. nullable aware context.md"
+              },
+              "icon": "excalidraw-icon",
+              "title": "1. nullable aware context"
+            }
+          },
+          {
+            "id": "3ac18e503ea7d051",
+            "type": "leaf",
+            "state": {
+              "type": "excalidraw",
+              "state": {
+                "file": "csharp/null/3. communicating null intent in class design/using null operator.md"
+              },
+              "icon": "excalidraw-icon",
+              "title": "using null operator"
+            }
+          },
+          {
+            "id": "e77770eeaebef214",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "csharp/My Style.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "My Style"
             }
           },
           {
@@ -120,7 +196,7 @@
             }
           }
         ],
-        "currentTab": 7
+        "currentTab": 12
       }
     ],
     "direction": "vertical"
@@ -152,7 +228,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "path:",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -177,7 +253,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 234.5
+    "width": 388.5
   },
   "right": {
     "id": "637498d0fb60adf3",
@@ -193,7 +269,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "k8s/general.md",
+                "file": "csharp/about null/3. designing classes and APIs with null intent.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -203,7 +279,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for general"
+              "title": "Backlinks for 3. designing classes and APIs with null intent"
             }
           },
           {
@@ -274,52 +350,53 @@
       "obsidian-excalidraw-plugin:Create new drawing": false
     }
   },
-  "active": "3e5b36851794119d",
+  "active": "b496eb79c7bd24c7",
   "lastOpenFiles": [
-    "Pasted Image 20250413200911_734.png",
-    "Pasted Image 20250413235024_024.png",
-    "Pasted Image 20250414093751_549.png",
-    "Pasted Image 20250414093807_471.png",
-    "Pasted Image 20250413191916_757.png",
-    "cloud/aws/EC2.md",
-    "cloud/aws/S3.md",
-    "cloud/aws/VPC.md",
+    "csharp/action, delegates.md",
+    "csharp/null/3. communicating null intent in class design/using null operator.md",
+    "csharp/null/3. communicating null intent in class design/using system diagnostics codeanalysis.md",
+    "csharp/null/4. filter out null using pattern & prop matching/Drawing 2025-04-20 00.06.31.excalidraw.md",
+    "csharp/null/1. nullable aware context.md",
+    "csharp/null/2. performing null operations in csharp.md",
+    "csharp/about null/4. filter out null using pattern & prop matching/Untitled 1.md",
+    "csharp/about null/4. filter out null using pattern & prop matching/Untitled.md",
+    "Pasted Image 20250420010348_993.png",
+    "Pasted Image 20250420004658_192.png",
+    "Pasted Image 20250420004205_402.png",
+    "Pasted Image 20250420003943_247.png",
+    "Pasted Image 20250420003704_975.png",
+    "Pasted Image 20250420003147_117.png",
+    "csharp/null/4. filter out null using pattern & prop matching",
+    "Pasted Image 20250419211651_152.png",
+    "Pasted Image 20250419211634_542.png",
+    "Pasted Image 20250419211103_160.png",
+    "Pasted Image 20250419211040_937.png",
+    "csharp/about null/3. designing classes and APIs with null intent/Untitled.md",
+    "csharp/null/3. communicating null intent in class design",
+    "csharp/My Style.md",
+    "csharp/null/General, default.md",
+    "csharp/about null/Untitled.md",
+    "csharp/about null/Embracing the Nullable Aware Context in Csharp.md",
+    "csharp/about null/Untitled 1.md",
     "cloud/aws/Terms/High Availability vs. Fault Tolerance.md",
-    "cloud/aws/IAM.md",
-    "cloud/k8s in cloud/KCNA exam questions.md",
-    "softwareTesting/bestPractices/defineExplicitBehaviors/visibleStateChanges.md",
+    "csharp/README.md",
+    "csharp/ref in out.md",
+    "csharp/Testing.md",
+    "softwareTesting/bestPractices/narrowResponsibilities/General remarks.md",
+    "cloud/aws/EC2.md",
+    "Untitled.md",
+    "csharp/null",
+    "csharp/flashcards.md",
+    "csharp/Common dependencies.md",
+    "csharp/Functools.md",
+    "csharp/Reflection.md",
+    "csharp/General.md",
+    "softwareTesting/bestPractices/narrowResponsibilities/pics",
+    "softwareTesting/bestPractices/isolateDependencies",
+    "softwareTesting/bestPractices/minimiseSideEffects",
+    "softwareTesting/bestPractices/narrowResponsibilities",
     "softwareTesting/bestPractices/defineExplicitBehaviors/refactoringExercise/attempt/Exercises/Exercises.Tests/obj/Debug/net9.0/Exercises.Tests.dll",
     "softwareTesting/bestPractices/defineExplicitBehaviors/refactoringExercise/attempt/Exercises/Exercises.Tests/obj/Debug/net9.0/Exercises.Tests.pdb",
-    "softwareTesting/bestPractices/defineExplicitBehaviors/refactoringExercise/attempt/Exercises/Exercises.Tests/obj/Debug/net9.0/Exercises.Tests.csproj.AssemblyReference.cache",
-    "softwareTesting/bestPractices/defineExplicitBehaviors/refactoringExercise/attempt/Exercises/Exercises.Tests/obj/Debug/net9.0/Exercises.Tests.csproj.CoreCompileInputs.cache",
-    "softwareTesting/bestPractices/defineExplicitBehaviors/refactoringExercise/attempt/Exercises/Exercises.Tests/obj/Debug/net9.0/Exercises.Tests.csproj.FileListAbsolute.txt",
-    "softwareTesting/bestPractices/defineExplicitBehaviors/refactoringExercise/attempt/Exercises/Exercises.Tests/bin/Debug/net9.0/Exercises.Tests.pdb",
-    "softwareTesting/bestPractices/defineExplicitBehaviors/refactoringExercise/attempt/Exercises/Exercises.Tests/bin/Debug/net9.0/Exercises.Tests.dll",
-    "softwareTesting/bestPractices/defineExplicitBehaviors/refactoringExercise/attempt/Exercises/Exercises.Tests/bin/Debug/net9.0/Exercises.Tests.deps.json",
-    "softwareTesting/bestPractices/defineExplicitBehaviors/refactoringExercise/attempt/Exercises/Exercises.Tests/obj/Debug/net9.0/Exercise.AFE77562.Up2Date",
-    "softwareTesting/bestPractices/defineExplicitBehaviors/refactoringExercise/attempt/Exercises/Exercises.Tests/obj/Debug/net9.0/Verify.Attributes.cs",
-    "softwareTesting/testing_legacy_code/README.md",
-    "softwareTesting/bestPractices/defineExplicitBehaviors/refactoringExercise/attempt/Exercises/Exercises/README.md",
-    "softwareTesting/bestPractices/defineExplicitBehaviors/refactoringExercise/end/Exercises/Exercises/README.md",
-    "softwareTesting/bestPractices/defineExplicitBehaviors/refactoringExercise/end/Exercises/Exercises/Explanation.md",
-    "softwareTesting/bestPractices/defineExplicitBehaviors/refactoringExercise/start/Exercises/Exercises/README.md",
-    "softwareTesting/bestPractices/defineExplicitBehaviors/refactoringExercise/from-zero-to-hero-writing-testable-code-in-csharp-main/section-03/end/Exercises/Exercises/README.md",
-    "softwareTesting/bestPractices/defineExplicitBehaviors/refactoringExercise/from-zero-to-hero-writing-testable-code-in-csharp-main/section-03/end/Exercises/Exercises/Explanation.md",
-    "softwareTesting/bestPractices/defineExplicitBehaviors/refactoringExercise/from-zero-to-hero-writing-testable-code-in-csharp-main/README.md",
-    "softwareTesting/bestPractices/defineExplicitBehaviors/general.md",
-    "softwareTesting/bestPractices/defineExplicitBehaviors/separateConstructorFromLogic.md",
-    "softwareTesting/bestPractices/defineExplicitBehaviors/Untitled.md",
-    "softwareTesting/bestPractices/defineExplicitBehaviors/explicitErrorHandling.md",
-    "Pasted Image 20250413235315_924.png",
-    "Pasted Image 20250413235024_032.png",
-    "Pasted Image 20250413194937_569.png",
-    "Pasted Image 20250413194937_553.png",
-    "softwareTesting/bestPractices/General.md",
-    "softwareTesting/bestPractices/DefineExplicitBehaviors/Untitled.md",
-    "softwareTesting/bestPractices/Untitled.md",
-    "networking/DNS, A, AAAA, CName etc/Flow.md",
-    "cloud/aws/Route53.md",
-    "Pasted Image 20250410171022_090.png",
-    "networking/DNS, A, AAAA, CName etc/DNS, A, AAAA, CName etc..md"
+    "softwareTesting/bestPractices/defineExplicitBehaviors/refactoringExercise/attempt/Exercises/Exercises.Tests/obj/Debug/net9.0/Exercises.Tests.csproj.AssemblyReference.cache"
   ]
 }
