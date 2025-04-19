@@ -149,22 +149,10 @@
             "state": {
               "type": "excalidraw",
               "state": {
-                "file": "csharp/null/1. nullable aware context.md"
+                "file": "csharp/null/3. communicating null intent in class design/using system diagnostics codeanalysis.md"
               },
               "icon": "excalidraw-icon",
-              "title": "1. nullable aware context"
-            }
-          },
-          {
-            "id": "3ac18e503ea7d051",
-            "type": "leaf",
-            "state": {
-              "type": "excalidraw",
-              "state": {
-                "file": "csharp/null/3. communicating null intent in class design/using null operator.md"
-              },
-              "icon": "excalidraw-icon",
-              "title": "using null operator"
+              "title": "using system diagnostics codeanalysis"
             }
           },
           {
@@ -196,7 +184,7 @@
             }
           }
         ],
-        "currentTab": 12
+        "currentTab": 11
       }
     ],
     "direction": "vertical"
@@ -350,53 +338,52 @@
       "obsidian-excalidraw-plugin:Create new drawing": false
     }
   },
-  "active": "b496eb79c7bd24c7",
+  "active": "8a051697a617aac6",
   "lastOpenFiles": [
-    "csharp/action, delegates.md",
     "csharp/null/3. communicating null intent in class design/using null operator.md",
+    "csharp/null/1. nullable aware context.md",
+    "csharp/My Style.md",
+    "csharp/ref in out.md",
+    "_assets/Pasted Image 20250409145425_464.png",
+    "_assets/Pasted Image 20250409145550_513.png",
+    "_assets",
+    "_assets/Pasted Image 20250419204338_215.png",
+    "cloud/aws/EC2/Storage/EBS/General.md",
+    "cloud/aws/EC2/Storage/EBS/Snapshots.md",
+    "cloud/aws/EC2/Storage/Instance Storage.md",
+    "cloud/aws/EC2/Storage/General.md",
+    "cloud/aws/EC2/Storage/EBS",
+    "cloud/aws/EC2/ECS/Untitled.md",
+    "cloud/aws/EC2/ECS/Drawing 2025-04-13 11.43.27.excalidraw.md",
+    "cloud/aws/EC2/General.md",
+    "cloud/aws/EC2/Storage",
+    "cloud/aws/EC2/ECS",
+    "cloud/aws/EC2",
+    "_assets/Pasted Image 20250413131850_386.png",
+    "_assets/Pasted Image 20250413131047_189.png",
+    "_assets/Pasted Image 20250413122328_418.png",
+    "_assets/Pasted Image 20250413115906_636.png",
+    "_assets/Pasted Image 20250413115408_811.png",
+    "_assets/Pasted Image 20250411195252_998.png",
+    "_assets/Pasted Image 20250411193637_789.png",
+    "csharp/action, delegates.md",
     "csharp/null/3. communicating null intent in class design/using system diagnostics codeanalysis.md",
     "csharp/null/4. filter out null using pattern & prop matching/Drawing 2025-04-20 00.06.31.excalidraw.md",
-    "csharp/null/1. nullable aware context.md",
     "csharp/null/2. performing null operations in csharp.md",
     "csharp/about null/4. filter out null using pattern & prop matching/Untitled 1.md",
     "csharp/about null/4. filter out null using pattern & prop matching/Untitled.md",
-    "Pasted Image 20250420010348_993.png",
-    "Pasted Image 20250420004658_192.png",
-    "Pasted Image 20250420004205_402.png",
-    "Pasted Image 20250420003943_247.png",
-    "Pasted Image 20250420003704_975.png",
-    "Pasted Image 20250420003147_117.png",
     "csharp/null/4. filter out null using pattern & prop matching",
-    "Pasted Image 20250419211651_152.png",
-    "Pasted Image 20250419211634_542.png",
-    "Pasted Image 20250419211103_160.png",
-    "Pasted Image 20250419211040_937.png",
     "csharp/about null/3. designing classes and APIs with null intent/Untitled.md",
     "csharp/null/3. communicating null intent in class design",
-    "csharp/My Style.md",
     "csharp/null/General, default.md",
     "csharp/about null/Untitled.md",
     "csharp/about null/Embracing the Nullable Aware Context in Csharp.md",
     "csharp/about null/Untitled 1.md",
     "cloud/aws/Terms/High Availability vs. Fault Tolerance.md",
     "csharp/README.md",
-    "csharp/ref in out.md",
     "csharp/Testing.md",
-    "softwareTesting/bestPractices/narrowResponsibilities/General remarks.md",
-    "cloud/aws/EC2.md",
-    "Untitled.md",
     "csharp/null",
-    "csharp/flashcards.md",
-    "csharp/Common dependencies.md",
-    "csharp/Functools.md",
-    "csharp/Reflection.md",
-    "csharp/General.md",
     "softwareTesting/bestPractices/narrowResponsibilities/pics",
-    "softwareTesting/bestPractices/isolateDependencies",
-    "softwareTesting/bestPractices/minimiseSideEffects",
-    "softwareTesting/bestPractices/narrowResponsibilities",
-    "softwareTesting/bestPractices/defineExplicitBehaviors/refactoringExercise/attempt/Exercises/Exercises.Tests/obj/Debug/net9.0/Exercises.Tests.dll",
-    "softwareTesting/bestPractices/defineExplicitBehaviors/refactoringExercise/attempt/Exercises/Exercises.Tests/obj/Debug/net9.0/Exercises.Tests.pdb",
-    "softwareTesting/bestPractices/defineExplicitBehaviors/refactoringExercise/attempt/Exercises/Exercises.Tests/obj/Debug/net9.0/Exercises.Tests.csproj.AssemblyReference.cache"
+    "softwareTesting/bestPractices/isolateDependencies"
   ]
 }
