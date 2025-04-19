@@ -147,12 +147,14 @@
             "id": "8a051697a617aac6",
             "type": "leaf",
             "state": {
-              "type": "excalidraw",
+              "type": "markdown",
               "state": {
-                "file": "csharp/null/3. communicating null intent in class design/using system diagnostics codeanalysis.md"
+                "file": "csharp/Clean architecture.md",
+                "mode": "source",
+                "source": false
               },
-              "icon": "excalidraw-icon",
-              "title": "using system diagnostics codeanalysis"
+              "icon": "lucide-file",
+              "title": "Clean architecture"
             }
           },
           {
@@ -340,6 +342,8 @@
   },
   "active": "8a051697a617aac6",
   "lastOpenFiles": [
+    "cleancode.md",
+    "csharp/null/3. communicating null intent in class design/using system diagnostics codeanalysis.md",
     "csharp/null/3. communicating null intent in class design/using null operator.md",
     "csharp/null/1. nullable aware context.md",
     "csharp/My Style.md",
@@ -367,7 +371,6 @@
     "_assets/Pasted Image 20250411195252_998.png",
     "_assets/Pasted Image 20250411193637_789.png",
     "csharp/action, delegates.md",
-    "csharp/null/3. communicating null intent in class design/using system diagnostics codeanalysis.md",
     "csharp/null/4. filter out null using pattern & prop matching/Drawing 2025-04-20 00.06.31.excalidraw.md",
     "csharp/null/2. performing null operations in csharp.md",
     "csharp/about null/4. filter out null using pattern & prop matching/Untitled 1.md",
