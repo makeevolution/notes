@@ -6,13 +6,13 @@
 - Directory.Build.props (standardize settings for all modules)
 - Directory.Build.targets (standardize target builds for all modules)
 - global.json
-
+- editorconfig https://www.jetbrains.com/help/rider/Using_EditorConfig.html
 
 ## Must remember during coding
 - Return Result class instead of bool/null/etc.
 - Domain classes must not contain public functions
 - async await
-	- bolt in configureawait to specify intent with thread
+	- bolt in configureawait to specify intent with thread (do you wanna use calling thread for executing continuation or not)
 	- bolt in cancellationToken
 - When designing classes, and having to work with old projects with disabled nullable:
 	- set \#nullable enable on top of your class
