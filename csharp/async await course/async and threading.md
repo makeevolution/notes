@@ -17,7 +17,7 @@
 
 # Tips
 - Try catching `Task.WhenAll` will only register the exception thrown by the first task throwing! To get all the exceptions:
-  ```
+```
 public class Worker : BackgroundService
 {
     private readonly ILogger<Worker> _logger;
@@ -108,5 +108,5 @@ public class Worker : BackgroundService
         }
     }
 }
-  ```
+```
 
