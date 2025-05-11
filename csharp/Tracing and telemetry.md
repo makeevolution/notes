@@ -1,4 +1,5 @@
 # Tracing and telemetry
+### Inspired from https://edgamat.com/2024/04/20/Enrich-Serilog-With-Traces.html#:~:text=The%20TraceId%20is%20a%2016%20byte%20value%20that,specific%20activity.%20You%20can%20create%20activities%20within%20activities.
 The goal is to:
 1. Make it possible to correlate log lines using System.Diagnostics.Activity and Serilog
 2. Add custom context to log lines (e.g. function name, caller name)
