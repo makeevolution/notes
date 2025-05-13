@@ -1,4 +1,5 @@
 # Tracing and telemetry
+## Implementation
 ### Inspired from https://edgamat.com/2024/04/20/Enrich-Serilog-With-Traces.html#:~:text=The%20TraceId%20is%20a%2016%20byte%20value%20that,specific%20activity.%20You%20can%20create%20activities%20within%20activities.
 The goal is to:
 1. Make it possible to correlate log lines using System.Diagnostics.Activity and Serilog
@@ -180,3 +181,7 @@ Example output:
                           (at UploadCaseToArchiveService class in ExecuteAsync method (Line no. 48))
                           {TraceId="708954acbc152c61c988fe62684f24bc"}
 ```
+## Testing
+### Logging
+The above logging is an extension method. The `Moq` library cannot verify calls from a static class. To test it, instead test the call to the `logger.Write`; example:
+`_loggerMock.Verify(l => l.Write(It.Is<LogEvent>(@event => @event.Level == LogEventLevel.Information && @event.Properties["Message"].ToString().Contains("Successfully uploaded")) ), Times.Once());`
