@@ -3,6 +3,7 @@
 # docker rm -f mongo
 # docker rm -f mongo-express
 # run using docker-compose up --force-recreate -d
+# conn string = mongodb://localhost:27017
 
 version: '3.9'
 services:
