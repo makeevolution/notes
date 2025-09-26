@@ -8,6 +8,54 @@
         "type": "tabs",
         "children": [
           {
+            "id": "76d21cfff83bebfc",
+            "type": "leaf",
+            "state": {
+              "type": "excalidraw",
+              "state": {
+                "file": "cloud/aws/IAM/general.md"
+              },
+              "icon": "excalidraw-icon",
+              "title": "general"
+            }
+          },
+          {
+            "id": "11b8fbb4c6a33ef7",
+            "type": "leaf",
+            "state": {
+              "type": "excalidraw",
+              "state": {
+                "file": "cloud/aws/IAM/principal, identity, ARN.md"
+              },
+              "icon": "excalidraw-icon",
+              "title": "principal, identity, ARN"
+            }
+          },
+          {
+            "id": "19aa78bfb59d7d1a",
+            "type": "leaf",
+            "state": {
+              "type": "excalidraw",
+              "state": {
+                "file": "cloud/aws/IAM/principal, identity, ARN.md"
+              },
+              "icon": "excalidraw-icon",
+              "title": "principal, identity, ARN"
+            }
+          },
+          {
+            "id": "262518253b914f11",
+            "type": "leaf",
+            "state": {
+              "type": "excalidraw",
+              "state": {
+                "file": "cloud/aws/IAM/principal, identity, ARN.md"
+              },
+              "icon": "excalidraw-icon",
+              "title": "principal, identity, ARN"
+            }
+          },
+          {
             "id": "5d3bdf9d43e665ed",
             "type": "leaf",
             "state": {
@@ -15,8 +63,8 @@
               "state": {
                 "file": "cloud/aws/Route53.md"
               },
-              "icon": "excalidraw-icon",
-              "title": "Route53"
+              "icon": "lucide-file",
+              "title": "Plugin no longer active"
             }
           },
           {
@@ -101,8 +149,8 @@
               "state": {
                 "file": "csharp/about null/General, default.md"
               },
-              "icon": "lucide-file",
-              "title": "Plugin no longer active"
+              "icon": "excalidraw-icon",
+              "title": "General, default"
             }
           },
           {
@@ -113,8 +161,8 @@
               "state": {
                 "file": "csharp/about null/1. nullable aware context.md"
               },
-              "icon": "lucide-file",
-              "title": "Plugin no longer active"
+              "icon": "excalidraw-icon",
+              "title": "1. nullable aware context"
             }
           },
           {
@@ -130,27 +178,79 @@
             }
           },
           {
-            "id": "e77770eeaebef214",
+            "id": "8a051697a617aac6",
             "type": "leaf",
             "state": {
-              "type": "excalidraw",
+              "type": "markdown",
               "state": {
-                "file": "csharp/null/3. communicating null intent in class design/using system diagnostics codeanalysis.md"
+                "file": "csharp/My Style.md",
+                "mode": "source",
+                "source": false
               },
-              "icon": "excalidraw-icon",
-              "title": "using system diagnostics codeanalysis"
+              "icon": "lucide-file",
+              "title": "My Style"
             }
           },
           {
-            "id": "f45090b11a352f65",
+            "id": "05cb6256aec88b7e",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "csharp/event handling/Events, examples.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Events, examples"
+            }
+          },
+          {
+            "id": "05d48c69a575490b",
             "type": "leaf",
             "state": {
               "type": "excalidraw",
               "state": {
-                "file": "_assets/Drawing 2025-05-05 09.11.35.excalidraw.md"
+                "file": "softwareTesting/bestPractices/narrowResponsibilities/General.md"
               },
               "icon": "excalidraw-icon",
-              "title": "Drawing 2025-05-05 09.11.35.excalidraw"
+              "title": "General"
+            }
+          },
+          {
+            "id": "77b24e337170d83c",
+            "type": "leaf",
+            "state": {
+              "type": "excalidraw",
+              "state": {
+                "file": "softwareTesting/bestPractices/narrowResponsibilities/General.md"
+              },
+              "icon": "excalidraw-icon",
+              "title": "General"
+            }
+          },
+          {
+            "id": "5f85dbb37043ac73",
+            "type": "leaf",
+            "state": {
+              "type": "empty",
+              "state": {},
+              "icon": "lucide-file",
+              "title": "New tab"
+            }
+          },
+          {
+            "id": "e77770eeaebef214",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "csharp/My Style.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "My Style"
             }
           },
           {
@@ -168,7 +268,7 @@
             }
           }
         ],
-        "currentTab": 10
+        "currentTab": 3
       }
     ],
     "direction": "vertical"
@@ -225,7 +325,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 388.5
+    "width": 299.5
   },
   "right": {
     "id": "637498d0fb60adf3",
@@ -322,53 +422,51 @@
       "obsidian-excalidraw-plugin:Create new drawing": false
     }
   },
-  "active": "e77770eeaebef214",
+  "active": "262518253b914f11",
   "lastOpenFiles": [
-    "csharp/null/3. communicating null intent in class design/using system diagnostics codeanalysis.png",
-    "csharp/null/3. communicating null intent in class design/using null operator.md",
+    "cloud/aws/IAM/Roles (read principal, identity ARN first).md",
+    "Pasted Image 20250926135120_477.png",
+    "cloud/aws/IAM/Roles (read principal, identity ARN first).png",
+    "Pasted Image 20250926133737_729.png",
+    "cloud/aws/IAM/principal, identity, ARN.md",
+    "Pasted Image 20250926132936_095.png",
+    "cloud/aws/IAM/general.md",
+    "cloud/aws/IAM/principal, identity, ARN.png",
+    "Pasted Image 20250926130048_661.png",
+    "Pasted Image 20250926122916_352.png",
+    "cloud/aws/IAM/Principal, identity, ARN.md",
+    "cloud/aws/IAM",
     "csharp/null/3. communicating null intent in class design/using system diagnostics codeanalysis.md",
-    "csharp/My Style.md",
+    "csharp/null/3. communicating null intent in class design/using null operator.md",
+    "notes/Welcome.md",
+    "notes",
+    "csharp/null/3. communicating null intent in class design/using system diagnostics codeanalysis.png",
+    "csharp/Unit of work, your style",
+    "csharp/Tracing and telemetry.md",
+    "csharp/Error handling tricks.md",
     "_assets/Drawing 2025-05-05 09.11.35.excalidraw.md",
-    "cloud/aws/Terms/High Availability vs. Fault Tolerance.md",
-    "Pasted Image 20250505091344_970.png",
-    "Pasted image 20250505091052.png",
-    "csharp/Testing.md",
-    "Pasted image 20250504200058.png",
-    "Pasted image 20250504195913.png",
     "_assets/Drawing 2025-05-04 19.10.38.excalidraw.png",
-    "Pasted image 20250504193850.png",
-    "Pasted image 20250504193802.png",
     "_assets/Drawing 2025-05-04 19.10.38.excalidraw.md",
-    "Pasted Image 20250504191356_543.png",
-    "Pasted Image 20250504191059_362.png",
-    "cloud/aws/Route53.md",
+    "Pasted image 20250505091052.png",
     "networking/DNS, A, AAAA, CName etc/DNS, A, AAAA, CName etc..md",
-    "networking/DNS, A, AAAA, CName etc/Flow.md",
-    "_assets/Pasted Image 20250410165408_593.png",
-    "csharp/Clean architecture.md",
-    "cleancode.md",
-    "csharp/null/1. nullable aware context.md",
-    "csharp/ref in out.md",
+    "softwareTesting/bestPractices/narrowResponsibilities/General.md",
+    "softwareTesting/bestPractices/narrowResponsibilities/CompositionOfNarrowComponents.md",
+    "softwareTesting/bestPractices/General.md",
+    "softwareTesting/bestPractices/defineExplicitBehaviors/visibleStateChanges.md",
+    "softwareTesting/bestPractices/defineExplicitBehaviors/separateConstructorFromLogic.md",
+    "softwareTesting/bestPractices/defineExplicitBehaviors/explicitErrorHandling.md",
+    "softwareTesting/bestPractices/defineExplicitBehaviors/general.md",
+    "csharp/event handling/Drawing 2025-04-25 18.57.36.excalidraw.md",
+    "csharp/event handling/Events, examples.md",
+    "csharp/My Style.md",
+    "csharp/event handling",
+    "csharp/extensions.md",
+    "csharp/action, delegates.md",
     "_assets",
-    "cloud/aws/EC2/Storage/EBS/General.md",
-    "cloud/aws/EC2/Storage/EBS/Snapshots.md",
-    "cloud/aws/EC2/Storage/Instance Storage.md",
-    "cloud/aws/EC2/Storage/General.md",
     "cloud/aws/EC2/Storage/EBS",
-    "cloud/aws/EC2/ECS/Untitled.md",
-    "cloud/aws/EC2/ECS/Drawing 2025-04-13 11.43.27.excalidraw.md",
-    "cloud/aws/EC2/General.md",
     "cloud/aws/EC2/Storage",
     "cloud/aws/EC2/ECS",
     "cloud/aws/EC2",
-    "csharp/action, delegates.md",
-    "csharp/null/4. filter out null using pattern & prop matching/Drawing 2025-04-20 00.06.31.excalidraw.md",
-    "csharp/null/2. performing null operations in csharp.md",
-    "csharp/about null/4. filter out null using pattern & prop matching/Untitled 1.md",
-    "csharp/null/4. filter out null using pattern & prop matching",
-    "csharp/null/3. communicating null intent in class design",
-    "csharp/null",
-    "softwareTesting/bestPractices/narrowResponsibilities/pics",
-    "softwareTesting/bestPractices/isolateDependencies"
+    "csharp/null/4. filter out null using pattern & prop matching"
   ]
 }
