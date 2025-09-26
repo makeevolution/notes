@@ -1,9 +1,5 @@
 # Git
 
-- Remove from cache easily: https://stackoverflow.com/a/46663143
-  - In a nutshell: remove all files from git cache, then add the files you want to ignore to .gitignore, then `git add .` again
-  - Much simpler; no need to figure out regexes, no fighting with bash or powershell on syntax, etc.
- 
 - Multiple .gitignore files for different branches. There's a trick to have multiple gitignores for different branches: https://gist.github.com/wizioo/c89847c7894ede628071 or https://gist.github.com/Tealk/13ec8effe72f45f45165143cc64a3048. Summary:
 
 In general, the solution is to make a general `.gitignore` file and add `.gitignore.branch_name` files for the branches I want to add specific file exclusion.

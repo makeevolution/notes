@@ -11,14 +11,12 @@
             "id": "76d21cfff83bebfc",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "excalidraw",
               "state": {
-                "file": "networking/DNS, A, AAAA, CName etc/DNS, A, AAAA, CName etc..md",
-                "mode": "source",
-                "source": false
+                "file": "cloud/aws/IAM.md"
               },
-              "icon": "lucide-file",
-              "title": "DNS, A, AAAA, CName etc."
+              "icon": "excalidraw-icon",
+              "title": "IAM"
             }
           },
           {
@@ -149,12 +147,60 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "csharp/Clean architecture.md",
+                "file": "csharp/My Style.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Clean architecture"
+              "title": "My Style"
+            }
+          },
+          {
+            "id": "05cb6256aec88b7e",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "csharp/event handling/Events, examples.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Events, examples"
+            }
+          },
+          {
+            "id": "05d48c69a575490b",
+            "type": "leaf",
+            "state": {
+              "type": "excalidraw",
+              "state": {
+                "file": "softwareTesting/bestPractices/narrowResponsibilities/General.md"
+              },
+              "icon": "excalidraw-icon",
+              "title": "General"
+            }
+          },
+          {
+            "id": "77b24e337170d83c",
+            "type": "leaf",
+            "state": {
+              "type": "excalidraw",
+              "state": {
+                "file": "softwareTesting/bestPractices/narrowResponsibilities/General.md"
+              },
+              "icon": "excalidraw-icon",
+              "title": "General"
+            }
+          },
+          {
+            "id": "5f85dbb37043ac73",
+            "type": "leaf",
+            "state": {
+              "type": "empty",
+              "state": {},
+              "icon": "lucide-file",
+              "title": "New tab"
             }
           },
           {
@@ -185,8 +231,7 @@
               "title": "High Availability vs. Fault Tolerance"
             }
           }
-        ],
-        "currentTab": 11
+        ]
       }
     ],
     "direction": "vertical"
@@ -243,7 +288,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 388.5
+    "width": 299.5
   },
   "right": {
     "id": "637498d0fb60adf3",
@@ -340,16 +385,37 @@
       "obsidian-excalidraw-plugin:Create new drawing": false
     }
   },
-  "active": "8a051697a617aac6",
+  "active": "76d21cfff83bebfc",
   "lastOpenFiles": [
-    "cleancode.md",
-    "csharp/null/3. communicating null intent in class design/using system diagnostics codeanalysis.md",
-    "csharp/null/3. communicating null intent in class design/using null operator.md",
-    "csharp/null/1. nullable aware context.md",
-    "csharp/My Style.md",
-    "csharp/ref in out.md",
+    "networking/DNS, A, AAAA, CName etc/DNS, A, AAAA, CName etc..md",
+    "softwareTesting/bestPractices/narrowResponsibilities/General.md",
+    "Pasted Image 20250618123007_537.png",
+    "softwareTesting/bestPractices/narrowResponsibilities/CompositionOfNarrowComponents.md",
+    "softwareTesting/bestPractices/narrowResponsibilities/pics/Pasted Image 20250618121649_567.png",
+    "Pasted Image 20250618121856_372.png",
     "_assets/Pasted Image 20250409145425_464.png",
     "_assets/Pasted Image 20250409145550_513.png",
+    "_assets/Pasted Image 20250420004658_192.png",
+    "_assets/Pasted Image 20250420010348_993.png",
+    "softwareTesting/bestPractices/narrowResponsibilities/pics/1000041813.jpg",
+    "softwareTesting/bestPractices/narrowResponsibilities/pics/1000041811.jpg",
+    "softwareTesting/bestPractices/General.md",
+    "softwareTesting/bestPractices/defineExplicitBehaviors/visibleStateChanges.md",
+    "softwareTesting/bestPractices/defineExplicitBehaviors/separateConstructorFromLogic.md",
+    "softwareTesting/bestPractices/defineExplicitBehaviors/explicitErrorHandling.md",
+    "softwareTesting/bestPractices/defineExplicitBehaviors/general.md",
+    "csharp/null/3. communicating null intent in class design/using system diagnostics codeanalysis.md",
+    "csharp/null/3. communicating null intent in class design/using null operator.md",
+    "csharp/event handling/Drawing 2025-04-25 18.57.36.excalidraw.md",
+    "csharp/event handling/Events, examples.md",
+    "csharp/My Style.md",
+    "csharp/event handling",
+    "csharp/extensions.md",
+    "csharp/action, delegates.md",
+    "csharp/null/1. nullable aware context.md",
+    "csharp/Clean architecture.md",
+    "cleancode.md",
+    "csharp/ref in out.md",
     "_assets",
     "_assets/Pasted Image 20250419204338_215.png",
     "cloud/aws/EC2/Storage/EBS/General.md",
@@ -363,30 +429,9 @@
     "cloud/aws/EC2/Storage",
     "cloud/aws/EC2/ECS",
     "cloud/aws/EC2",
-    "_assets/Pasted Image 20250413131850_386.png",
-    "_assets/Pasted Image 20250413131047_189.png",
-    "_assets/Pasted Image 20250413122328_418.png",
-    "_assets/Pasted Image 20250413115906_636.png",
-    "_assets/Pasted Image 20250413115408_811.png",
-    "_assets/Pasted Image 20250411195252_998.png",
-    "_assets/Pasted Image 20250411193637_789.png",
-    "csharp/action, delegates.md",
-    "csharp/null/4. filter out null using pattern & prop matching/Drawing 2025-04-20 00.06.31.excalidraw.md",
-    "csharp/null/2. performing null operations in csharp.md",
-    "csharp/about null/4. filter out null using pattern & prop matching/Untitled 1.md",
-    "csharp/about null/4. filter out null using pattern & prop matching/Untitled.md",
     "csharp/null/4. filter out null using pattern & prop matching",
-    "csharp/about null/3. designing classes and APIs with null intent/Untitled.md",
     "csharp/null/3. communicating null intent in class design",
-    "csharp/null/General, default.md",
-    "csharp/about null/Untitled.md",
-    "csharp/about null/Embracing the Nullable Aware Context in Csharp.md",
-    "csharp/about null/Untitled 1.md",
-    "cloud/aws/Terms/High Availability vs. Fault Tolerance.md",
-    "csharp/README.md",
-    "csharp/Testing.md",
     "csharp/null",
-    "softwareTesting/bestPractices/narrowResponsibilities/pics",
-    "softwareTesting/bestPractices/isolateDependencies"
+    "softwareTesting/bestPractices/narrowResponsibilities/pics"
   ]
 }
