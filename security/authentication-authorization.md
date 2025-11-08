@@ -20,7 +20,7 @@
     - if token expires, client can create a middleware to catch 401, send refresh token, get a new access token, and retry the request
     - JWT is a way of encoding a token. Other alternatives include having opaque tokens, CWT (cbor web tokens, RFC-8392), etc             
 ##### Where to store JWT
-    - Either in cookies or headers (but for cookies only as a HttpOnly cookie)
+    - Either in cookies or headers (but for cookies only as a HttpOnly cookie, and also samesite=lax or none with secure=True and CSRF token, see below for more info)
     - Storing in localstorage as Auth Bearer (like in section above) and making the frontend load it and send as header to backend has many differences over sending it over httponly cookies:
       - Storing in localstorage or a non-HttpOnly cookie makes it vulnerable by XSS attacks, since `localStorage.getItem('access_token') or document.cookie can be used to get the token like this (only shown for localstorage):
       ```
