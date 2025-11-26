@@ -1,0 +1,51 @@
+services:
+  postgres:
+    image: postgres
+    hostname: postgreshost
+    environment:
+      - POSTGRES_USER=exampleuser
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_DB=db
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@example.com
+      - PGADMIN_DEFAULT_PASSWORD=1234
+      - PGADMIN_CONFIG_SERVER_MODE=False
+      - PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED=False
+    ports:
+      - 5050:80
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./pgadmin/servers.json:/pgadmin4/servers.json:ro
+      - ./pgadmin/.pgpass:/pgpass/.pgpass:ro
+
+  phppgadmin:
+    image: dockage/phppgadmin
+    container_name: phppgadmin
+    restart: always
+    depends_on:
+      - postgres
+    environment:
+      PHP_PG_ADMIN_SERVER_HOST: postgres
+      PHP_PG_ADMIN_SERVER_DEFAULT_DB: db
+      PHP_PG_ADMIN_SERVER_SSL_MODE: allow
+    ports:
+      - "8081:80"
+    volumes:
+      - ./pgadmin/servers.conf.php:/etc/phppgadmin/conf.d/servers.conf.php:ro
+
+volumes:
+  postgres_data:
