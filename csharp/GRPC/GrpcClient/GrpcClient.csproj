@@ -17,6 +17,14 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Protobuf Include="Protos\customers.proto">
+        <GrpcServices>Client</GrpcServices>
+        <Access>Public</Access>
+        <ProtoCompile>True</ProtoCompile>
+        <CompileOutputs>True</CompileOutputs>
+        <OutputDir>obj\Debug\net9.0\</OutputDir>
+        <Generator>MSBuild:Compile</Generator>
+      </Protobuf>
       <Protobuf Include="Protos\greet.proto">
         <GrpcServices>Client</GrpcServices>  <!-- The values can either be Server, Client or Both -->
         <Access>Public</Access>
