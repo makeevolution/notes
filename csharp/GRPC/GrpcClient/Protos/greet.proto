@@ -1,0 +1,27 @@
+// Proto file is a contract
+
+syntax = "proto3";
+
+option csharp_namespace = "GrpcClient";
+
+package greet;
+
+// The greeting service definition.
+service Greeter {
+  // When you call the SayHello method remotely, you need to pass in a HelloRequest message, and the reply will be
+  // HelloReply.
+  rpc SayHello (HelloRequest) returns (HelloReply);  
+}
+
+// Message: Similar/same to your usual csharp class that defines a model.
+// Define 0 or more properties.
+// The request message containing the user's name.
+message HelloRequest {
+  string name = 1;  // The number defines the order this property goes (so msg below is 2, another one would be 3, etc.)
+  string msg = 2;
+}
+
+// The response message containing the greetings.
+message HelloReply {
+  string message = 1;
+}
