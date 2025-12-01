@@ -1,56 +1,76 @@
-# The Interview Process
-Hi C# candidate!
+# Experiment with various web .NET services
+## Important things to register in a web .NET service
 
-There are three parts to the technical interview process:
-- An assignment to complete on your own
-- A pairing-up session to extend the assignment together
-- Systems design questions
+## How to add data protection (ask what this is for)
+`services.AddDataProtection().PersistKeysToFileSystem`
 
-## Part 1: The take-home assignment
+## How to show detailed error pages in development environment
+ ``` 
+builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-You should have received a .Net solution. The solution contains the start of an API service but is missing quite a few crucial parts.
-Your task is to fill in these missing parts based on the business requirements provided.
-Plan on needing about four hours to complete the assignment.
+var app = builder.Build();
 
-During the first half hour of the interview, we will ask you to share your screen and will go over your solution together.
-By that time, our interviewers will have studied your code and prepared some questions for you. So, we need a few days between your completion of the assignment and the actual interview.
+if (app.Environment.IsDevelopment())
+{
+app.UseDeveloperExceptionPage();
+}
+else
+{
+app.UseExceptionHandler("/Home/Error");
+}
+```
 
-The exact requirements and how to get started are described in Assignment.md
-
-## Part 2: Extending the service
-
-During this part of the interview, we will do some pair programming. One of the interviewers will start as the driver and work together with you on a small extension of the service. Halfway, you will swap roles.
-
-
-## Part 3: System design
-
-Here we will ask you some questions around application and solution design.
-
-# Our values and what we expect
-
-Our technical values at Coolblue:
-- We collaborate with domain and business stakeholders to understand the problems we want to solve
-- We value team communication so we document our design/architecture choices
-- We have a strong culture of Test Driven Development, before we write production code we prefer to write tests first (you can generate the target classes, methods, properties etc from tests using refactoring tools 💡)
-- We like to know what our applications and services are doing in production without necessarily having to debug code or without needing the customer to tell us something is wrong so we proactively monitor them and invest in logging
-- We value SOLID principles and are pragmatic around applying them to the systems we build
-- We strive to keep our applications and systems self-healing and resilient in face of failures
-
-What we expect in your solution:
-- A working service
-- Behavioral tests
-- Appropriate separation of concerns
-- A solution with an architecture that you can defend and would feel comfortable putting in production
-- Readable code with meaningful names for variables/classes/interfaces etc
-- Appropriate exception handling and fault tolerance
-- Should be runnable on our machines so keep that in mind while picking third party tools and apps etc
-- Documentation of your design decisions and technical choices for the tasks. A simple markdown or text file (included in your submission) showing the following will be enough: 
-    - Assumption/Decision Made
-    - Reason
-- Complete the use case and ensure its tests all pass. You should not change the unit tests themselves!
+## How to create a CSP for dotnet
+https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CSP 
+For .NET use NWebSec library
 
 
-# What you can expect from us
-We are, of course, not going to let you deal with the assignment on your own. You will have two software developers available via Slack. Please feel free to ask your questions or clarifications, they are happy to help. Please make sure you send us your questions before or after the weekend, as we don’t work on the weekends.
+## How to avoid user enumeration attacks
+User enumeration attacks happen when an attacker can determine valid usernames or email addresses in your system by observing the system's responses to login or registration attempts. To prevent this, you can implement the following strategies:
 
-If your question is related to the interview process itself, if you want to reschedule, or anything else, contact your HR contact. They will be happy to help you
+When a login API responds faster for non-existent users than for existing users, attackers can use response time differences to figure out which usernames exist.
+
+For example:
+
+```
+Username	Response Time
+Alice	120 ms
+Bob	50 ms
+```
+An attacker notices “Bob” responds faster → maybe Bob doesn’t exist → username enumeration.
+
+The goal is to make all login attempts take roughly the same time, regardless of whether the username exists.
+
+```
+private static async Task AvoidUserEnumeration(DateTime startTime)
+{
+var alreadySpent = (DateTime.UtcNow - startTime).TotalMilliseconds;
+if (alreadySpent > AuthCallRandomWaitMaxMilliSeconds)
+return;
+
+    await Task.Delay(AuthCallRandomWaitMaxMilliSeconds - (int)alreadySpent);
+}
+```
+Step by Step
+
+Track start time
+
+startTime is the time the authentication logic started.
+
+You calculate how long the processing has already taken:
+
+`var alreadySpent = (DateTime.UtcNow - startTime).TotalMilliseconds;`
+
+
+Check if we need to wait
+
+If the elapsed time is already more than the configured max, just return:
+
+`if (alreadySpent > AuthCallRandomWaitMaxMilliSeconds) return;`
+
+
+Delay for the remaining time
+
+Otherwise, delay for the difference so that the total response time is roughly AuthCallRandomWaitMaxMilliSeconds:
+
+`await Task.Delay(AuthCallRandomWaitMaxMilliSeconds - (int)alreadySpent);`
