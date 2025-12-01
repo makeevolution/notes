@@ -4,6 +4,15 @@ option csharp_namespace = "GrpcServer";
 
 service Customer {
   rpc GetCustomerInfo (CustomerLookupModel) returns (CustomerModel);
+  // In GRPC we cannot have empty inputs, so we need to fake a NewCustomerRequest
+  // GRPC supports streaming too out of the box
+  // We can also return a list using repeats (google this), but here we use stream instead to support
+  // async.
+  rpc GetNewCustomers (NewCustomerRequest) returns (stream CustomerModel);
+}
+
+message NewCustomerRequest {
+  
 }
 
 message CustomerLookupModel {
