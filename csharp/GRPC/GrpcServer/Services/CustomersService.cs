@@ -53,6 +53,7 @@ public class CustomersService : Customer.CustomerBase
         };
         foreach (var cust in customers)
         {
+            await Task.Delay(TimeSpan.FromSeconds(1));  // Simulate delay in streaming
             await responseStream.WriteAsync(cust);
         }
     }

@@ -22,11 +22,13 @@ TLDR:
     `Client` gives you `GreeterClient` (as is in GrpcClient project).
 
 - Run both projects and see the client got a response from the server.
-- Note that the server and the client has no reference to each other!
+- Everytime you make a change, must `dotnet clean` and `dotnet build` otherwise it won't register the new changes.
+- Note that the server and the client has no project reference to each other!
 
 - When we add a new proto (e.g. the customers.proto in server), do not forget to check that the build properties is set
   correctly: ![Schermafbeelding 2025-11-29 220649.png](Images/Schermafbeelding%202025-11-29%20220649.png)
   - Then, reload project/build. What this does is the Grpc package (either `Grpc.AspNetCore` or `Grpc.Net.Client`) will
     create the service specified in the `proto` file as a csharp class in `obj`, and you can use it in your services.
   - Only then, you create your service class for the proto in `Services`
-  - Don't forget to register the service in `Program.cs
+  - Don't forget to register the service in `Program.cs`
+

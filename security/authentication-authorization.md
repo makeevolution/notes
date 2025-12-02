@@ -105,11 +105,3 @@ After my studying, here is a summary of how OAuth2 Scopes can wors with in tande
 4. For the `client-credentials` client, the authserver will assign directly scopes and send back the JWT token with the scopes for it (no groups/roles since it is not known concept to that client!)
 5. Thus, scopes are there to auto-restrict access granularly to resources in the backend by default, irrespective of whether the client application knows of the concept of the user or roles or groups, while the groups and roles are to support additional restrict access in the client application that require this concept (e.g. the roles are used in the frontend to hide certain UI elements or groups to hide certain test executions; this info is sent inside the JWT token by the backend).
    - Although, it can also indeed be used to restrict access to more resources in the backend (e.g. our groups filtering; remember we had TokenHasView attribute in our viewset that restricts the incoming user if their token has no e.g. view:food, delete:food, add:food, edit:food scopes, but inside the list() or get() method, we did filter further whether the user is in a particular group!). But the main idea is not this.
-
-### Misc.:
-  - CORS:
-    - In short: cross domain requests should not be allowed by default.
-    - On every request, we always send a header called ORIGIN that indicates our hostname (e.g. `localhost:9000`, `google.com`)
-    - The server will need to check this origin against a list of origins it allows (e.g. ACCESS_CONTROL_ALLOW_ORIGIN of Django)
-    - If ok, then the server will send its response, with ACCESS_CONTROL_ALLOW_ORIGIN and its value in the header
-      - If response doesn't allow, then this header will be missing, and our modern browser will not want to display the data
