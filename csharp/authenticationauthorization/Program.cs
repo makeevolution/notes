@@ -97,11 +97,13 @@ app.MapGet("/login", (HttpContext ctx, CookieAuthService cookieCookieAuthService
     // A person/user is represented by a ClaimsPrincipal
     ClaimsPrincipal user = new ClaimsPrincipal([identity]);
     
+    // The ClaimsPrincipal above is also often called an "authentication ticket"
+    
     // 3. Construct the cookie and append it to the request
     cookieCookieAuthService.SignIn(user);
     // The SignIn method above is roughly equivalent to the framework code:
     // ctx.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, user).GetAwaiter().GetResult();
-    // This method btw is more inclusive, since it will also include the Issuer information in the cookie
+    // This method btw is more inclusive, since it will also include the Issuer i.e. Authentication Scheme information in the cookie
     return "Login okay! check your cookie in F12.";
 });
 
