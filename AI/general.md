@@ -1,11 +1,33 @@
 # General
+## Skills
+- Skills are repeatable 
 - All AI configs is under `~/.config` in your computer
 - All AI skills accessible by any models are put in `~/.agents/skills` in your computer
-- For Rider Github copilot, put your `instruction` files in `/Users/aldo.sebastian/.config/github-copilot/intellij/`
-- Put new skills under `~/.agents/skills` for a place where your skills can be found by any harness
-- https://github.com/SachiHarshitha/copilot-usage to check your copilot usage by scanning your logs. When installing, put `README.md` on the `apps/cli` folder
+## Agents.md vs. .instruction files
+- They are the same; `agents.md` are used cross-models, while `.instruction` files are for Copilot only
+- For Rider Github copilot, put your `instruction` files in `/Users/aldo.sebastian/.config/github-copilot/intellij/` so it is usable in any repo
+## Hooks
+- Commands that will run (deterministically i.e. for sure) on certain points during AI answering your questions
+- No cross-model setup is available yet at time of writing this doc
+- For Copilot: `https://docs.github.com/en/copilot/concepts/agents/cloud-agent/about-hooks`
+- Useful hooks:
+```
+{
+  "version": 1,
+  "hooks": {
+    "agentStop": [
+      {
+        "type": "command",
+        "bash": "osascript -e 'display notification \"Hello!\" with title \"My App\"'"
+      }
+    ]
+  }
+}
+
+```
 
 # Costs of Copilot
+- https://github.com/SachiHarshitha/copilot-usage to check your copilot usage by scanning your logs. When installing, put `README.md` on the `apps/cli` folder
 ## Request vs. usage based billing
 - Before 1 June 2026, `$39` (for enterprise) includes 1000 requests
   - Multipliers like Opus 4.6 (3x) means each request using Opus 4.6 is counted as 3 requests
