@@ -18,7 +18,7 @@
     "agentStop": [
       {
         "type": "command",
-        "bash": "osascript -e 'display notification \"Hello!\" with title \"My App\"'"
+        "bash": "osascript -e 'display notification \"AI is done!\" with title \"Hey\"'"
       }
     ]
   }
