@@ -11,7 +11,7 @@
 - No cross-model setup is available yet at time of writing this doc
 - For Copilot: `https://docs.github.com/en/copilot/concepts/agents/cloud-agent/about-hooks`
 - Useful hooks:
-```
+```copilot-example
 {
   "version": 1,
   "hooks": {
