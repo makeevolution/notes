@@ -27,3 +27,12 @@ SELECT * FROM all_sequences WHERE sequence_name LIKE '%PARTIALTABLENAME%';
 -- triggers
 SELECT * FROM all_triggers WHERE table_name LIKE '%PARTIALTABLENAME%';
 ```
+
+- Efficiently get the first match given a where condition (no need to scan through all rows)
+```
+-- Returns an int (1) when found, otherwise no rows aka null. 
+SELECT 1 
+FROM SOMETABLE 
+WHERE IDCOLUMN = :id 
+FETCH FIRST 1 ROWS ONLY
+```
