@@ -9,3 +9,21 @@
   AND i.TABLE_SCHEMA = DATABASE()
   AND i.TABLE_NAME = '<yourtable>';  # houd de aanhalingstekens op
   ```
+
+- Get the DDL that will create the table from scratch:
+```
+SELECT DBMS_METADATA.GET_DDL('TABLE', 'SOMETABLE') FROM dual;
+```
+
+- Get all sequences in the all tables like PARTIALTABLENAME
+```
+-- sequences
+SELECT * FROM all_sequences WHERE sequence_name LIKE '%PARTIALTABLENAME%';
+```
+
+- Get all triggers in all tables like PARTIALTABLENAME
+
+```
+-- triggers
+SELECT * FROM all_triggers WHERE table_name LIKE '%PARTIALTABLENAME%';
+```
