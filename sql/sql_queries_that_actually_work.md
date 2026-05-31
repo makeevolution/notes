@@ -10,7 +10,7 @@
   AND i.TABLE_NAME = '<yourtable>';  # houd de aanhalingstekens op
   ```
 
-- Get the DDL that will create the table from scratch:
+- Get the DDL that will create the table from scratch to get all details of the table:
 ```
 SELECT DBMS_METADATA.GET_DDL('TABLE', 'SOMETABLE') FROM dual;
 ```
@@ -36,3 +36,20 @@ FROM SOMETABLE
 WHERE IDCOLUMN = :id 
 FETCH FIRST 1 ROWS ONLY
 ```
+-- Get details of a column in a table
+SELECT *
+FROM all_tab_columns
+WHERE table_name = 'VAN_CARRIERTRANSFER'
+AND column_name = 'CARRIERTRANSFER';
+
+-- check if a column is nullable on the tables where the column is used as a foreign key
+SELECT TABLE_NAME, COLUMN_NAME, NULLABLE, DATA_TYPE
+FROM ALL_TAB_COLUMNS
+WHERE TABLE_NAME IN (
+    'VAN_CARRIERTRANSFERAREA',
+    'VAN_SHIPMENTCARRIERGROUP',
+    'VAN_ADDITIONALCARRIERS',
+    'VAN_SHIPMENTCARRIER'
+)
+AND OWNER = 'DEVVANESSA'
+AND COLUMN_NAME = 'CARRIERTRANSFERID';
