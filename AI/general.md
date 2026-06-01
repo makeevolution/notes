@@ -1,10 +1,12 @@
 # General
 ## Skills
-- Skills are repeatable 
+- Skills are repeatable instructions you can invoke using `/`
 - All AI configs is under `~/.config` in your computer
-- All AI skills accessible by any models are put in `~/.agents/skills` in your computer
+- All AI skills accessible by both OpenRouter and Copilot `~/.agents/skills` in your computer
+- For Claude, skills must be in `~/.claude/skills`. Symlink to `~/.agents/skills` to make it easy
+- To make a skill auto invoked on every prompt (for Claude), you can make a `~/.claude/CLAUDE.md` and tell it to invoke a particular skill everytime
 ## Agents.md vs. .instruction files
-- They are the same; `agents.md` are used cross-models, while `.instruction` files are for Copilot only
+- They are the same; `agents.md` are used cross-models, while `.instruction` files are for Copilot only. These are project files. 
 - For Rider Github copilot, put your `instruction` files in `/Users/aldo.sebastian/.config/github-copilot/intellij/` so it is usable in any repo
 ## Hooks
 - Commands that will run (deterministically i.e. for sure) on certain points during AI answering your questions
