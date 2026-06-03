@@ -1,3 +1,6 @@
+# Bash
+| lsof -i :6363 │ Lists all processes with open connections on port 6363 to identify what is holding it │                                                                                                                                                                                                                 
+
 # Powershell
 
 ### How to create alias in Windows Powershell
