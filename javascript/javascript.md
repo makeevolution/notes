@@ -47,3 +47,5 @@ https://stackblitz.com/edit/rxjs-dwwryf?devtoolsheight=60&file=index.ts
     }
   ```
   4. Set breakpoint on test and debug
+ 
+- How to print an object fully for debugging purposes: `JSON.stringify(event, null, 2)`
