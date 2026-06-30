@@ -82,6 +82,31 @@ Let's follow the arrows, along the way we will explain what each component are.
       - Notice we also have an `API Loadbalancer` now.
         - This is needed because we run the control plane on multiple instances, to manage communication communication between users to the control planes, or between the nodes to the control planes, in a better way.
 
+## What happens when you are doing `kubectl apply -f deployment.yaml`?
+1. kubectl request comes in
+- User runs: kubectl apply -f deployment.yaml
+- Request goes to API Server (the gateway)
+
+2. API Server saves YAML in etcd
+
+3. Controller Manager sees the new spec in etcd
+- (it's always watching etcd)
+- Controller Manager says: "User wants 3 pods, so I should make 3 pods"
+- Controller Manager asks API to create the pod specs
+
+4. Scheduler notices new pods that need placement 
+- Scheduler looks at nodes: "Which node has resources?"
+- Scheduler decides: "Pod goes to Node A"
+- Scheduler updates etcd with this decision (doesn't directly call kubelet)
+
+5. Kubelet on Node A notices the update in etcd 
+- Kubelet sees: "There's a pod for me to create"
+- Kubelet creates the pod (calls containerD → runc)
+
+6. Controller Manager monitors continuously 
+- Checks: "Do I have 3 pods? Yes. Good."
+- If a pod dies: "Now I have 2. I need 3. Make another one!" → back to step 3
+
  ## Why we need deployment/replicationcontroller/statefulset/etc to manage pods?
 
  When you create unmanaged pods, a cluster node is selected to run the pod and then its containers are run on that node. Kubernetes then monitors those containers and automatically restarts them if they fail. But if the whole node fails, the pods on the node are lost and will not be replaced with new ones, unless those pods are managed by a Deployment, ReplicationControllers or similar.
