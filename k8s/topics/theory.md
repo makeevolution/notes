@@ -46,7 +46,7 @@ Let's follow the arrows, along the way we will explain what each component are.
   - There are 4 `static pods` created:
       - `etcd`:
           - A consistent, distributed, `key value` store
-          - It stores all the `yaml` files that will be given by the users as a `json` manifest (i.e. key value!)
+          - It stores all the `yaml` files that will be given by the users (so e.g. deployment YAML, etc.), saving them as a `json` manifest (i.e. key value!)
           - This means `etcd` is like the back-end of k8s cluster
           - Ideally, in production, it is recommended to run multiple instances of etcd, with odd number of members (i.e. as a cluster); more information below on this
       - `kubeapi` server:
