@@ -91,7 +91,7 @@ Let's follow the arrows, along the way we will explain what each component are.
 
 2. API Server saves YAML in etcd
 
-3. Controller Manager sees the new spec in etcd
+3. Controller Manager sees the spec in etcd
 - (it's always watching etcd)
 - Controller Manager says: "User wants 3 pods, so I should make 3 pods"
 - Controller Manager asks API to create the pod specs
@@ -101,11 +101,15 @@ Let's follow the arrows, along the way we will explain what each component are.
 - Scheduler decides: "Pod goes to Node A"
 - Scheduler updates etcd with this decision (doesn't directly call kubelet)
 
-5. Kubelet on Node A notices the update in etcd 
+5. Kubelet on Node A notices the update in etcd (thorugh periodic querying of the API server)
 - Kubelet sees: "There's a pod for me to create"
 - Kubelet creates the pod (calls containerD → runc)
 
-6. Controller Manager monitors continuously 
+6. Lets say a pod dies
+- Kubelet tells this to the API Server
+- API server updates the spec in the etcd database with status e.g. only 2 out of 3 pods are alive
+
+7. Controller Manager monitors continuously the API server too of the status aforementioned above
 - Checks: "Do I have 3 pods? Yes. Good."
 - If a pod dies: "Now I have 2. I need 3. Make another one!" → back to step 3
 
