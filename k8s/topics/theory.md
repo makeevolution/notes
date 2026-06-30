@@ -83,6 +83,8 @@ Let's follow the arrows, along the way we will explain what each component are.
         - This is needed because we run the control plane on multiple instances, to manage communication communication between users to the control planes, or between the nodes to the control planes, in a better way.
 
 ## What happens when you are doing `kubectl apply -f deployment.yaml`?
+<img width="1692" height="930" alt="image" src="https://github.com/user-attachments/assets/9517d0fd-49c4-42be-ae67-7f9289d382a1" />
+
 1. kubectl request comes in
 - User runs: kubectl apply -f deployment.yaml
 - Request goes to API Server (the gateway)
